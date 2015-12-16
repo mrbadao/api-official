@@ -65,7 +65,7 @@ class CakeResponse {
 		412 => 'Precondition Failed',
 		413 => 'Request Entity Too Large',
 		414 => 'Request-URI Too Large',
-		415 => 'Unsupported Media Type',
+		415 => 'Unsupported Medias Type',
 		416 => 'Requested range not satisfiable',
 		417 => 'Expectation Failed',
 		429 => 'Too Many Requests',

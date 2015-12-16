@@ -20,7 +20,7 @@ App::uses('View', 'View');
 App::uses('CakeRequest', 'Network');
 
 /**
- * Media View provides a custom view implementation for sending files to visitors. Its great
+ * Medias View provides a custom view implementation for sending files to visitors. Its great
  * for making the response of a controller action be a file that is saved somewhere on the filesystem.
  *
  * An example use comes from the CakePHP internals. MediaView is used to serve plugin and theme assets,
@@ -39,7 +39,7 @@ App::uses('CakeRequest', 'Network');
  * ```
  * class ExampleController extends AppController {
  *		public function download() {
- *			$this->viewClass = 'Media';
+ *			$this->viewClass = 'Medias';
  *			$params = array(
  *				'id' => 'example.zip',
  *				'name' => 'example',

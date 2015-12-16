@@ -1379,7 +1379,7 @@ class CakeResponseTest extends CakeTestCase {
  */
 	public function testFileWithUnknownFileTypeIE() {
 		$currentUserAgent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : null;
-		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (compatible; MSIE 8.0; Windows NT 5.2; Trident/4.0; Media Center PC 4.0; SLCC1; .NET CLR 3.0.04320)';
+		$_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (compatible; MSIE 8.0; Windows NT 5.2; Trident/4.0; Medias Center PC 4.0; SLCC1; .NET CLR 3.0.04320)';
 
 		$response = $this->getMock('CakeResponse', array(
 			'header',
