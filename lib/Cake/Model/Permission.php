@@ -239,7 +239,7 @@ class Permission extends AppModel {
 	}
 
 /**
- * Get the crud type keys
+ * Get the Crud type keys
  *
  * @param array $keys Permission schema
  * @return array permission keys

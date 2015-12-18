@@ -44,7 +44,7 @@ class CrudAuthorize extends BaseAuthorize {
 	}
 
 /**
- * sets the crud mappings for prefix routes.
+ * sets the Crud mappings for prefix routes.
  *
  * @return void
  */

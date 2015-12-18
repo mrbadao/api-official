@@ -72,7 +72,7 @@ class ControllerTask extends BakeTask {
 			$actions = '';
 
 			if (!empty($this->params['public'])) {
-				$this->out(__d('cake_console', 'Baking basic crud methods for ') . $controller);
+				$this->out(__d('cake_console', 'Baking basic Crud methods for ') . $controller);
 				$actions .= $this->bakeActions($controller);
 			}
 			if (!empty($this->params['admin'])) {
@@ -479,10 +479,10 @@ class ControllerTask extends BakeTask {
 		))->addArgument('name', array(
 			'help' => __d('cake_console', 'Name of the controller to bake. Can use Plugin.name to bake controllers into plugins.')
 		))->addOption('public', array(
-			'help' => __d('cake_console', 'Bake a controller with basic crud actions (index, view, add, edit, delete).'),
+			'help' => __d('cake_console', 'Bake a controller with basic Crud actions (index, view, add, edit, delete).'),
 			'boolean' => true
 		))->addOption('admin', array(
-			'help' => __d('cake_console', 'Bake a controller with crud actions for one of the Routing.prefixes.'),
+			'help' => __d('cake_console', 'Bake a controller with Crud actions for one of the Routing.prefixes.'),
 			'boolean' => true
 		))->addOption('plugin', array(
 			'short' => 'p',
