@@ -52,9 +52,9 @@ Configure::write('debug', 2);
  * @see ErrorHandler for more information on error handling and configuration.
  */
 Configure::write('Error', array(
-		'handler' => 'ErrorHandler::handleError',
-		'level' => E_ALL & ~E_DEPRECATED,
-		'trace' => true
+	'handler' => 'ErrorHandler::handleError',
+	'level' => E_ALL & ~E_DEPRECATED,
+	'trace' => true
 ));
 
 /**
@@ -78,9 +78,10 @@ Configure::write('Error', array(
  * @see ErrorHandler for more information on exception handling and configuration.
  */
 Configure::write('Exception', array(
-		'handler' => 'ErrorHandler::handleException',
-		'renderer' => 'ExceptionRenderer',
-		'log' => true
+	'handler' => 'ErrorHandler::handleException',
+	'renderer' => 'ExceptionRenderer',
+//	'renderer' => 'AppExceptionRenderer',
+	'log' => true
 ));
 
 /**
@@ -215,7 +216,7 @@ Configure::write('App.encoding', 'UTF-8');
  * the cake shell command: cake schema create Sessions
  */
 Configure::write('Session', array(
-		'defaults' => 'php'
+	'defaults' => 'php'
 ));
 
 /**
@@ -365,11 +366,11 @@ $prefix = 'myapp_';
  * object listings, and translation cache files are stored with this configuration.
  */
 Cache::config('_cake_core_', array(
-		'engine' => $engine,
-		'prefix' => $prefix . 'cake_core_',
-		'path' => CACHE . 'persistent' . DS,
-		'serialize' => ($engine === 'File'),
-		'duration' => $duration
+	'engine' => $engine,
+	'prefix' => $prefix . 'cake_core_',
+	'path' => CACHE . 'persistent' . DS,
+	'serialize' => ($engine === 'File'),
+	'duration' => $duration
 ));
 
 /**
@@ -377,11 +378,9 @@ Cache::config('_cake_core_', array(
  * is used to store schema descriptions, and table listings in connections.
  */
 Cache::config('_cake_model_', array(
-		'engine' => $engine,
-		'prefix' => $prefix . 'cake_model_',
-		'path' => CACHE . 'models' . DS,
-		'serialize' => ($engine === 'File'),
-		'duration' => $duration
+	'engine' => $engine,
+	'prefix' => $prefix . 'cake_model_',
+	'path' => CACHE . 'models' . DS,
+	'serialize' => ($engine === 'File'),
+	'duration' => $duration
 ));
-//Error handler
-Configure::write('Error.handler', 'AppError::handleError');

@@ -30,7 +30,6 @@ class ApiBaseController extends Controller
 		$this->layout = null;
 		$this->autoRender = false;
 		$this->response->type(self::default_response_content_type);
-
 	}
 
 	/**

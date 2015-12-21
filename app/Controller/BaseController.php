@@ -13,5 +13,4 @@ App::uses('Controller', 'Controller');
  */
 class BaseController extends Controller
 {
-
 }
