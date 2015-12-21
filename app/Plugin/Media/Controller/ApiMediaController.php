@@ -42,8 +42,7 @@ class ApiMediaController extends ApiBaseController
 		if ($this->Media->save(array("Media" => $this->request->data("data")))) {
 			return self::getJsonResponseData(200, array("success" => true));
 		} else {
-			var_dump($this->Media->validationErrors);
-//			return self::getJsonResponseData(500, $this->Media->find('first'));
+			return self::getJsonResponseData(500, array(), $this->Media->validationErrors);
 		}
 	}
 

@@ -110,4 +110,7 @@ CakeLog::config('error', array(
 		'file' => 'error',
 ));
 
+//custom AppError
+App::uses('AppError', 'Lib');
+
 CakePlugin::load('Media', array('bootstrap' => false, 'routes' => true));

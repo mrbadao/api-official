@@ -383,3 +383,5 @@ Cache::config('_cake_model_', array(
 		'serialize' => ($engine === 'File'),
 		'duration' => $duration
 ));
+//Error handler
+Configure::write('Error.handler', 'AppError::handleError');
