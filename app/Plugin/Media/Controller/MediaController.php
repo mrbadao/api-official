@@ -6,7 +6,7 @@
  * @Time: 14:53
  */
 
-App::uses('BaseController', 'Media.Controller');
+App::uses('BaseController', 'Controller');
 
 /**
  * Class MediaController

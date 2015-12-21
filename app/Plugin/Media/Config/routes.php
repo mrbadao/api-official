@@ -30,6 +30,15 @@ Router::connect(
 		'action' => 'getmedia'
 	)
 );
+Router::connect(
+	'/api/media/postmedia',
+	array(
+		'plugin' => 'media',
+		'controller' => 'apiMedia',
+		'action' => 'postmedia',
+		'[method]' => 'POST',
+	)
+);
 //web view
 Router::connect(
 	'/media/',
