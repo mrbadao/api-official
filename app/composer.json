@@ -1,15 +1,18 @@
 {
   "name": "official/api",
-  "description": "official",
+  "description": "CakePhp 2.7.x WebApp",
   "minimum-stability": "stable",
   "license": "proprietary",
   "authors": [
     {
-      "name": "Hieu Nguyen",
-      "email": "hieunc12@gmail.com"
+      "name": "HieuNC",
+      "email": "hieunc18@gmail.com"
     }
   ],
+  "config": {
+    "vendor-dir": "Vendor"
+  },
   "require": {
-    "t73biz/cakephp2-jwt-auth": "^1.0"
+    "t73biz/cakephp2-jwt-auth": "1.0.6"
   }
 }
