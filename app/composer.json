@@ -1,0 +1,15 @@
+{
+  "name": "official/api",
+  "description": "official",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Hieu Nguyen",
+      "email": "hieunc12@gmail.com"
+    }
+  ],
+  "require": {
+    "t73biz/cakephp2-jwt-auth": "^1.0"
+  }
+}

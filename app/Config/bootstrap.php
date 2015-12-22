@@ -114,3 +114,4 @@ CakeLog::config('error', array(
 //App::uses('AppExceptionHandler', 'Lib/Error');
 
 CakePlugin::load('Media', array('bootstrap' => false, 'routes' => true));
+CakePlugin::load('JwtAuth', array('bootstrap' => false, 'routes' => false));

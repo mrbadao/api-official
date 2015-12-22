@@ -10,7 +10,6 @@ CREATE TABLE `official`.`media` (
 	`created`           TIMESTAMP    NULL,
 	`modified`          TIMESTAMP    NULL,
 	PRIMARY KEY (`media_id`),
-	UNIQUE INDEX `media_name_UNIQUE` (`media_name` ASC),
 	UNIQUE INDEX `media_id_UNIQUE` (`media_id` ASC),
 	INDEX `media_link_idx` USING BTREE (`media_link` ASC),
 	INDEX `media_thumbnail_idx` (`media_thumbnail` ASC),
