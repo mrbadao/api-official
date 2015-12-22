@@ -43,6 +43,30 @@ class ApiBaseController extends Controller
 	{
 		parent::beforeRender();
 		$this->response->type(self::default_response_content_type);
+
+		$this->Auth->authenticate = array(
+			'Form' => array(
+				'fields' => array(
+					'username' => 'username',
+					'password' => 'password'
+				),
+				'userModel' => 'User',
+				'scope' => array(
+					'User.active' => 1,
+				)
+			),
+			'BzUtils.JwtToken' => array(
+				'fields' => array(
+					'username' => 'username',
+					'password' => 'password',
+				),
+				'header' => 'AuthToken',
+				'userModel' => 'User',
+				'scope' => array(
+					'User.active' => 1
+				)
+			)
+		);
 	}
 
 	/**
