@@ -20,18 +20,21 @@ class ApiBaseController extends Controller
 
 	public $components = array(
 		'Auth' => array(
+			'loginAction' => array(
+				'controller' => 'apiUsers', //Change here
+				'action' => 'login',
+				'plugin' => null
+			),
 			'loginRedirect' => array(
-				'plugin' => 'media',
-				'controller' => 'media',
-				'action' => 'index'
+				'controller' => 'apiUsers',
+				'action' => 'login'
 			),
 			'logoutRedirect' => array(
-				'plugin' => 'media',
-				'controller' => 'media',
-				'action' => 'index'
+				'controller' => 'apiUsers',
+				'action' => 'login'
 			),
 			'authenticate' => array(
-				'Authenticate.Token' => array(
+				'JwtAuth.JwtToken' => array(
 					'fields' => array(
 						'username' => 'username',
 						'password' => 'password',
