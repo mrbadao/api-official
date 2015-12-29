@@ -17,7 +17,34 @@ class ApiBaseController extends Controller
 	 * @contant default response type
 	 */
 	const default_response_content_type = "application/json; charset=utf-8";
-	public $components = array('RequestHandler');
+
+	public $components = array(
+		'Auth' => array(
+			'loginRedirect' => array(
+				'plugin' => 'media',
+				'controller' => 'media',
+				'action' => 'index'
+			),
+			'logoutRedirect' => array(
+				'plugin' => 'media',
+				'controller' => 'media',
+				'action' => 'index'
+			),
+			'authenticate' => array(
+				'Authenticate.Token' => array(
+					'fields' => array(
+						'username' => 'username',
+						'password' => 'password',
+						'token' => 'public_key',
+					),
+					'parameter' => '_token',
+					'header' => 'X-MyApiTokenHeader',
+					'userModel' => 'User',
+					'scope' => array('User.active' => 1)
+				)
+			)
+		)
+	);
 
 	/**
 	 * ApiBaseController constructor.
@@ -41,32 +68,8 @@ class ApiBaseController extends Controller
 	 */
 	public function beforeFilter()
 	{
-		parent::beforeRender();
+		parent::beforeFilter();
 		$this->response->type(self::default_response_content_type);
-
-		$this->Auth->authenticate = array(
-			'Form' => array(
-				'fields' => array(
-					'username' => 'username',
-					'password' => 'password'
-				),
-				'userModel' => 'User',
-				'scope' => array(
-					'User.active' => 1,
-				)
-			),
-			'BzUtils.JwtToken' => array(
-				'fields' => array(
-					'username' => 'username',
-					'password' => 'password',
-				),
-				'header' => 'AuthToken',
-				'userModel' => 'User',
-				'scope' => array(
-					'User.active' => 1
-				)
-			)
-		);
 	}
 
 	/**
