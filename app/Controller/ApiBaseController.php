@@ -21,7 +21,7 @@ class ApiBaseController extends Controller
 	public $components = array(
 		'Auth' => array(
 			'loginAction' => array(
-				'controller' => 'apiUsers', //Change here
+				'controller' => 'apiUsers',
 				'action' => 'login',
 				'plugin' => null
 			),
@@ -38,10 +38,10 @@ class ApiBaseController extends Controller
 					'fields' => array(
 						'username' => 'username',
 						'password' => 'password',
-						'token' => 'public_key',
+						'token' => 'api_access_key',
 					),
 					'parameter' => '_token',
-					'header' => 'X-MyApiTokenHeader',
+					'header' => 'X_TOKEN',
 					'userModel' => 'User',
 					'scope' => array('User.active' => 1)
 				)
