@@ -1442,3 +1442,845 @@ Stack Trace:
 #0 /home/hieunc/06_my_projects/api-official/app/webroot/index.php(111): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
 #1 /home/hieunc/06_my_projects/api-official/index.php(41): require('/home/hieunc/06...')
 #2 {main}
+2016-01-05 12:32:54 Error: Fatal Error (4): syntax error, unexpected '}' in [/home/hieunc/06_my_projects/api-official/app/Controller/Component/ApiAuthComponent.php, line 57]
+2016-01-05 12:32:54 Error: [FatalErrorException] syntax error, unexpected '}'
+Request URL: /api-official/api/users/login
+Stack Trace:
+#0 /home/hieunc/06_my_projects/api-official/lib/Cake/Error/ErrorHandler.php(213): ErrorHandler::handleFatalError(4, 'syntax error, u...', '/home/hieunc/06...', 57)
+#1 [internal function]: ErrorHandler::handleError(4, 'syntax error, u...', '/home/hieunc/06...', 57, Array)
+#2 /home/hieunc/06_my_projects/api-official/lib/Cake/Core/App.php(933): call_user_func('ErrorHandler::h...', 4, 'syntax error, u...', '/home/hieunc/06...', 57, Array)
+#3 /home/hieunc/06_my_projects/api-official/lib/Cake/Core/App.php(906): App::_checkFatalError()
+#4 [internal function]: App::shutdown()
+#5 {main}
+2016-01-05 12:33:44 Error: [NotFoundException] 123
+Request URL: /api-official/api/media/getmedia
+Stack Trace:
+#0 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Component/AuthComponent.php(305): ApiAuthComponent->_unauthenticated(Object(ApiMediaController))
+#1 [internal function]: AuthComponent->startup(Object(ApiMediaController))
+#2 /home/hieunc/06_my_projects/api-official/lib/Cake/Utility/ObjectCollection.php(128): call_user_func_array(Array, Array)
+#3 [internal function]: ObjectCollection->trigger(Object(CakeEvent))
+#4 /home/hieunc/06_my_projects/api-official/lib/Cake/Event/CakeEventManager.php(243): call_user_func(Array, Object(CakeEvent))
+#5 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Controller.php(677): CakeEventManager->dispatch(Object(CakeEvent))
+#6 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(189): Controller->startupProcess()
+#7 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(ApiMediaController), Object(CakeRequest))
+#8 /home/hieunc/06_my_projects/api-official/app/webroot/index.php(111): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2016-01-05 12:34:37 Error: [NotFoundException] 123
+Request URL: /api-official/api/media/getmedia
+Stack Trace:
+#0 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Component/AuthComponent.php(305): ApiAuthComponent->_unauthenticated(Object(ApiMediaController))
+#1 [internal function]: AuthComponent->startup(Object(ApiMediaController))
+#2 /home/hieunc/06_my_projects/api-official/lib/Cake/Utility/ObjectCollection.php(128): call_user_func_array(Array, Array)
+#3 [internal function]: ObjectCollection->trigger(Object(CakeEvent))
+#4 /home/hieunc/06_my_projects/api-official/lib/Cake/Event/CakeEventManager.php(243): call_user_func(Array, Object(CakeEvent))
+#5 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Controller.php(677): CakeEventManager->dispatch(Object(CakeEvent))
+#6 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(189): Controller->startupProcess()
+#7 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(ApiMediaController), Object(CakeRequest))
+#8 /home/hieunc/06_my_projects/api-official/app/webroot/index.php(111): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2016-01-05 12:40:35 Error: Fatal Error (1): Class 'ApiAuthenticateException' not found in [/home/hieunc/06_my_projects/api-official/app/Controller/Component/ApiAuthComponent.php, line 56]
+2016-01-05 12:40:35 Error: [FatalErrorException] Class 'ApiAuthenticateException' not found
+Request URL: /api-official/api/media/getmedia
+Stack Trace:
+#0 /home/hieunc/06_my_projects/api-official/lib/Cake/Error/ErrorHandler.php(213): ErrorHandler::handleFatalError(1, 'Class 'ApiAuthe...', '/home/hieunc/06...', 56)
+#1 [internal function]: ErrorHandler::handleError(1, 'Class 'ApiAuthe...', '/home/hieunc/06...', 56, Array)
+#2 /home/hieunc/06_my_projects/api-official/lib/Cake/Core/App.php(933): call_user_func('ErrorHandler::h...', 1, 'Class 'ApiAuthe...', '/home/hieunc/06...', 56, Array)
+#3 /home/hieunc/06_my_projects/api-official/lib/Cake/Core/App.php(906): App::_checkFatalError()
+#4 [internal function]: App::shutdown()
+#5 {main}
+2016-01-05 12:41:15 Error: Fatal Error (1): Class 'ApiAuthenticateException' not found in [/home/hieunc/06_my_projects/api-official/app/Controller/Component/ApiAuthComponent.php, line 56]
+2016-01-05 12:41:15 Error: [FatalErrorException] Class 'ApiAuthenticateException' not found
+Request URL: /api-official/api/media/getmedia
+Stack Trace:
+#0 /home/hieunc/06_my_projects/api-official/lib/Cake/Error/ErrorHandler.php(213): ErrorHandler::handleFatalError(1, 'Class 'ApiAuthe...', '/home/hieunc/06...', 56)
+#1 [internal function]: ErrorHandler::handleError(1, 'Class 'ApiAuthe...', '/home/hieunc/06...', 56, Array)
+#2 /home/hieunc/06_my_projects/api-official/lib/Cake/Core/App.php(933): call_user_func('ErrorHandler::h...', 1, 'Class 'ApiAuthe...', '/home/hieunc/06...', 56, Array)
+#3 /home/hieunc/06_my_projects/api-official/lib/Cake/Core/App.php(906): App::_checkFatalError()
+#4 [internal function]: App::shutdown()
+#5 {main}
+2016-01-05 12:41:17 Error: Fatal Error (1): Class 'ApiAuthenticateException' not found in [/home/hieunc/06_my_projects/api-official/app/Controller/Component/ApiAuthComponent.php, line 56]
+2016-01-05 12:41:17 Error: [FatalErrorException] Class 'ApiAuthenticateException' not found
+Request URL: /api-official/api/media/getmedia
+Stack Trace:
+#0 /home/hieunc/06_my_projects/api-official/lib/Cake/Error/ErrorHandler.php(213): ErrorHandler::handleFatalError(1, 'Class 'ApiAuthe...', '/home/hieunc/06...', 56)
+#1 [internal function]: ErrorHandler::handleError(1, 'Class 'ApiAuthe...', '/home/hieunc/06...', 56, Array)
+#2 /home/hieunc/06_my_projects/api-official/lib/Cake/Core/App.php(933): call_user_func('ErrorHandler::h...', 1, 'Class 'ApiAuthe...', '/home/hieunc/06...', 56, Array)
+#3 /home/hieunc/06_my_projects/api-official/lib/Cake/Core/App.php(906): App::_checkFatalError()
+#4 [internal function]: App::shutdown()
+#5 {main}
+2016-01-05 12:42:07 Error: [ApiAuthenticateException] Seems that Pointy is missing.
+Exception Attributes: array (
+  'widget' => 'Pointy',
+)
+Request URL: /api-official/api/media/getmedia
+Stack Trace:
+#0 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Component/AuthComponent.php(305): ApiAuthComponent->_unauthenticated(Object(ApiMediaController))
+#1 [internal function]: AuthComponent->startup(Object(ApiMediaController))
+#2 /home/hieunc/06_my_projects/api-official/lib/Cake/Utility/ObjectCollection.php(128): call_user_func_array(Array, Array)
+#3 [internal function]: ObjectCollection->trigger(Object(CakeEvent))
+#4 /home/hieunc/06_my_projects/api-official/lib/Cake/Event/CakeEventManager.php(243): call_user_func(Array, Object(CakeEvent))
+#5 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Controller.php(677): CakeEventManager->dispatch(Object(CakeEvent))
+#6 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(189): Controller->startupProcess()
+#7 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(ApiMediaController), Object(CakeRequest))
+#8 /home/hieunc/06_my_projects/api-official/app/webroot/index.php(111): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2016-01-05 12:42:50 Error: Fatal Error (1): Class 'ApiAuthenticateException' not found in [/home/hieunc/06_my_projects/api-official/app/Controller/Component/ApiAuthComponent.php, line 57]
+2016-01-05 12:42:50 Error: [FatalErrorException] Class 'ApiAuthenticateException' not found
+Request URL: /api-official/api/media/getmedia
+Stack Trace:
+#0 /home/hieunc/06_my_projects/api-official/lib/Cake/Error/ErrorHandler.php(213): ErrorHandler::handleFatalError(1, 'Class 'ApiAuthe...', '/home/hieunc/06...', 57)
+#1 [internal function]: ErrorHandler::handleError(1, 'Class 'ApiAuthe...', '/home/hieunc/06...', 57, Array)
+#2 /home/hieunc/06_my_projects/api-official/lib/Cake/Core/App.php(933): call_user_func('ErrorHandler::h...', 1, 'Class 'ApiAuthe...', '/home/hieunc/06...', 57, Array)
+#3 /home/hieunc/06_my_projects/api-official/lib/Cake/Core/App.php(906): App::_checkFatalError()
+#4 [internal function]: App::shutdown()
+#5 {main}
+2016-01-05 12:43:02 Error: [ApiAuthenticateException] Seems that Pointy is missing.
+Exception Attributes: array (
+  'widget' => 'Pointy',
+)
+Request URL: /api-official/api/media/getmedia
+Stack Trace:
+#0 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Component/AuthComponent.php(305): ApiAuthComponent->_unauthenticated(Object(ApiMediaController))
+#1 [internal function]: AuthComponent->startup(Object(ApiMediaController))
+#2 /home/hieunc/06_my_projects/api-official/lib/Cake/Utility/ObjectCollection.php(128): call_user_func_array(Array, Array)
+#3 [internal function]: ObjectCollection->trigger(Object(CakeEvent))
+#4 /home/hieunc/06_my_projects/api-official/lib/Cake/Event/CakeEventManager.php(243): call_user_func(Array, Object(CakeEvent))
+#5 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Controller.php(677): CakeEventManager->dispatch(Object(CakeEvent))
+#6 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(189): Controller->startupProcess()
+#7 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(ApiMediaController), Object(CakeRequest))
+#8 /home/hieunc/06_my_projects/api-official/app/webroot/index.php(111): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2016-01-05 12:43:43 Error: Fatal Error (4): syntax error, unexpected ')' in [/home/hieunc/06_my_projects/api-official/app/Controller/Component/ApiAuthComponent.php, line 57]
+2016-01-05 12:43:43 Error: [FatalErrorException] syntax error, unexpected ')'
+Request URL: /api-official/api/media/getmedia
+Stack Trace:
+#0 /home/hieunc/06_my_projects/api-official/lib/Cake/Error/ErrorHandler.php(213): ErrorHandler::handleFatalError(4, 'syntax error, u...', '/home/hieunc/06...', 57)
+#1 [internal function]: ErrorHandler::handleError(4, 'syntax error, u...', '/home/hieunc/06...', 57, Array)
+#2 /home/hieunc/06_my_projects/api-official/lib/Cake/Core/App.php(933): call_user_func('ErrorHandler::h...', 4, 'syntax error, u...', '/home/hieunc/06...', 57, Array)
+#3 /home/hieunc/06_my_projects/api-official/lib/Cake/Core/App.php(906): App::_checkFatalError()
+#4 [internal function]: App::shutdown()
+#5 {main}
+2016-01-05 12:43:52 Error: [ApiAuthenticateException] adad
+Request URL: /api-official/api/media/getmedia
+Stack Trace:
+#0 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Component/AuthComponent.php(305): ApiAuthComponent->_unauthenticated(Object(ApiMediaController))
+#1 [internal function]: AuthComponent->startup(Object(ApiMediaController))
+#2 /home/hieunc/06_my_projects/api-official/lib/Cake/Utility/ObjectCollection.php(128): call_user_func_array(Array, Array)
+#3 [internal function]: ObjectCollection->trigger(Object(CakeEvent))
+#4 /home/hieunc/06_my_projects/api-official/lib/Cake/Event/CakeEventManager.php(243): call_user_func(Array, Object(CakeEvent))
+#5 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Controller.php(677): CakeEventManager->dispatch(Object(CakeEvent))
+#6 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(189): Controller->startupProcess()
+#7 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(ApiMediaController), Object(CakeRequest))
+#8 /home/hieunc/06_my_projects/api-official/app/webroot/index.php(111): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2016-01-05 12:44:34 Error: [ApiAuthenticateException] adad
+Request URL: /api-official/api/media/getmedia
+Stack Trace:
+#0 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Component/AuthComponent.php(305): ApiAuthComponent->_unauthenticated(Object(ApiMediaController))
+#1 [internal function]: AuthComponent->startup(Object(ApiMediaController))
+#2 /home/hieunc/06_my_projects/api-official/lib/Cake/Utility/ObjectCollection.php(128): call_user_func_array(Array, Array)
+#3 [internal function]: ObjectCollection->trigger(Object(CakeEvent))
+#4 /home/hieunc/06_my_projects/api-official/lib/Cake/Event/CakeEventManager.php(243): call_user_func(Array, Object(CakeEvent))
+#5 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Controller.php(677): CakeEventManager->dispatch(Object(CakeEvent))
+#6 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(189): Controller->startupProcess()
+#7 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(ApiMediaController), Object(CakeRequest))
+#8 /home/hieunc/06_my_projects/api-official/app/webroot/index.php(111): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2016-01-05 12:45:05 Error: [ApiAuthenticateException] adad
+Request URL: /api-official/api/media/getmedia
+Stack Trace:
+#0 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Component/AuthComponent.php(305): ApiAuthComponent->_unauthenticated(Object(ApiMediaController))
+#1 [internal function]: AuthComponent->startup(Object(ApiMediaController))
+#2 /home/hieunc/06_my_projects/api-official/lib/Cake/Utility/ObjectCollection.php(128): call_user_func_array(Array, Array)
+#3 [internal function]: ObjectCollection->trigger(Object(CakeEvent))
+#4 /home/hieunc/06_my_projects/api-official/lib/Cake/Event/CakeEventManager.php(243): call_user_func(Array, Object(CakeEvent))
+#5 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Controller.php(677): CakeEventManager->dispatch(Object(CakeEvent))
+#6 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(189): Controller->startupProcess()
+#7 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(ApiMediaController), Object(CakeRequest))
+#8 /home/hieunc/06_my_projects/api-official/app/webroot/index.php(111): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2016-01-05 12:45:05 Error: Fatal Error (1): Cannot access protected property ApiAuthenticateException::$code in [/home/hieunc/06_my_projects/api-official/app/Lib/Error/AppExceptionRenderer.php, line 16]
+2016-01-05 12:45:05 Error: [FatalErrorException] Cannot access protected property ApiAuthenticateException::$code
+Request URL: /api-official/api/media/getmedia
+Stack Trace:
+#0 /home/hieunc/06_my_projects/api-official/lib/Cake/Error/ErrorHandler.php(213): ErrorHandler::handleFatalError(1, 'Cannot access p...', '/home/hieunc/06...', 16)
+#1 [internal function]: ErrorHandler::handleError(1, 'Cannot access p...', '/home/hieunc/06...', 16, Array)
+#2 /home/hieunc/06_my_projects/api-official/lib/Cake/Core/App.php(933): call_user_func('ErrorHandler::h...', 1, 'Cannot access p...', '/home/hieunc/06...', 16, Array)
+#3 /home/hieunc/06_my_projects/api-official/lib/Cake/Core/App.php(906): App::_checkFatalError()
+#4 [internal function]: App::shutdown()
+#5 {main}
+2016-01-05 12:47:04 Error: Fatal Error (64): Cannot override final method Exception::getCode() in [/home/hieunc/06_my_projects/api-official/app/Lib/Error/ApiExceptions/ApiAuthenticateException.php, line 0]
+2016-01-05 12:47:04 Error: [FatalErrorException] Cannot override final method Exception::getCode()
+Request URL: /api-official/api/media/getmedia
+Stack Trace:
+#0 /home/hieunc/06_my_projects/api-official/lib/Cake/Error/ErrorHandler.php(213): ErrorHandler::handleFatalError(64, 'Cannot override...', '/home/hieunc/06...', 0)
+#1 [internal function]: ErrorHandler::handleError(64, 'Cannot override...', '/home/hieunc/06...', 0, Array)
+#2 /home/hieunc/06_my_projects/api-official/lib/Cake/Core/App.php(933): call_user_func('ErrorHandler::h...', 64, 'Cannot override...', '/home/hieunc/06...', 0, Array)
+#3 /home/hieunc/06_my_projects/api-official/lib/Cake/Core/App.php(906): App::_checkFatalError()
+#4 [internal function]: App::shutdown()
+#5 {main}
+2016-01-05 12:47:38 Error: [ApiAuthenticateException] adad
+Request URL: /api-official/api/media/getmedia
+Stack Trace:
+#0 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Component/AuthComponent.php(305): ApiAuthComponent->_unauthenticated(Object(ApiMediaController))
+#1 [internal function]: AuthComponent->startup(Object(ApiMediaController))
+#2 /home/hieunc/06_my_projects/api-official/lib/Cake/Utility/ObjectCollection.php(128): call_user_func_array(Array, Array)
+#3 [internal function]: ObjectCollection->trigger(Object(CakeEvent))
+#4 /home/hieunc/06_my_projects/api-official/lib/Cake/Event/CakeEventManager.php(243): call_user_func(Array, Object(CakeEvent))
+#5 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Controller.php(677): CakeEventManager->dispatch(Object(CakeEvent))
+#6 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(189): Controller->startupProcess()
+#7 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(ApiMediaController), Object(CakeRequest))
+#8 /home/hieunc/06_my_projects/api-official/app/webroot/index.php(111): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2016-01-05 12:47:49 Error: [ApiAuthenticateException] adad
+Request URL: /api-official/api/media/getmedia
+Stack Trace:
+#0 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Component/AuthComponent.php(305): ApiAuthComponent->_unauthenticated(Object(ApiMediaController))
+#1 [internal function]: AuthComponent->startup(Object(ApiMediaController))
+#2 /home/hieunc/06_my_projects/api-official/lib/Cake/Utility/ObjectCollection.php(128): call_user_func_array(Array, Array)
+#3 [internal function]: ObjectCollection->trigger(Object(CakeEvent))
+#4 /home/hieunc/06_my_projects/api-official/lib/Cake/Event/CakeEventManager.php(243): call_user_func(Array, Object(CakeEvent))
+#5 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Controller.php(677): CakeEventManager->dispatch(Object(CakeEvent))
+#6 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(189): Controller->startupProcess()
+#7 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(ApiMediaController), Object(CakeRequest))
+#8 /home/hieunc/06_my_projects/api-official/app/webroot/index.php(111): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2016-01-05 12:49:03 Error: [ApiAuthenticateException] adad
+Request URL: /api-official/api/media/getmedia
+Stack Trace:
+#0 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Component/AuthComponent.php(305): ApiAuthComponent->_unauthenticated(Object(ApiMediaController))
+#1 [internal function]: AuthComponent->startup(Object(ApiMediaController))
+#2 /home/hieunc/06_my_projects/api-official/lib/Cake/Utility/ObjectCollection.php(128): call_user_func_array(Array, Array)
+#3 [internal function]: ObjectCollection->trigger(Object(CakeEvent))
+#4 /home/hieunc/06_my_projects/api-official/lib/Cake/Event/CakeEventManager.php(243): call_user_func(Array, Object(CakeEvent))
+#5 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Controller.php(677): CakeEventManager->dispatch(Object(CakeEvent))
+#6 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(189): Controller->startupProcess()
+#7 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(ApiMediaController), Object(CakeRequest))
+#8 /home/hieunc/06_my_projects/api-official/app/webroot/index.php(111): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2016-01-05 12:49:17 Error: [ApiAuthenticateException] adad
+Request URL: /api-official/api/media/getmedia
+Stack Trace:
+#0 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Component/AuthComponent.php(305): ApiAuthComponent->_unauthenticated(Object(ApiMediaController))
+#1 [internal function]: AuthComponent->startup(Object(ApiMediaController))
+#2 /home/hieunc/06_my_projects/api-official/lib/Cake/Utility/ObjectCollection.php(128): call_user_func_array(Array, Array)
+#3 [internal function]: ObjectCollection->trigger(Object(CakeEvent))
+#4 /home/hieunc/06_my_projects/api-official/lib/Cake/Event/CakeEventManager.php(243): call_user_func(Array, Object(CakeEvent))
+#5 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Controller.php(677): CakeEventManager->dispatch(Object(CakeEvent))
+#6 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(189): Controller->startupProcess()
+#7 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(ApiMediaController), Object(CakeRequest))
+#8 /home/hieunc/06_my_projects/api-official/app/webroot/index.php(111): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2016-01-05 12:52:39 Error: [ApiAuthenticateException] adad
+Request URL: /api-official/api/users/login
+Stack Trace:
+#0 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Component/AuthComponent.php(305): ApiAuthComponent->_unauthenticated(Object(ApiUsersController))
+#1 [internal function]: AuthComponent->startup(Object(ApiUsersController))
+#2 /home/hieunc/06_my_projects/api-official/lib/Cake/Utility/ObjectCollection.php(128): call_user_func_array(Array, Array)
+#3 [internal function]: ObjectCollection->trigger(Object(CakeEvent))
+#4 /home/hieunc/06_my_projects/api-official/lib/Cake/Event/CakeEventManager.php(243): call_user_func(Array, Object(CakeEvent))
+#5 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Controller.php(677): CakeEventManager->dispatch(Object(CakeEvent))
+#6 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(189): Controller->startupProcess()
+#7 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(ApiUsersController), Object(CakeRequest))
+#8 /home/hieunc/06_my_projects/api-official/app/webroot/index.php(111): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2016-01-05 12:52:50 Error: [ApiAuthenticateException] adad
+Request URL: /api-official/api/users/login
+Stack Trace:
+#0 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Component/AuthComponent.php(305): ApiAuthComponent->_unauthenticated(Object(ApiUsersController))
+#1 [internal function]: AuthComponent->startup(Object(ApiUsersController))
+#2 /home/hieunc/06_my_projects/api-official/lib/Cake/Utility/ObjectCollection.php(128): call_user_func_array(Array, Array)
+#3 [internal function]: ObjectCollection->trigger(Object(CakeEvent))
+#4 /home/hieunc/06_my_projects/api-official/lib/Cake/Event/CakeEventManager.php(243): call_user_func(Array, Object(CakeEvent))
+#5 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Controller.php(677): CakeEventManager->dispatch(Object(CakeEvent))
+#6 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(189): Controller->startupProcess()
+#7 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(ApiUsersController), Object(CakeRequest))
+#8 /home/hieunc/06_my_projects/api-official/app/webroot/index.php(111): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2016-01-05 12:53:30 Error: [ApiAuthenticateException] adad
+Request URL: /api-official/api/users/login
+Stack Trace:
+#0 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Component/AuthComponent.php(305): ApiAuthComponent->_unauthenticated(Object(ApiUsersController))
+#1 [internal function]: AuthComponent->startup(Object(ApiUsersController))
+#2 /home/hieunc/06_my_projects/api-official/lib/Cake/Utility/ObjectCollection.php(128): call_user_func_array(Array, Array)
+#3 [internal function]: ObjectCollection->trigger(Object(CakeEvent))
+#4 /home/hieunc/06_my_projects/api-official/lib/Cake/Event/CakeEventManager.php(243): call_user_func(Array, Object(CakeEvent))
+#5 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Controller.php(677): CakeEventManager->dispatch(Object(CakeEvent))
+#6 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(189): Controller->startupProcess()
+#7 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(ApiUsersController), Object(CakeRequest))
+#8 /home/hieunc/06_my_projects/api-official/app/webroot/index.php(111): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2016-01-05 12:53:41 Error: [ApiAuthenticateException] adad
+Request URL: /api-official/api/media/getmedia
+Stack Trace:
+#0 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Component/AuthComponent.php(305): ApiAuthComponent->_unauthenticated(Object(ApiMediaController))
+#1 [internal function]: AuthComponent->startup(Object(ApiMediaController))
+#2 /home/hieunc/06_my_projects/api-official/lib/Cake/Utility/ObjectCollection.php(128): call_user_func_array(Array, Array)
+#3 [internal function]: ObjectCollection->trigger(Object(CakeEvent))
+#4 /home/hieunc/06_my_projects/api-official/lib/Cake/Event/CakeEventManager.php(243): call_user_func(Array, Object(CakeEvent))
+#5 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Controller.php(677): CakeEventManager->dispatch(Object(CakeEvent))
+#6 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(189): Controller->startupProcess()
+#7 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(ApiMediaController), Object(CakeRequest))
+#8 /home/hieunc/06_my_projects/api-official/app/webroot/index.php(111): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2016-01-05 12:54:20 Error: [ApiAuthenticateException] adad
+Request URL: /api-official/api/media/getmedia
+Stack Trace:
+#0 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Component/AuthComponent.php(305): ApiAuthComponent->_unauthenticated(Object(ApiMediaController))
+#1 [internal function]: AuthComponent->startup(Object(ApiMediaController))
+#2 /home/hieunc/06_my_projects/api-official/lib/Cake/Utility/ObjectCollection.php(128): call_user_func_array(Array, Array)
+#3 [internal function]: ObjectCollection->trigger(Object(CakeEvent))
+#4 /home/hieunc/06_my_projects/api-official/lib/Cake/Event/CakeEventManager.php(243): call_user_func(Array, Object(CakeEvent))
+#5 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Controller.php(677): CakeEventManager->dispatch(Object(CakeEvent))
+#6 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(189): Controller->startupProcess()
+#7 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(ApiMediaController), Object(CakeRequest))
+#8 /home/hieunc/06_my_projects/api-official/app/webroot/index.php(111): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2016-01-05 12:54:20 Error: Fatal Error (1): Call to undefined method ApiAuthenticateException::getMessae() in [/home/hieunc/06_my_projects/api-official/app/Lib/Error/AppExceptionRenderer.php, line 19]
+2016-01-05 12:54:20 Error: [FatalErrorException] Call to undefined method ApiAuthenticateException::getMessae()
+Request URL: /api-official/api/media/getmedia
+Stack Trace:
+#0 /home/hieunc/06_my_projects/api-official/lib/Cake/Error/ErrorHandler.php(213): ErrorHandler::handleFatalError(1, 'Call to undefin...', '/home/hieunc/06...', 19)
+#1 [internal function]: ErrorHandler::handleError(1, 'Call to undefin...', '/home/hieunc/06...', 19, Array)
+#2 /home/hieunc/06_my_projects/api-official/lib/Cake/Core/App.php(933): call_user_func('ErrorHandler::h...', 1, 'Call to undefin...', '/home/hieunc/06...', 19, Array)
+#3 /home/hieunc/06_my_projects/api-official/lib/Cake/Core/App.php(906): App::_checkFatalError()
+#4 [internal function]: App::shutdown()
+#5 {main}
+2016-01-05 12:54:42 Error: [ApiAuthenticateException] adad
+Request URL: /api-official/api/media/getmedia
+Stack Trace:
+#0 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Component/AuthComponent.php(305): ApiAuthComponent->_unauthenticated(Object(ApiMediaController))
+#1 [internal function]: AuthComponent->startup(Object(ApiMediaController))
+#2 /home/hieunc/06_my_projects/api-official/lib/Cake/Utility/ObjectCollection.php(128): call_user_func_array(Array, Array)
+#3 [internal function]: ObjectCollection->trigger(Object(CakeEvent))
+#4 /home/hieunc/06_my_projects/api-official/lib/Cake/Event/CakeEventManager.php(243): call_user_func(Array, Object(CakeEvent))
+#5 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Controller.php(677): CakeEventManager->dispatch(Object(CakeEvent))
+#6 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(189): Controller->startupProcess()
+#7 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(ApiMediaController), Object(CakeRequest))
+#8 /home/hieunc/06_my_projects/api-official/app/webroot/index.php(111): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2016-01-05 12:54:57 Error: [ApiAuthenticateException] adad
+Request URL: /api-official/api/media/getmedia
+Stack Trace:
+#0 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Component/AuthComponent.php(305): ApiAuthComponent->_unauthenticated(Object(ApiMediaController))
+#1 [internal function]: AuthComponent->startup(Object(ApiMediaController))
+#2 /home/hieunc/06_my_projects/api-official/lib/Cake/Utility/ObjectCollection.php(128): call_user_func_array(Array, Array)
+#3 [internal function]: ObjectCollection->trigger(Object(CakeEvent))
+#4 /home/hieunc/06_my_projects/api-official/lib/Cake/Event/CakeEventManager.php(243): call_user_func(Array, Object(CakeEvent))
+#5 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Controller.php(677): CakeEventManager->dispatch(Object(CakeEvent))
+#6 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(189): Controller->startupProcess()
+#7 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(ApiMediaController), Object(CakeRequest))
+#8 /home/hieunc/06_my_projects/api-official/app/webroot/index.php(111): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2016-01-05 12:57:54 Error: Fatal Error (4): syntax error, unexpected '}' in [/home/hieunc/06_my_projects/api-official/app/Lib/Error/ApiExceptions/ApiAuthenticateException.php, line 18]
+2016-01-05 12:57:54 Error: [FatalErrorException] syntax error, unexpected '}'
+Request URL: /api-official/api/media/getmedia
+Stack Trace:
+#0 /home/hieunc/06_my_projects/api-official/lib/Cake/Error/ErrorHandler.php(213): ErrorHandler::handleFatalError(4, 'syntax error, u...', '/home/hieunc/06...', 18)
+#1 [internal function]: ErrorHandler::handleError(4, 'syntax error, u...', '/home/hieunc/06...', 18, Array)
+#2 /home/hieunc/06_my_projects/api-official/lib/Cake/Core/App.php(933): call_user_func('ErrorHandler::h...', 4, 'syntax error, u...', '/home/hieunc/06...', 18, Array)
+#3 /home/hieunc/06_my_projects/api-official/lib/Cake/Core/App.php(906): App::_checkFatalError()
+#4 [internal function]: App::shutdown()
+#5 {main}
+2016-01-05 12:59:58 Error: [ApiAuthenticateException] adad
+Request URL: /api-official/api/media/getmedia
+Stack Trace:
+#0 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Component/AuthComponent.php(305): ApiAuthComponent->_unauthenticated(Object(ApiMediaController))
+#1 [internal function]: AuthComponent->startup(Object(ApiMediaController))
+#2 /home/hieunc/06_my_projects/api-official/lib/Cake/Utility/ObjectCollection.php(128): call_user_func_array(Array, Array)
+#3 [internal function]: ObjectCollection->trigger(Object(CakeEvent))
+#4 /home/hieunc/06_my_projects/api-official/lib/Cake/Event/CakeEventManager.php(243): call_user_func(Array, Object(CakeEvent))
+#5 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Controller.php(677): CakeEventManager->dispatch(Object(CakeEvent))
+#6 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(189): Controller->startupProcess()
+#7 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(ApiMediaController), Object(CakeRequest))
+#8 /home/hieunc/06_my_projects/api-official/app/webroot/index.php(111): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2016-01-05 13:02:48 Error: [ApiAuthenticateException] adad
+Request URL: /api-official/api/media/getmedia
+Stack Trace:
+#0 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Component/AuthComponent.php(305): ApiAuthComponent->_unauthenticated(Object(ApiMediaController))
+#1 [internal function]: AuthComponent->startup(Object(ApiMediaController))
+#2 /home/hieunc/06_my_projects/api-official/lib/Cake/Utility/ObjectCollection.php(128): call_user_func_array(Array, Array)
+#3 [internal function]: ObjectCollection->trigger(Object(CakeEvent))
+#4 /home/hieunc/06_my_projects/api-official/lib/Cake/Event/CakeEventManager.php(243): call_user_func(Array, Object(CakeEvent))
+#5 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Controller.php(677): CakeEventManager->dispatch(Object(CakeEvent))
+#6 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(189): Controller->startupProcess()
+#7 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(ApiMediaController), Object(CakeRequest))
+#8 /home/hieunc/06_my_projects/api-official/app/webroot/index.php(111): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2016-01-05 13:02:48 Error: Fatal Error (4): syntax error, unexpected 'echo' (T_ECHO) in [/home/hieunc/06_my_projects/api-official/app/Lib/Error/AppExceptionRenderer.php, line 17]
+2016-01-05 13:02:48 Error: [FatalErrorException] syntax error, unexpected 'echo' (T_ECHO)
+Request URL: /api-official/api/media/getmedia
+Stack Trace:
+#0 /home/hieunc/06_my_projects/api-official/lib/Cake/Error/ErrorHandler.php(213): ErrorHandler::handleFatalError(4, 'syntax error, u...', '/home/hieunc/06...', 17)
+#1 [internal function]: ErrorHandler::handleError(4, 'syntax error, u...', '/home/hieunc/06...', 17, Array)
+#2 /home/hieunc/06_my_projects/api-official/lib/Cake/Core/App.php(933): call_user_func('ErrorHandler::h...', 4, 'syntax error, u...', '/home/hieunc/06...', 17, Array)
+#3 /home/hieunc/06_my_projects/api-official/lib/Cake/Core/App.php(906): App::_checkFatalError()
+#4 [internal function]: App::shutdown()
+#5 {main}
+2016-01-05 13:03:03 Error: [ApiAuthenticateException] adad
+Request URL: /api-official/api/media/getmedia
+Stack Trace:
+#0 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Component/AuthComponent.php(305): ApiAuthComponent->_unauthenticated(Object(ApiMediaController))
+#1 [internal function]: AuthComponent->startup(Object(ApiMediaController))
+#2 /home/hieunc/06_my_projects/api-official/lib/Cake/Utility/ObjectCollection.php(128): call_user_func_array(Array, Array)
+#3 [internal function]: ObjectCollection->trigger(Object(CakeEvent))
+#4 /home/hieunc/06_my_projects/api-official/lib/Cake/Event/CakeEventManager.php(243): call_user_func(Array, Object(CakeEvent))
+#5 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Controller.php(677): CakeEventManager->dispatch(Object(CakeEvent))
+#6 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(189): Controller->startupProcess()
+#7 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(ApiMediaController), Object(CakeRequest))
+#8 /home/hieunc/06_my_projects/api-official/app/webroot/index.php(111): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2016-01-05 13:03:24 Error: [ApiAuthenticateException] adad
+Request URL: /api-official/api/media/getmedia
+Stack Trace:
+#0 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Component/AuthComponent.php(305): ApiAuthComponent->_unauthenticated(Object(ApiMediaController))
+#1 [internal function]: AuthComponent->startup(Object(ApiMediaController))
+#2 /home/hieunc/06_my_projects/api-official/lib/Cake/Utility/ObjectCollection.php(128): call_user_func_array(Array, Array)
+#3 [internal function]: ObjectCollection->trigger(Object(CakeEvent))
+#4 /home/hieunc/06_my_projects/api-official/lib/Cake/Event/CakeEventManager.php(243): call_user_func(Array, Object(CakeEvent))
+#5 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Controller.php(677): CakeEventManager->dispatch(Object(CakeEvent))
+#6 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(189): Controller->startupProcess()
+#7 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(ApiMediaController), Object(CakeRequest))
+#8 /home/hieunc/06_my_projects/api-official/app/webroot/index.php(111): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2016-01-05 13:06:35 Error: [ApiAuthenticateException] adad
+Request URL: /api-official/api/media/getmedia
+Stack Trace:
+#0 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Component/AuthComponent.php(305): ApiAuthComponent->_unauthenticated(Object(ApiMediaController))
+#1 [internal function]: AuthComponent->startup(Object(ApiMediaController))
+#2 /home/hieunc/06_my_projects/api-official/lib/Cake/Utility/ObjectCollection.php(128): call_user_func_array(Array, Array)
+#3 [internal function]: ObjectCollection->trigger(Object(CakeEvent))
+#4 /home/hieunc/06_my_projects/api-official/lib/Cake/Event/CakeEventManager.php(243): call_user_func(Array, Object(CakeEvent))
+#5 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Controller.php(677): CakeEventManager->dispatch(Object(CakeEvent))
+#6 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(189): Controller->startupProcess()
+#7 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(ApiMediaController), Object(CakeRequest))
+#8 /home/hieunc/06_my_projects/api-official/app/webroot/index.php(111): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2016-01-05 13:06:35 Error: Fatal Error (1): Call to undefined function type() in [/home/hieunc/06_my_projects/api-official/app/Lib/Error/AppExceptionRenderer.php, line 16]
+2016-01-05 13:06:35 Error: [FatalErrorException] Call to undefined function type()
+Request URL: /api-official/api/media/getmedia
+Stack Trace:
+#0 /home/hieunc/06_my_projects/api-official/lib/Cake/Error/ErrorHandler.php(213): ErrorHandler::handleFatalError(1, 'Call to undefin...', '/home/hieunc/06...', 16)
+#1 [internal function]: ErrorHandler::handleError(1, 'Call to undefin...', '/home/hieunc/06...', 16, Array)
+#2 /home/hieunc/06_my_projects/api-official/lib/Cake/Core/App.php(933): call_user_func('ErrorHandler::h...', 1, 'Call to undefin...', '/home/hieunc/06...', 16, Array)
+#3 /home/hieunc/06_my_projects/api-official/lib/Cake/Core/App.php(906): App::_checkFatalError()
+#4 [internal function]: App::shutdown()
+#5 {main}
+2016-01-05 13:06:47 Error: [ApiAuthenticateException] adad
+Request URL: /api-official/api/media/getmedia
+Stack Trace:
+#0 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Component/AuthComponent.php(305): ApiAuthComponent->_unauthenticated(Object(ApiMediaController))
+#1 [internal function]: AuthComponent->startup(Object(ApiMediaController))
+#2 /home/hieunc/06_my_projects/api-official/lib/Cake/Utility/ObjectCollection.php(128): call_user_func_array(Array, Array)
+#3 [internal function]: ObjectCollection->trigger(Object(CakeEvent))
+#4 /home/hieunc/06_my_projects/api-official/lib/Cake/Event/CakeEventManager.php(243): call_user_func(Array, Object(CakeEvent))
+#5 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Controller.php(677): CakeEventManager->dispatch(Object(CakeEvent))
+#6 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(189): Controller->startupProcess()
+#7 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(ApiMediaController), Object(CakeRequest))
+#8 /home/hieunc/06_my_projects/api-official/app/webroot/index.php(111): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2016-01-05 13:07:01 Error: [ApiAuthenticateException] adad
+Request URL: /api-official/api/media/getmedia
+Stack Trace:
+#0 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Component/AuthComponent.php(305): ApiAuthComponent->_unauthenticated(Object(ApiMediaController))
+#1 [internal function]: AuthComponent->startup(Object(ApiMediaController))
+#2 /home/hieunc/06_my_projects/api-official/lib/Cake/Utility/ObjectCollection.php(128): call_user_func_array(Array, Array)
+#3 [internal function]: ObjectCollection->trigger(Object(CakeEvent))
+#4 /home/hieunc/06_my_projects/api-official/lib/Cake/Event/CakeEventManager.php(243): call_user_func(Array, Object(CakeEvent))
+#5 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Controller.php(677): CakeEventManager->dispatch(Object(CakeEvent))
+#6 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(189): Controller->startupProcess()
+#7 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(ApiMediaController), Object(CakeRequest))
+#8 /home/hieunc/06_my_projects/api-official/app/webroot/index.php(111): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2016-01-05 13:07:09 Error: [ApiAuthenticateException] adad
+Request URL: /api-official/api/media/getmedia
+Stack Trace:
+#0 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Component/AuthComponent.php(305): ApiAuthComponent->_unauthenticated(Object(ApiMediaController))
+#1 [internal function]: AuthComponent->startup(Object(ApiMediaController))
+#2 /home/hieunc/06_my_projects/api-official/lib/Cake/Utility/ObjectCollection.php(128): call_user_func_array(Array, Array)
+#3 [internal function]: ObjectCollection->trigger(Object(CakeEvent))
+#4 /home/hieunc/06_my_projects/api-official/lib/Cake/Event/CakeEventManager.php(243): call_user_func(Array, Object(CakeEvent))
+#5 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Controller.php(677): CakeEventManager->dispatch(Object(CakeEvent))
+#6 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(189): Controller->startupProcess()
+#7 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(ApiMediaController), Object(CakeRequest))
+#8 /home/hieunc/06_my_projects/api-official/app/webroot/index.php(111): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2016-01-05 13:07:14 Error: [ApiAuthenticateException] adad
+Request URL: /api-official/api/media/getmedia
+Stack Trace:
+#0 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Component/AuthComponent.php(305): ApiAuthComponent->_unauthenticated(Object(ApiMediaController))
+#1 [internal function]: AuthComponent->startup(Object(ApiMediaController))
+#2 /home/hieunc/06_my_projects/api-official/lib/Cake/Utility/ObjectCollection.php(128): call_user_func_array(Array, Array)
+#3 [internal function]: ObjectCollection->trigger(Object(CakeEvent))
+#4 /home/hieunc/06_my_projects/api-official/lib/Cake/Event/CakeEventManager.php(243): call_user_func(Array, Object(CakeEvent))
+#5 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Controller.php(677): CakeEventManager->dispatch(Object(CakeEvent))
+#6 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(189): Controller->startupProcess()
+#7 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(ApiMediaController), Object(CakeRequest))
+#8 /home/hieunc/06_my_projects/api-official/app/webroot/index.php(111): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2016-01-05 13:08:19 Error: [ApiAuthenticateException] adad
+Request URL: /api-official/api/media/getmedia
+Stack Trace:
+#0 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Component/AuthComponent.php(305): ApiAuthComponent->_unauthenticated(Object(ApiMediaController))
+#1 [internal function]: AuthComponent->startup(Object(ApiMediaController))
+#2 /home/hieunc/06_my_projects/api-official/lib/Cake/Utility/ObjectCollection.php(128): call_user_func_array(Array, Array)
+#3 [internal function]: ObjectCollection->trigger(Object(CakeEvent))
+#4 /home/hieunc/06_my_projects/api-official/lib/Cake/Event/CakeEventManager.php(243): call_user_func(Array, Object(CakeEvent))
+#5 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Controller.php(677): CakeEventManager->dispatch(Object(CakeEvent))
+#6 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(189): Controller->startupProcess()
+#7 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(ApiMediaController), Object(CakeRequest))
+#8 /home/hieunc/06_my_projects/api-official/app/webroot/index.php(111): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2016-01-05 13:08:24 Error: [ApiAuthenticateException] adad
+Request URL: /api-official/api/media/getmedia
+Stack Trace:
+#0 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Component/AuthComponent.php(305): ApiAuthComponent->_unauthenticated(Object(ApiMediaController))
+#1 [internal function]: AuthComponent->startup(Object(ApiMediaController))
+#2 /home/hieunc/06_my_projects/api-official/lib/Cake/Utility/ObjectCollection.php(128): call_user_func_array(Array, Array)
+#3 [internal function]: ObjectCollection->trigger(Object(CakeEvent))
+#4 /home/hieunc/06_my_projects/api-official/lib/Cake/Event/CakeEventManager.php(243): call_user_func(Array, Object(CakeEvent))
+#5 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Controller.php(677): CakeEventManager->dispatch(Object(CakeEvent))
+#6 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(189): Controller->startupProcess()
+#7 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(ApiMediaController), Object(CakeRequest))
+#8 /home/hieunc/06_my_projects/api-official/app/webroot/index.php(111): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2016-01-05 13:09:19 Error: [ApiAuthenticateException] adad
+Request URL: /api-official/api/media/getmedia
+Stack Trace:
+#0 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Component/AuthComponent.php(305): ApiAuthComponent->_unauthenticated(Object(ApiMediaController))
+#1 [internal function]: AuthComponent->startup(Object(ApiMediaController))
+#2 /home/hieunc/06_my_projects/api-official/lib/Cake/Utility/ObjectCollection.php(128): call_user_func_array(Array, Array)
+#3 [internal function]: ObjectCollection->trigger(Object(CakeEvent))
+#4 /home/hieunc/06_my_projects/api-official/lib/Cake/Event/CakeEventManager.php(243): call_user_func(Array, Object(CakeEvent))
+#5 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Controller.php(677): CakeEventManager->dispatch(Object(CakeEvent))
+#6 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(189): Controller->startupProcess()
+#7 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(ApiMediaController), Object(CakeRequest))
+#8 /home/hieunc/06_my_projects/api-official/app/webroot/index.php(111): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2016-01-05 13:09:20 Error: [ApiAuthenticateException] adad
+Request URL: /api-official/api/media/getmedia
+Stack Trace:
+#0 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Component/AuthComponent.php(305): ApiAuthComponent->_unauthenticated(Object(ApiMediaController))
+#1 [internal function]: AuthComponent->startup(Object(ApiMediaController))
+#2 /home/hieunc/06_my_projects/api-official/lib/Cake/Utility/ObjectCollection.php(128): call_user_func_array(Array, Array)
+#3 [internal function]: ObjectCollection->trigger(Object(CakeEvent))
+#4 /home/hieunc/06_my_projects/api-official/lib/Cake/Event/CakeEventManager.php(243): call_user_func(Array, Object(CakeEvent))
+#5 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Controller.php(677): CakeEventManager->dispatch(Object(CakeEvent))
+#6 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(189): Controller->startupProcess()
+#7 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(ApiMediaController), Object(CakeRequest))
+#8 /home/hieunc/06_my_projects/api-official/app/webroot/index.php(111): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2016-01-05 13:09:21 Error: [ApiAuthenticateException] adad
+Request URL: /api-official/api/media/getmedia
+Stack Trace:
+#0 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Component/AuthComponent.php(305): ApiAuthComponent->_unauthenticated(Object(ApiMediaController))
+#1 [internal function]: AuthComponent->startup(Object(ApiMediaController))
+#2 /home/hieunc/06_my_projects/api-official/lib/Cake/Utility/ObjectCollection.php(128): call_user_func_array(Array, Array)
+#3 [internal function]: ObjectCollection->trigger(Object(CakeEvent))
+#4 /home/hieunc/06_my_projects/api-official/lib/Cake/Event/CakeEventManager.php(243): call_user_func(Array, Object(CakeEvent))
+#5 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Controller.php(677): CakeEventManager->dispatch(Object(CakeEvent))
+#6 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(189): Controller->startupProcess()
+#7 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(ApiMediaController), Object(CakeRequest))
+#8 /home/hieunc/06_my_projects/api-official/app/webroot/index.php(111): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2016-01-05 13:09:43 Error: [ApiAuthenticateException] adad
+Request URL: /api-official/api/media/getmedia
+Stack Trace:
+#0 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Component/AuthComponent.php(305): ApiAuthComponent->_unauthenticated(Object(ApiMediaController))
+#1 [internal function]: AuthComponent->startup(Object(ApiMediaController))
+#2 /home/hieunc/06_my_projects/api-official/lib/Cake/Utility/ObjectCollection.php(128): call_user_func_array(Array, Array)
+#3 [internal function]: ObjectCollection->trigger(Object(CakeEvent))
+#4 /home/hieunc/06_my_projects/api-official/lib/Cake/Event/CakeEventManager.php(243): call_user_func(Array, Object(CakeEvent))
+#5 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Controller.php(677): CakeEventManager->dispatch(Object(CakeEvent))
+#6 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(189): Controller->startupProcess()
+#7 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(ApiMediaController), Object(CakeRequest))
+#8 /home/hieunc/06_my_projects/api-official/app/webroot/index.php(111): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2016-01-05 13:09:50 Error: [ApiAuthenticateException] adad
+Request URL: /api-official/api/media/getmedia
+Stack Trace:
+#0 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Component/AuthComponent.php(305): ApiAuthComponent->_unauthenticated(Object(ApiMediaController))
+#1 [internal function]: AuthComponent->startup(Object(ApiMediaController))
+#2 /home/hieunc/06_my_projects/api-official/lib/Cake/Utility/ObjectCollection.php(128): call_user_func_array(Array, Array)
+#3 [internal function]: ObjectCollection->trigger(Object(CakeEvent))
+#4 /home/hieunc/06_my_projects/api-official/lib/Cake/Event/CakeEventManager.php(243): call_user_func(Array, Object(CakeEvent))
+#5 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Controller.php(677): CakeEventManager->dispatch(Object(CakeEvent))
+#6 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(189): Controller->startupProcess()
+#7 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(ApiMediaController), Object(CakeRequest))
+#8 /home/hieunc/06_my_projects/api-official/app/webroot/index.php(111): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2016-01-05 13:09:50 Error: [ApiAuthenticateException] adad
+Request URL: /api-official/api/media/getmedia
+Stack Trace:
+#0 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Component/AuthComponent.php(305): ApiAuthComponent->_unauthenticated(Object(ApiMediaController))
+#1 [internal function]: AuthComponent->startup(Object(ApiMediaController))
+#2 /home/hieunc/06_my_projects/api-official/lib/Cake/Utility/ObjectCollection.php(128): call_user_func_array(Array, Array)
+#3 [internal function]: ObjectCollection->trigger(Object(CakeEvent))
+#4 /home/hieunc/06_my_projects/api-official/lib/Cake/Event/CakeEventManager.php(243): call_user_func(Array, Object(CakeEvent))
+#5 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Controller.php(677): CakeEventManager->dispatch(Object(CakeEvent))
+#6 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(189): Controller->startupProcess()
+#7 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(ApiMediaController), Object(CakeRequest))
+#8 /home/hieunc/06_my_projects/api-official/app/webroot/index.php(111): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2016-01-05 13:09:51 Error: [ApiAuthenticateException] adad
+Request URL: /api-official/api/media/getmedia
+Stack Trace:
+#0 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Component/AuthComponent.php(305): ApiAuthComponent->_unauthenticated(Object(ApiMediaController))
+#1 [internal function]: AuthComponent->startup(Object(ApiMediaController))
+#2 /home/hieunc/06_my_projects/api-official/lib/Cake/Utility/ObjectCollection.php(128): call_user_func_array(Array, Array)
+#3 [internal function]: ObjectCollection->trigger(Object(CakeEvent))
+#4 /home/hieunc/06_my_projects/api-official/lib/Cake/Event/CakeEventManager.php(243): call_user_func(Array, Object(CakeEvent))
+#5 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Controller.php(677): CakeEventManager->dispatch(Object(CakeEvent))
+#6 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(189): Controller->startupProcess()
+#7 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(ApiMediaController), Object(CakeRequest))
+#8 /home/hieunc/06_my_projects/api-official/app/webroot/index.php(111): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2016-01-05 13:09:52 Error: [ApiAuthenticateException] adad
+Request URL: /api-official/api/media/getmedia
+Stack Trace:
+#0 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Component/AuthComponent.php(305): ApiAuthComponent->_unauthenticated(Object(ApiMediaController))
+#1 [internal function]: AuthComponent->startup(Object(ApiMediaController))
+#2 /home/hieunc/06_my_projects/api-official/lib/Cake/Utility/ObjectCollection.php(128): call_user_func_array(Array, Array)
+#3 [internal function]: ObjectCollection->trigger(Object(CakeEvent))
+#4 /home/hieunc/06_my_projects/api-official/lib/Cake/Event/CakeEventManager.php(243): call_user_func(Array, Object(CakeEvent))
+#5 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Controller.php(677): CakeEventManager->dispatch(Object(CakeEvent))
+#6 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(189): Controller->startupProcess()
+#7 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(ApiMediaController), Object(CakeRequest))
+#8 /home/hieunc/06_my_projects/api-official/app/webroot/index.php(111): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2016-01-05 13:10:00 Error: [ApiAuthenticateException] adad
+Request URL: /api-official/api/media/getmedia
+Stack Trace:
+#0 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Component/AuthComponent.php(305): ApiAuthComponent->_unauthenticated(Object(ApiMediaController))
+#1 [internal function]: AuthComponent->startup(Object(ApiMediaController))
+#2 /home/hieunc/06_my_projects/api-official/lib/Cake/Utility/ObjectCollection.php(128): call_user_func_array(Array, Array)
+#3 [internal function]: ObjectCollection->trigger(Object(CakeEvent))
+#4 /home/hieunc/06_my_projects/api-official/lib/Cake/Event/CakeEventManager.php(243): call_user_func(Array, Object(CakeEvent))
+#5 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Controller.php(677): CakeEventManager->dispatch(Object(CakeEvent))
+#6 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(189): Controller->startupProcess()
+#7 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(ApiMediaController), Object(CakeRequest))
+#8 /home/hieunc/06_my_projects/api-official/app/webroot/index.php(111): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2016-01-05 13:10:07 Error: [ApiAuthenticateException] adad
+Request URL: /api-official/api/media/getmedia
+Stack Trace:
+#0 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Component/AuthComponent.php(305): ApiAuthComponent->_unauthenticated(Object(ApiMediaController))
+#1 [internal function]: AuthComponent->startup(Object(ApiMediaController))
+#2 /home/hieunc/06_my_projects/api-official/lib/Cake/Utility/ObjectCollection.php(128): call_user_func_array(Array, Array)
+#3 [internal function]: ObjectCollection->trigger(Object(CakeEvent))
+#4 /home/hieunc/06_my_projects/api-official/lib/Cake/Event/CakeEventManager.php(243): call_user_func(Array, Object(CakeEvent))
+#5 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Controller.php(677): CakeEventManager->dispatch(Object(CakeEvent))
+#6 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(189): Controller->startupProcess()
+#7 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(ApiMediaController), Object(CakeRequest))
+#8 /home/hieunc/06_my_projects/api-official/app/webroot/index.php(111): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2016-01-05 13:10:09 Error: [ApiAuthenticateException] adad
+Request URL: /api-official/api/media/getmedia
+Stack Trace:
+#0 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Component/AuthComponent.php(305): ApiAuthComponent->_unauthenticated(Object(ApiMediaController))
+#1 [internal function]: AuthComponent->startup(Object(ApiMediaController))
+#2 /home/hieunc/06_my_projects/api-official/lib/Cake/Utility/ObjectCollection.php(128): call_user_func_array(Array, Array)
+#3 [internal function]: ObjectCollection->trigger(Object(CakeEvent))
+#4 /home/hieunc/06_my_projects/api-official/lib/Cake/Event/CakeEventManager.php(243): call_user_func(Array, Object(CakeEvent))
+#5 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Controller.php(677): CakeEventManager->dispatch(Object(CakeEvent))
+#6 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(189): Controller->startupProcess()
+#7 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(ApiMediaController), Object(CakeRequest))
+#8 /home/hieunc/06_my_projects/api-official/app/webroot/index.php(111): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2016-01-05 13:10:39 Error: [ApiAuthenticateException] adad
+Request URL: /api-official/api/media/getmedia
+Stack Trace:
+#0 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Component/AuthComponent.php(305): ApiAuthComponent->_unauthenticated(Object(ApiMediaController))
+#1 [internal function]: AuthComponent->startup(Object(ApiMediaController))
+#2 /home/hieunc/06_my_projects/api-official/lib/Cake/Utility/ObjectCollection.php(128): call_user_func_array(Array, Array)
+#3 [internal function]: ObjectCollection->trigger(Object(CakeEvent))
+#4 /home/hieunc/06_my_projects/api-official/lib/Cake/Event/CakeEventManager.php(243): call_user_func(Array, Object(CakeEvent))
+#5 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Controller.php(677): CakeEventManager->dispatch(Object(CakeEvent))
+#6 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(189): Controller->startupProcess()
+#7 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(ApiMediaController), Object(CakeRequest))
+#8 /home/hieunc/06_my_projects/api-official/app/webroot/index.php(111): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2016-01-05 13:10:43 Error: [ApiAuthenticateException] adad
+Request URL: /api-official/api/media/getmedia
+Stack Trace:
+#0 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Component/AuthComponent.php(305): ApiAuthComponent->_unauthenticated(Object(ApiMediaController))
+#1 [internal function]: AuthComponent->startup(Object(ApiMediaController))
+#2 /home/hieunc/06_my_projects/api-official/lib/Cake/Utility/ObjectCollection.php(128): call_user_func_array(Array, Array)
+#3 [internal function]: ObjectCollection->trigger(Object(CakeEvent))
+#4 /home/hieunc/06_my_projects/api-official/lib/Cake/Event/CakeEventManager.php(243): call_user_func(Array, Object(CakeEvent))
+#5 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Controller.php(677): CakeEventManager->dispatch(Object(CakeEvent))
+#6 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(189): Controller->startupProcess()
+#7 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(ApiMediaController), Object(CakeRequest))
+#8 /home/hieunc/06_my_projects/api-official/app/webroot/index.php(111): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2016-01-05 13:10:57 Error: [ApiAuthenticateException] adad
+Request URL: /api-official/api/media/getmedia
+Stack Trace:
+#0 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Component/AuthComponent.php(305): ApiAuthComponent->_unauthenticated(Object(ApiMediaController))
+#1 [internal function]: AuthComponent->startup(Object(ApiMediaController))
+#2 /home/hieunc/06_my_projects/api-official/lib/Cake/Utility/ObjectCollection.php(128): call_user_func_array(Array, Array)
+#3 [internal function]: ObjectCollection->trigger(Object(CakeEvent))
+#4 /home/hieunc/06_my_projects/api-official/lib/Cake/Event/CakeEventManager.php(243): call_user_func(Array, Object(CakeEvent))
+#5 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Controller.php(677): CakeEventManager->dispatch(Object(CakeEvent))
+#6 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(189): Controller->startupProcess()
+#7 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(ApiMediaController), Object(CakeRequest))
+#8 /home/hieunc/06_my_projects/api-official/app/webroot/index.php(111): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2016-01-05 13:11:24 Error: [ApiAuthenticateException] adad
+Request URL: /api-official/api/users/login
+Stack Trace:
+#0 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Component/AuthComponent.php(305): ApiAuthComponent->_unauthenticated(Object(ApiUsersController))
+#1 [internal function]: AuthComponent->startup(Object(ApiUsersController))
+#2 /home/hieunc/06_my_projects/api-official/lib/Cake/Utility/ObjectCollection.php(128): call_user_func_array(Array, Array)
+#3 [internal function]: ObjectCollection->trigger(Object(CakeEvent))
+#4 /home/hieunc/06_my_projects/api-official/lib/Cake/Event/CakeEventManager.php(243): call_user_func(Array, Object(CakeEvent))
+#5 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Controller.php(677): CakeEventManager->dispatch(Object(CakeEvent))
+#6 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(189): Controller->startupProcess()
+#7 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(ApiUsersController), Object(CakeRequest))
+#8 /home/hieunc/06_my_projects/api-official/app/webroot/index.php(111): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2016-01-05 13:11:25 Error: [ApiAuthenticateException] adad
+Request URL: /api-official/api/users/login
+Stack Trace:
+#0 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Component/AuthComponent.php(305): ApiAuthComponent->_unauthenticated(Object(ApiUsersController))
+#1 [internal function]: AuthComponent->startup(Object(ApiUsersController))
+#2 /home/hieunc/06_my_projects/api-official/lib/Cake/Utility/ObjectCollection.php(128): call_user_func_array(Array, Array)
+#3 [internal function]: ObjectCollection->trigger(Object(CakeEvent))
+#4 /home/hieunc/06_my_projects/api-official/lib/Cake/Event/CakeEventManager.php(243): call_user_func(Array, Object(CakeEvent))
+#5 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Controller.php(677): CakeEventManager->dispatch(Object(CakeEvent))
+#6 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(189): Controller->startupProcess()
+#7 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(ApiUsersController), Object(CakeRequest))
+#8 /home/hieunc/06_my_projects/api-official/app/webroot/index.php(111): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2016-01-05 13:11:25 Error: [ApiAuthenticateException] adad
+Request URL: /api-official/api/users/login
+Stack Trace:
+#0 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Component/AuthComponent.php(305): ApiAuthComponent->_unauthenticated(Object(ApiUsersController))
+#1 [internal function]: AuthComponent->startup(Object(ApiUsersController))
+#2 /home/hieunc/06_my_projects/api-official/lib/Cake/Utility/ObjectCollection.php(128): call_user_func_array(Array, Array)
+#3 [internal function]: ObjectCollection->trigger(Object(CakeEvent))
+#4 /home/hieunc/06_my_projects/api-official/lib/Cake/Event/CakeEventManager.php(243): call_user_func(Array, Object(CakeEvent))
+#5 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Controller.php(677): CakeEventManager->dispatch(Object(CakeEvent))
+#6 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(189): Controller->startupProcess()
+#7 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(ApiUsersController), Object(CakeRequest))
+#8 /home/hieunc/06_my_projects/api-official/app/webroot/index.php(111): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2016-01-05 13:11:25 Error: [ApiAuthenticateException] adad
+Request URL: /api-official/api/users/login
+Stack Trace:
+#0 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Component/AuthComponent.php(305): ApiAuthComponent->_unauthenticated(Object(ApiUsersController))
+#1 [internal function]: AuthComponent->startup(Object(ApiUsersController))
+#2 /home/hieunc/06_my_projects/api-official/lib/Cake/Utility/ObjectCollection.php(128): call_user_func_array(Array, Array)
+#3 [internal function]: ObjectCollection->trigger(Object(CakeEvent))
+#4 /home/hieunc/06_my_projects/api-official/lib/Cake/Event/CakeEventManager.php(243): call_user_func(Array, Object(CakeEvent))
+#5 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Controller.php(677): CakeEventManager->dispatch(Object(CakeEvent))
+#6 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(189): Controller->startupProcess()
+#7 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(ApiUsersController), Object(CakeRequest))
+#8 /home/hieunc/06_my_projects/api-official/app/webroot/index.php(111): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2016-01-05 13:12:30 Error: [ApiAuthenticateException] adad
+Request URL: /api-official/api/users/login
+Stack Trace:
+#0 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Component/AuthComponent.php(305): ApiAuthComponent->_unauthenticated(Object(ApiUsersController))
+#1 [internal function]: AuthComponent->startup(Object(ApiUsersController))
+#2 /home/hieunc/06_my_projects/api-official/lib/Cake/Utility/ObjectCollection.php(128): call_user_func_array(Array, Array)
+#3 [internal function]: ObjectCollection->trigger(Object(CakeEvent))
+#4 /home/hieunc/06_my_projects/api-official/lib/Cake/Event/CakeEventManager.php(243): call_user_func(Array, Object(CakeEvent))
+#5 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Controller.php(677): CakeEventManager->dispatch(Object(CakeEvent))
+#6 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(189): Controller->startupProcess()
+#7 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(ApiUsersController), Object(CakeRequest))
+#8 /home/hieunc/06_my_projects/api-official/app/webroot/index.php(111): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2016-01-05 13:12:30 Error: [ApiAuthenticateException] adad
+Request URL: /api-official/api/users/login
+Stack Trace:
+#0 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Component/AuthComponent.php(305): ApiAuthComponent->_unauthenticated(Object(ApiUsersController))
+#1 [internal function]: AuthComponent->startup(Object(ApiUsersController))
+#2 /home/hieunc/06_my_projects/api-official/lib/Cake/Utility/ObjectCollection.php(128): call_user_func_array(Array, Array)
+#3 [internal function]: ObjectCollection->trigger(Object(CakeEvent))
+#4 /home/hieunc/06_my_projects/api-official/lib/Cake/Event/CakeEventManager.php(243): call_user_func(Array, Object(CakeEvent))
+#5 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Controller.php(677): CakeEventManager->dispatch(Object(CakeEvent))
+#6 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(189): Controller->startupProcess()
+#7 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(ApiUsersController), Object(CakeRequest))
+#8 /home/hieunc/06_my_projects/api-official/app/webroot/index.php(111): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2016-01-05 13:12:31 Error: [ApiAuthenticateException] adad
+Request URL: /api-official/api/users/login
+Stack Trace:
+#0 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Component/AuthComponent.php(305): ApiAuthComponent->_unauthenticated(Object(ApiUsersController))
+#1 [internal function]: AuthComponent->startup(Object(ApiUsersController))
+#2 /home/hieunc/06_my_projects/api-official/lib/Cake/Utility/ObjectCollection.php(128): call_user_func_array(Array, Array)
+#3 [internal function]: ObjectCollection->trigger(Object(CakeEvent))
+#4 /home/hieunc/06_my_projects/api-official/lib/Cake/Event/CakeEventManager.php(243): call_user_func(Array, Object(CakeEvent))
+#5 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Controller.php(677): CakeEventManager->dispatch(Object(CakeEvent))
+#6 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(189): Controller->startupProcess()
+#7 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(ApiUsersController), Object(CakeRequest))
+#8 /home/hieunc/06_my_projects/api-official/app/webroot/index.php(111): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2016-01-05 13:12:31 Error: [ApiAuthenticateException] adad
+Request URL: /api-official/api/users/login
+Stack Trace:
+#0 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Component/AuthComponent.php(305): ApiAuthComponent->_unauthenticated(Object(ApiUsersController))
+#1 [internal function]: AuthComponent->startup(Object(ApiUsersController))
+#2 /home/hieunc/06_my_projects/api-official/lib/Cake/Utility/ObjectCollection.php(128): call_user_func_array(Array, Array)
+#3 [internal function]: ObjectCollection->trigger(Object(CakeEvent))
+#4 /home/hieunc/06_my_projects/api-official/lib/Cake/Event/CakeEventManager.php(243): call_user_func(Array, Object(CakeEvent))
+#5 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Controller.php(677): CakeEventManager->dispatch(Object(CakeEvent))
+#6 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(189): Controller->startupProcess()
+#7 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(ApiUsersController), Object(CakeRequest))
+#8 /home/hieunc/06_my_projects/api-official/app/webroot/index.php(111): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2016-01-05 13:12:31 Error: [ApiAuthenticateException] adad
+Request URL: /api-official/api/users/login
+Stack Trace:
+#0 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Component/AuthComponent.php(305): ApiAuthComponent->_unauthenticated(Object(ApiUsersController))
+#1 [internal function]: AuthComponent->startup(Object(ApiUsersController))
+#2 /home/hieunc/06_my_projects/api-official/lib/Cake/Utility/ObjectCollection.php(128): call_user_func_array(Array, Array)
+#3 [internal function]: ObjectCollection->trigger(Object(CakeEvent))
+#4 /home/hieunc/06_my_projects/api-official/lib/Cake/Event/CakeEventManager.php(243): call_user_func(Array, Object(CakeEvent))
+#5 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Controller.php(677): CakeEventManager->dispatch(Object(CakeEvent))
+#6 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(189): Controller->startupProcess()
+#7 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(ApiUsersController), Object(CakeRequest))
+#8 /home/hieunc/06_my_projects/api-official/app/webroot/index.php(111): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}
+2016-01-05 13:15:06 Error: [ApiAuthenticateException] Login Error
+Request URL: /api-official/api/users/login
+Stack Trace:
+#0 [internal function]: ApiUsersController->login()
+#1 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Controller.php(490): ReflectionMethod->invokeArgs(Object(ApiUsersController), Array)
+#2 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(193): Controller->invokeAction(Object(CakeRequest))
+#3 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(ApiUsersController), Object(CakeRequest))
+#4 /home/hieunc/06_my_projects/api-official/app/webroot/index.php(111): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#5 {main}
+2016-01-05 13:15:11 Error: [ApiAuthenticateException] Login Error
+Request URL: /api-official/api/users/login
+Stack Trace:
+#0 [internal function]: ApiUsersController->login()
+#1 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Controller.php(490): ReflectionMethod->invokeArgs(Object(ApiUsersController), Array)
+#2 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(193): Controller->invokeAction(Object(CakeRequest))
+#3 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(ApiUsersController), Object(CakeRequest))
+#4 /home/hieunc/06_my_projects/api-official/app/webroot/index.php(111): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#5 {main}
+2016-01-05 13:15:34 Error: [ApiAuthenticateException] Login Error
+Request URL: /api-official/api/users/login
+Stack Trace:
+#0 [internal function]: ApiUsersController->login()
+#1 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Controller.php(490): ReflectionMethod->invokeArgs(Object(ApiUsersController), Array)
+#2 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(193): Controller->invokeAction(Object(CakeRequest))
+#3 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(ApiUsersController), Object(CakeRequest))
+#4 /home/hieunc/06_my_projects/api-official/app/webroot/index.php(111): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#5 {main}
+2016-01-05 13:15:38 Error: [ApiAuthenticateException] Login required.
+Request URL: /api-official/api/media/getmedia
+Stack Trace:
+#0 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Component/AuthComponent.php(305): ApiAuthComponent->_unauthenticated(Object(ApiMediaController))
+#1 [internal function]: AuthComponent->startup(Object(ApiMediaController))
+#2 /home/hieunc/06_my_projects/api-official/lib/Cake/Utility/ObjectCollection.php(128): call_user_func_array(Array, Array)
+#3 [internal function]: ObjectCollection->trigger(Object(CakeEvent))
+#4 /home/hieunc/06_my_projects/api-official/lib/Cake/Event/CakeEventManager.php(243): call_user_func(Array, Object(CakeEvent))
+#5 /home/hieunc/06_my_projects/api-official/lib/Cake/Controller/Controller.php(677): CakeEventManager->dispatch(Object(CakeEvent))
+#6 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(189): Controller->startupProcess()
+#7 /home/hieunc/06_my_projects/api-official/lib/Cake/Routing/Dispatcher.php(167): Dispatcher->_invoke(Object(ApiMediaController), Object(CakeRequest))
+#8 /home/hieunc/06_my_projects/api-official/app/webroot/index.php(111): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#9 {main}

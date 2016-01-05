@@ -21,7 +21,7 @@ class ApiUsersController extends ApiBaseController
 			unset($user['password']);
 			return self::getJsonResponseData(200, $user);
 		}
-		return self::getJsonResponseData(500, array(), array("Login error."));
+		throw new ApiAuthenticateException("Login Error", 403);
 	}
 
 

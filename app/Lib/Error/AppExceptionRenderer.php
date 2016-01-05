@@ -10,12 +10,23 @@ App::uses('ExceptionRenderer', 'Error');
 
 class AppExceptionRenderer extends ExceptionRenderer
 {
+
+	public function apiAuthenticate($error)
+	{
+		$this->controller->response->type(ApiBaseController::default_response_content_type);
+		echo json_encode(array(
+			"status" => $error->getCode(),
+			"data" => array(),
+			"errors" => array($error->getMessage()),
+		), true);
+		$this->controller->response->send();
+
+	}
+
 	public function notFound($error)
 	{
-//		$this->controller->beforeFilter();
-//		$this->controller->set('title_for_layout', 'Not Found');
-//		$this->controller->render('/Errors/error404');
-//		$this->controller->response->send();
+		var_dump(13123);
+		die;
 	}
 
 	public function badRequest($error)
