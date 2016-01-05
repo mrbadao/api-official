@@ -1412,3 +1412,33 @@ Stack Trace:
 #3 /home/hieunc/06_my_projects/api-official/lib/Cake/Core/App.php(906): App::_checkFatalError()
 #4 [internal function]: App::shutdown()
 #5 {main}
+2016-01-05 12:23:20 Error: [MissingControllerException] Controller class Controller could not be found.
+Exception Attributes: array (
+  'class' => 'Controller',
+  'plugin' => NULL,
+)
+Request URL: /api-official/
+Stack Trace:
+#0 /home/hieunc/06_my_projects/api-official/app/webroot/index.php(111): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 /home/hieunc/06_my_projects/api-official/index.php(41): require('/home/hieunc/06...')
+#2 {main}
+2016-01-05 12:24:02 Error: [MissingControllerException] Controller class Controller could not be found.
+Exception Attributes: array (
+  'class' => 'Controller',
+  'plugin' => NULL,
+)
+Request URL: /api-official/
+Stack Trace:
+#0 /home/hieunc/06_my_projects/api-official/app/webroot/index.php(111): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 /home/hieunc/06_my_projects/api-official/index.php(41): require('/home/hieunc/06...')
+#2 {main}
+2016-01-05 12:25:27 Error: [MissingControllerException] Controller class Controller could not be found.
+Exception Attributes: array (
+  'class' => 'Controller',
+  'plugin' => NULL,
+)
+Request URL: /api-official/
+Stack Trace:
+#0 /home/hieunc/06_my_projects/api-official/app/webroot/index.php(111): Dispatcher->dispatch(Object(CakeRequest), Object(CakeResponse))
+#1 /home/hieunc/06_my_projects/api-official/index.php(41): require('/home/hieunc/06...')
+#2 {main}
