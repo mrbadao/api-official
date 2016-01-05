@@ -41,17 +41,34 @@ class ApiAuthComponent extends AuthComponent
 	}
 
 	/**
-	 * Handles unauthenticated access attempt. First the `unathenticated()` method
-	 * of the last authenticator in the chain will be called. The authenticator can
-	 * handle sending response or redirection as appropriate and return `true` to
-	 * indicate no furthur action is necessary. If authenticator returns null this
-	 * method redirects user to login action. If it's an ajax request and
-	 * $ajaxLogin is specified that element is rendered else a 403 http status code
-	 * is returned.
+	 * Log a user out.
 	 *
-	 * @param Controller $controller A reference to the controller object.
-	 * @return bool True if current action is login action else false.
+	 * Returns the logout action to redirect to. Triggers the logout() method of
+	 * all the authenticate objects, so they can perform custom logout logic.
+	 * AuthComponent will remove the session data, so there is no need to do that
+	 * in an authentication object. Logging out will also renew the session id.
+	 * This helps mitigate issues with session replays.
+	 *
+	 * @return string AuthComponent::$logoutRedirect
+	 * @see AuthComponent::$logoutRedirect
+	 * @link http://book.cakephp.org/2.0/en/core-libraries/components/authentication.html#logging-users-out
 	 */
+	public function logout()
+	{
+		$this->_setDefaults();
+		if (empty($this->_authenticateObjects)) {
+			$this->constructAuthenticate();
+		}
+		$user = $this->user();
+		foreach ($this->_authenticateObjects as $auth) {
+			$auth->logout($user);
+		}
+		$this->Session->delete(static::$sessionKey);
+		$this->Session->delete('Auth.redirect');
+		$this->Session->renew();
+		return Router::normalize($this->logoutRedirect);
+	}
+
 	protected function _unauthenticated(Controller $controller)
 	{
 		if (empty($this->_authenticateObjects)) {
@@ -59,6 +76,7 @@ class ApiAuthComponent extends AuthComponent
 		}
 
 		$auth = $this->_authenticateObjects[count($this->_authenticateObjects) - 1];
+
 		if ($auth->unauthenticated($this->request, $this->response)) {
 			return false;
 		}

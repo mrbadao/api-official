@@ -43,7 +43,7 @@ class ApiBaseController extends Controller
 						'token' => 'api_access_key',
 					),
 					'parameter' => '_token',
-					'header' => 'X_TOKEN',
+					'header' => 'X-TOKEN',
 					'userModel' => 'User',
 					'scope' => array('User.active' => 1)
 				)

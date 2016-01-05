@@ -84,12 +84,6 @@ class JwtTokenAuthenticate extends BaseAuthenticate
 	 */
 	public function authenticate(CakeRequest $request, CakeResponse $response)
 	{
-		//get user if loggined
-		$user = $this->getUser($request);
-		if ($user) {
-			return $user;
-		}
-
 		//handle json post
 		$userLoginInfo = json_decode(utf8_encode(trim(file_get_contents('php://input'))), true);
 
@@ -125,10 +119,15 @@ class JwtTokenAuthenticate extends BaseAuthenticate
 			return false;
 		}
 
-		$userQueryResult[$model][$fields['token']] = JWT::encode($userQueryResult[$model], Configure::read('Security.salt'));
+		$userDataToEncode = $userQueryResult[$model];
+		unset($userDataToEncode[$fields['password']]);
+		unset($userDataToEncode['display_name']);
+		unset($userDataToEncode['created']);
+		unset($userDataToEncode['api_access_key']);
+
+		$userQueryResult[$model][$fields['token']] = JWT::encode($userDataToEncode, Configure::read('Security.salt'));
 		$userModelObj->{$userModelObj->primaryKey} = $userQueryResult[$model][$userModelObj->primaryKey];
 		$userQueryResult[$model]['modified'] = date('Y-m-d H:m:s');
-
 		if (!$userModelObj->save($userQueryResult)) {
 			return false;
 		}
@@ -183,20 +182,20 @@ class JwtTokenAuthenticate extends BaseAuthenticate
 	 */
 	public function _findUser($token, $password = null)
 	{
-		$token = JWT::decode($token, $this->settings['pepper'], array('HS256'));
+		$objDecode = JWT::decode($token, Configure::read('Security.salt'), array('HS256'));
 
-		if (isset($token->record)) {
+		if (isset($objDecode->record)) {
 			// Trick to convert object of stdClass to array. Typecasting to
 			// array doesn't convert property values which are themselves objects.
-			return json_deecode(json_encode($token->record), true);
+			return json_deecode(json_encode($objDecode->record), true);
 		}
 		$userModel = $this->settings['userModel'];
 		list($plugin, $model) = pluginSplit($userModel);
 
 		$fields = $this->settings['fields'];
 		$conditions = array(
-			$model . '.' . $fields['username'] => $token->user->name,
-			$model . '.' . $fields['token'] => $token->user->token
+			$model . '.' . $fields['username'] => $objDecode->{$fields['username']},
+			$model . '.' . $fields['token'] => $token,
 		);
 
 		if (!empty($this->settings['scope'])) {
@@ -217,5 +216,24 @@ class JwtTokenAuthenticate extends BaseAuthenticate
 		unset($result[$model]);
 
 		return array_merge($user, $result);
+	}
+
+
+	/**
+	 * Handle unauthenticated access attempt.
+	 *
+	 * @param CakeRequest $request A request object.
+	 * @param CakeResponse $response A response object.
+	 * @return mixed Either true to indicate the unauthenticated request has been
+	 *  dealt with and no more action is required by AuthComponent or void (default).
+	 */
+	public function unauthenticated(CakeRequest $request, CakeResponse $response)
+	{
+		//get user if loggined
+		$user = $this->getUser($request);
+		if ($user) {
+			return $user;
+		}
+		return false;
 	}
 }
