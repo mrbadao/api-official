@@ -84,6 +84,11 @@ class AppExceptionRenderer extends ExceptionRenderer
 		$this->notFound($error);
 	}
 
+	public function fatalError($error)
+	{
+		$this->notFound($error);
+	}
+
 	public function missingLayout($error)
 	{
 		$this->internalError($error);

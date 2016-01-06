@@ -78,10 +78,6 @@ class ApiBaseController extends Controller
 		parent::beforeFilter();
 		$this->response->type(self::default_response_content_type);
 		$this->response->header('Access-Control-Allow-Origin', '*');
-//		$this->response->header('Access-Control-Allow-Methods', '*');
-//		$this->response->header('Access-Control-Allow-Headers', 'X-Requested-With');
-//		$this->response->header('Access-Control-Allow-Headers','Content-Type, x-xsrf-token');
-//		$this->response->header('Access-Control-Max-Age', '172800');
 	}
 
 	/**
