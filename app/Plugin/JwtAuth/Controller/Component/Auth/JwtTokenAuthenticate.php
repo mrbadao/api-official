@@ -1,6 +1,5 @@
 <?php
 App::uses('BaseAuthenticate', 'Controller/Component/Auth');
-App::uses('CakeTime', 'Utility');
 App::uses('ErrorConstants', 'Utility/Constant');
 
 $path = CakePlugin::path('JwtAuth');
@@ -194,7 +193,11 @@ class JwtTokenAuthenticate extends BaseAuthenticate
 	 */
 	public function _findUser($token, $password = null)
 	{
-		$objDecode = JWT::decode($token, Configure::read('Security.salt'), array('HS256'));
+		try {
+			$objDecode = JWT::decode($token, Configure::read('Security.salt'), array('HS256'));
+		} catch (Exception $e) {
+			throw new ApiAuthenticateException(ErrorConstants::$API_MESSAGES['lOGIN']['4031'], 4031);
+		}
 
 		if (isset($objDecode->record)) {
 			// Trick to convert object of stdClass to array. Typecasting to

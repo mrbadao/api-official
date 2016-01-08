@@ -11,7 +11,7 @@ class ErrorConstants
 		"lOGIN" => array(
 			'403' => "Login Require.",
 			'4030' => "Login failed.",
-			'4031' => "Api access key invalida."
+			'4031' => "Api access key invalid."
 		),
 	);
 }

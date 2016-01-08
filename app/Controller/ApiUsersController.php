@@ -24,5 +24,10 @@ class ApiUsersController extends ApiBaseController
 		throw new ApiAuthenticateException(ErrorConstants::$API_MESSAGES['lOGIN']['4030'], 4030);
 	}
 
-
+	public function checkToken()
+	{
+		$user = $this->ApiAuth->user();
+		unset($user['password']);
+		return self::getJsonResponseData(200, $user['AccessToken']['token']);
+	}
 }

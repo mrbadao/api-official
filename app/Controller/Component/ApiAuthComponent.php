@@ -7,6 +7,7 @@
  */
 App::uses('AuthComponent', 'Controller/Component');
 App::uses('ApiAuthenticateException', 'Lib/Error/ApiExceptions');
+App::uses('ErrorConstants', 'Utility/Constant');
 
 /**
  * Class ApiAuthComponent
@@ -90,7 +91,7 @@ class ApiAuthComponent extends AuthComponent
 			return true;
 		}
 
-		throw new ApiAuthenticateException('Login required.', 403);
+		throw new ApiAuthenticateException(ErrorConstants::$API_MESSAGES['lOGIN']['403'], 403);
 
 		$controller->response->statusCode(403);
 		$controller->response->send();
