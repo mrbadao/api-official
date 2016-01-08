@@ -1,5 +1,6 @@
 <?php
 App::uses('BaseAuthenticate', 'Controller/Component/Auth');
+App::uses('CakeTime', 'Utility');
 App::uses('ErrorConstants', 'Utility/Constant');
 
 $path = CakePlugin::path('JwtAuth');
@@ -31,7 +32,8 @@ require_once($path . 'vendor' . DS . 'firebase' . DS . 'php-jwt' . DS . 'Authent
  */
 class JwtTokenAuthenticate extends BaseAuthenticate
 {
-
+	public $currentDateTime;
+	public $components = array('RequestHandler');
 	/**
 	 * Settings for this object.
 	 *
@@ -57,9 +59,10 @@ class JwtTokenAuthenticate extends BaseAuthenticate
 		'header' => 'X_TOKEN',
 		'userModel' => 'User',
 		'tokenModel' => 'AccessTokens',
+		'authTokenModel' => 'authToken',
 		'scope' => array(),
 		'recursive' => 0,
-		'contain' => null,
+		'contain' => array('authToken'),
 		'pepper' => '123'
 	);
 
@@ -72,6 +75,7 @@ class JwtTokenAuthenticate extends BaseAuthenticate
 	 */
 	public function __construct(ComponentCollection $collection, $settings)
 	{
+		$this->currentDateTime = new DateTime();
 		parent::__construct($collection, $settings);
 		if (empty($this->settings['parameter']) && empty($this->settings['header'])) {
 			throw new CakeException(__d('jwt_auth', 'You need to specify token parameter and/or header'));
@@ -124,25 +128,26 @@ class JwtTokenAuthenticate extends BaseAuthenticate
 		}
 
 		$tokenModelObj = ClassRegistry::init($tokenModel);
-		var_dump($tokenModelObj);
-		die;
+		$tokenEndcodeData = $userQueryResult[$model];
+		unset($tokenEndcodeData[$fields['password']]);
+		unset($tokenEndcodeData['display_name']);
+		unset($tokenEndcodeData['created']);
+		unset($tokenEndcodeData['modified']);
 
-//		$userDataToEncode = $userQueryResult[$model];
-//		unset($userDataToEncode[$fields['password']]);
-//		unset($userDataToEncode['display_name']);
-//		unset($userDataToEncode['created']);
-//
-//		$userQueryResult[$model][$fields['token']] = JWT::encode($userDataToEncode, Configure::read('Security.salt'));
-//		$userModelObj->{$userModelObj->primaryKey} = $userQueryResult[$model][$userModelObj->primaryKey];
-//		$userQueryResult[$model]['modified'] = date('Y-m-d H:m:s');
-//		if (!$userModelObj->save($userQueryResult)) {
-//			return false;
-//		}
-//
-//		$user = $userQueryResult[$model];
-//		unset($userQueryResult[$model]);
-//
-//		return array_merge($user, $userQueryResult);
+		$tokenData = array(
+			"user_id" => $userQueryResult[$model][$userModelObj->primaryKey],
+			"token" => JWT::encode($tokenEndcodeData, Configure::read('Security.salt')),
+			"client_ip" => $request->clientIp(),
+			"expired" => ($this->currentDateTime->add(new DateInterval('P1D'))->getTimestamp()),
+		);
+		if (!$tokenModelObj->save($tokenData)) {
+			return false;
+		}
+
+		$user = $userQueryResult[$model];
+		$user['api_access_key'] = $tokenData['token'];
+		unset($userQueryResult[$model]);
+		return array_merge($user, $userQueryResult);
 	}
 
 	/**
@@ -194,34 +199,42 @@ class JwtTokenAuthenticate extends BaseAuthenticate
 		if (isset($objDecode->record)) {
 			// Trick to convert object of stdClass to array. Typecasting to
 			// array doesn't convert property values which are themselves objects.
-			return json_deecode(json_encode($objDecode->record), true);
+			return json_decode(json_encode($objDecode->record), true);
 		}
-		$userModel = $this->settings['userModel'];
-		list($plugin, $model) = pluginSplit($userModel);
+		$tokenModel = $this->settings['tokenModel'];
+		list($plugin, $model) = pluginSplit($tokenModel);
+		$accessTokenModel = ClassRegistry::init($tokenModel);
 
 		$fields = $this->settings['fields'];
+
 		$conditions = array(
-			$model . '.' . $fields['username'] => $objDecode->{$fields['username']},
+			$model . '.user_id' => $objDecode->user_id,
 			$model . '.' . $fields['token'] => $token,
+			$model . '.expired >' => $this->currentDateTime->getTimestamp(),
 		);
 
 		if (!empty($this->settings['scope'])) {
-			$conditions = array_merge($conditions, $this->settings['scope']);
+			$accessTokenModel->belongsTo[$this->settings['userModel']]['conditions'] = array_merge(array(
+				$this->settings['userModel'] . '.user_id' => $objDecode->user_id,
+			), $this->settings['scope']);
+		} else {
+			$accessTokenModel->belongsTo[$this->settings['userModel']]['conditions'] = array(
+				$this->settings['userModel'] . '.user_id' => $objDecode->user_id,
+			);
 		}
 
-		$result = ClassRegistry::init($userModel)->find('first', array(
+		$result = $accessTokenModel->find('first', array(
 			'conditions' => $conditions,
 			'recursive' => (int)$this->settings['recursive'],
 			'contain' => $this->settings['contain'],
 		));
 
-		if (empty($result) || empty($result[$model])) {
+		if (empty($result) || empty($result[$model]) || empty($this->settings['userModel'])) {
 			return false;
 		}
 
-		$user = $result[$model];
-		unset($result[$model]);
-
+		$user = $result[$this->settings['userModel']];
+		unset($result[$this->settings['userModel']]);
 		return array_merge($user, $result);
 	}
 

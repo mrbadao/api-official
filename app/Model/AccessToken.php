@@ -10,4 +10,5 @@ App::uses('AppModel', 'Model');
 class AccessToken extends AppModel
 {
 	public $primaryKey = 'token_id';
+	public $belongsTo = array('User');
 }
