@@ -51,11 +51,12 @@ class JwtTokenAuthenticate extends BaseAuthenticate
 		'fields' => array(
 			'username' => 'username',
 			'password' => 'password',
+			'token' => 'token',
 		),
 		'parameter' => '_token',
 		'header' => 'X_TOKEN',
 		'userModel' => 'User',
-		'tokenModel'=> 'AccessTokens',
+		'tokenModel' => 'AccessTokens',
 		'scope' => array(),
 		'recursive' => 0,
 		'contain' => null,
@@ -98,6 +99,7 @@ class JwtTokenAuthenticate extends BaseAuthenticate
 		}
 
 		$userModel = $this->settings['userModel'];
+		$tokenModel = $this->settings['tokenModel'];
 		list($plugin, $model) = pluginSplit($userModel);
 
 		$fields = $this->settings['fields'];
@@ -121,23 +123,26 @@ class JwtTokenAuthenticate extends BaseAuthenticate
 			return false;
 		}
 
-		$userDataToEncode = $userQueryResult[$model];
-		unset($userDataToEncode[$fields['password']]);
-		unset($userDataToEncode['display_name']);
-		unset($userDataToEncode['created']);
-		unset($userDataToEncode['api_access_key']);
+		$tokenModelObj = ClassRegistry::init($tokenModel);
+		var_dump($tokenModelObj);
+		die;
 
-		$userQueryResult[$model][$fields['token']] = JWT::encode($userDataToEncode, Configure::read('Security.salt'));
-		$userModelObj->{$userModelObj->primaryKey} = $userQueryResult[$model][$userModelObj->primaryKey];
-		$userQueryResult[$model]['modified'] = date('Y-m-d H:m:s');
-		if (!$userModelObj->save($userQueryResult)) {
-			return false;
-		}
-
-		$user = $userQueryResult[$model];
-		unset($userQueryResult[$model]);
-
-		return array_merge($user, $userQueryResult);
+//		$userDataToEncode = $userQueryResult[$model];
+//		unset($userDataToEncode[$fields['password']]);
+//		unset($userDataToEncode['display_name']);
+//		unset($userDataToEncode['created']);
+//
+//		$userQueryResult[$model][$fields['token']] = JWT::encode($userDataToEncode, Configure::read('Security.salt'));
+//		$userModelObj->{$userModelObj->primaryKey} = $userQueryResult[$model][$userModelObj->primaryKey];
+//		$userQueryResult[$model]['modified'] = date('Y-m-d H:m:s');
+//		if (!$userModelObj->save($userQueryResult)) {
+//			return false;
+//		}
+//
+//		$user = $userQueryResult[$model];
+//		unset($userQueryResult[$model]);
+//
+//		return array_merge($user, $userQueryResult);
 	}
 
 	/**

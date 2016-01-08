@@ -33,8 +33,6 @@ class ApiMediaController extends ApiBaseController
 
 	public function postMedia()
 	{
-		$this->request->data = json_decode(utf8_encode(trim(file_get_contents('php://input'))), true);
-
 		if (!$this->request->data || empty($this->request->data('data'))) {
 			return self::getJsonResponseData(500, array(), array("data error."));
 		}

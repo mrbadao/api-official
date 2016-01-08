@@ -43,11 +43,12 @@ class ApiBaseController extends Controller
 					'fields' => array(
 						'username' => 'username',
 						'password' => 'password',
-						'token' => 'api_access_key',
+						'token' => 'token',
 					),
 					'parameter' => '_token',
 					'header' => 'X-TOKEN',
 					'userModel' => 'User',
+					'tokenModel' => 'AccessToken',
 					'scope' => array('User.active' => 1)
 				)
 			)
@@ -77,6 +78,8 @@ class ApiBaseController extends Controller
 	public function beforeFilter()
 	{
 		parent::beforeFilter();
+		$this->request->data = json_decode(utf8_encode(trim(file_get_contents('php://input'))), true);
+
 		$this->response->type(self::default_response_content_type);
 		$this->response->header('Access-Control-Allow-Origin', '*');
 	}
