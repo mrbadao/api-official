@@ -1,5 +1,7 @@
 <?php
 App::uses('BaseAuthenticate', 'Controller/Component/Auth');
+App::uses('ErrorConstants', 'Utility/Constant');
+
 $path = CakePlugin::path('JwtAuth');
 require_once($path . 'vendor' . DS . 'firebase' . DS . 'php-jwt' . DS . 'Authentication' . DS . 'JWT.php');
 
@@ -48,12 +50,12 @@ class JwtTokenAuthenticate extends BaseAuthenticate
 	public $settings = array(
 		'fields' => array(
 			'username' => 'username',
-			'token' => 'token',
 			'password' => 'password',
 		),
 		'parameter' => '_token',
 		'header' => 'X_TOKEN',
 		'userModel' => 'User',
+		'tokenModel'=> 'AccessTokens',
 		'scope' => array(),
 		'recursive' => 0,
 		'contain' => null,
@@ -92,7 +94,7 @@ class JwtTokenAuthenticate extends BaseAuthenticate
 			!isset($userLoginInfo['data']['username']) ||
 			!isset($userLoginInfo['data']['password'])
 		) {
-			//todo thrown exception empty username + pwd
+			throw new ApiAuthenticateException(ErrorConstants::$API_MESSAGES['lOGIN']['403'], 403);
 		}
 
 		$userModel = $this->settings['userModel'];
