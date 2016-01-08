@@ -5,9 +5,9 @@
  * @project api-official.
  * @Date: 05/01/2016 12:36
  */
-//App::uses('HttpException', 'Lib/Error');
+App::uses('ErrorConstants', 'Utility/Constant');
 
-class ApiAuthenticateException extends CakeException
+class ApiTokenInvalidException extends CakeException
 {
 	public function __construct($message, $code)
 	{
