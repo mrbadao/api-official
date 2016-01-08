@@ -8,6 +8,7 @@
 
 App::uses('Controller', 'Controller');
 App::uses('ApiAuthComponent', 'Controller/Component');
+App::uses('ErrorConstants', 'Utility/Constant');
 
 /**
  * Class ApiBaseController
