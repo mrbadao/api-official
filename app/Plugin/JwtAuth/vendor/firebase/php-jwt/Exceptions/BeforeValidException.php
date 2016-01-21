@@ -1,6 +1,5 @@
 <?php
 
-class BeforeValidException extends UnexpectedValueException
-{
+	class BeforeValidException extends UnexpectedValueException {
 
-}
+	}

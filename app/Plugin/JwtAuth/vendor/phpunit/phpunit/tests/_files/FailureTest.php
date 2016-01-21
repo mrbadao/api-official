@@ -1,75 +1,62 @@
 <?php
-class FailureTest extends PHPUnit_Framework_TestCase
-{
-    public function testAssertArrayEqualsArray()
-    {
-        $this->assertEquals(array(1), array(2), 'message');
-    }
 
-    public function testAssertIntegerEqualsInteger()
-    {
-        $this->assertEquals(1, 2, 'message');
-    }
+	class FailureTest extends PHPUnit_Framework_TestCase {
+		public function testAssertArrayEqualsArray() {
+			$this->assertEquals(array(1), array(2), 'message');
+		}
 
-    public function testAssertObjectEqualsObject()
-    {
-        $a      = new StdClass;
-        $a->foo = 'bar';
+		public function testAssertIntegerEqualsInteger() {
+			$this->assertEquals(1, 2, 'message');
+		}
 
-        $b      = new StdClass;
-        $b->bar = 'foo';
+		public function testAssertObjectEqualsObject() {
+			$a = new StdClass;
+			$a->foo = 'bar';
 
-        $this->assertEquals($a, $b, 'message');
-    }
+			$b = new StdClass;
+			$b->bar = 'foo';
 
-    public function testAssertNullEqualsString()
-    {
-        $this->assertEquals(null, 'bar', 'message');
-    }
+			$this->assertEquals($a, $b, 'message');
+		}
 
-    public function testAssertStringEqualsString()
-    {
-        $this->assertEquals('foo', 'bar', 'message');
-    }
+		public function testAssertNullEqualsString() {
+			$this->assertEquals(NULL, 'bar', 'message');
+		}
 
-    public function testAssertTextEqualsText()
-    {
-        $this->assertEquals("foo\nbar\n", "foo\nbaz\n", 'message');
-    }
+		public function testAssertStringEqualsString() {
+			$this->assertEquals('foo', 'bar', 'message');
+		}
 
-    public function testAssertStringMatchesFormat()
-    {
-        $this->assertStringMatchesFormat('*%s*', '**', 'message');
-    }
+		public function testAssertTextEqualsText() {
+			$this->assertEquals("foo\nbar\n", "foo\nbaz\n", 'message');
+		}
 
-    public function testAssertNumericEqualsNumeric()
-    {
-        $this->assertEquals(1, 2, 'message');
-    }
+		public function testAssertStringMatchesFormat() {
+			$this->assertStringMatchesFormat('*%s*', '**', 'message');
+		}
 
-    public function testAssertTextSameText()
-    {
-        $this->assertSame('foo', 'bar', 'message');
-    }
+		public function testAssertNumericEqualsNumeric() {
+			$this->assertEquals(1, 2, 'message');
+		}
 
-    public function testAssertObjectSameObject()
-    {
-        $this->assertSame(new StdClass, new StdClass, 'message');
-    }
+		public function testAssertTextSameText() {
+			$this->assertSame('foo', 'bar', 'message');
+		}
 
-    public function testAssertObjectSameNull()
-    {
-        $this->assertSame(new StdClass, null, 'message');
-    }
+		public function testAssertObjectSameObject() {
+			$this->assertSame(new StdClass, new StdClass, 'message');
+		}
 
-    public function testAssertFloatSameFloat()
-    {
-        $this->assertSame(1.0, 1.5, 'message');
-    }
+		public function testAssertObjectSameNull() {
+			$this->assertSame(new StdClass, NULL, 'message');
+		}
 
-    // Note that due to the implementation of this assertion it counts as 2 asserts
-    public function testAssertStringMatchesFormatFile()
-    {
-        $this->assertStringMatchesFormatFile(__DIR__ . '/expectedFileFormat.txt', '...BAR...');
-    }
-}
+		public function testAssertFloatSameFloat() {
+			$this->assertSame(1.0, 1.5, 'message');
+		}
+
+		// Note that due to the implementation of this assertion it counts as 2 asserts
+		public function testAssertStringMatchesFormatFile() {
+			$this->assertStringMatchesFormatFile(__DIR__ . '/expectedFileFormat.txt', '...BAR...');
+		}
+	}

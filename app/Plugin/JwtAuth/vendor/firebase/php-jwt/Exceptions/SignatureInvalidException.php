@@ -1,6 +1,5 @@
 <?php
 
-class SignatureInvalidException extends UnexpectedValueException
-{
+	class SignatureInvalidException extends UnexpectedValueException {
 
-}
+	}

@@ -1,9 +1,8 @@
 <?php
-namespace Composer\Installers;
+	namespace Composer\Installers;
 
-class MakoInstaller extends BaseInstaller
-{
-    protected $locations = array(
-        'package' => 'app/packages/{$name}/',
-    );
-}
+	class MakoInstaller extends BaseInstaller {
+		protected $locations = array(
+				'package' => 'app/packages/{$name}/',
+		);
+	}

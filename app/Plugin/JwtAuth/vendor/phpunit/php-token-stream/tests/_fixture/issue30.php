@@ -1,8 +1,7 @@
 <?php
-class Foo
-{
-    public function bar()
-    {
-        return Foo::CLASS;
-    }
-}
+
+	class Foo {
+		public function bar() {
+			return Foo::CLASS;
+		}
+	}

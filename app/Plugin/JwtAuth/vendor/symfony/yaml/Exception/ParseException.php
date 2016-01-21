@@ -1,141 +1,132 @@
 <?php
 
-/*
- * This file is part of the Symfony package.
- *
- * (c) Fabien Potencier <fabien@symfony.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+	/*
+	 * This file is part of the Symfony package.
+	 *
+	 * (c) Fabien Potencier <fabien@symfony.com>
+	 *
+	 * For the full copyright and license information, please view the LICENSE
+	 * file that was distributed with this source code.
+	 */
 
-namespace Symfony\Component\Yaml\Exception;
+	namespace Symfony\Component\Yaml\Exception;
 
-/**
- * Exception class thrown when an error occurs during parsing.
- *
- * @author Fabien Potencier <fabien@symfony.com>
- */
-class ParseException extends RuntimeException
-{
-    private $parsedFile;
-    private $parsedLine;
-    private $snippet;
-    private $rawMessage;
+	/**
+	 * Exception class thrown when an error occurs during parsing.
+	 *
+	 * @author Fabien Potencier <fabien@symfony.com>
+	 */
+	class ParseException extends RuntimeException {
+		private $parsedFile;
+		private $parsedLine;
+		private $snippet;
+		private $rawMessage;
 
-    /**
-     * Constructor.
-     *
-     * @param string     $message    The error message
-     * @param int        $parsedLine The line where the error occurred
-     * @param int        $snippet    The snippet of code near the problem
-     * @param string     $parsedFile The file name where the error occurred
-     * @param \Exception $previous   The previous exception
-     */
-    public function __construct($message, $parsedLine = -1, $snippet = null, $parsedFile = null, \Exception $previous = null)
-    {
-        $this->parsedFile = $parsedFile;
-        $this->parsedLine = $parsedLine;
-        $this->snippet = $snippet;
-        $this->rawMessage = $message;
+		/**
+		 * Constructor.
+		 *
+		 * @param string     $message    The error message
+		 * @param int        $parsedLine The line where the error occurred
+		 * @param int        $snippet    The snippet of code near the problem
+		 * @param string     $parsedFile The file name where the error occurred
+		 * @param \Exception $previous   The previous exception
+		 */
+		public function __construct($message, $parsedLine = -1, $snippet = NULL, $parsedFile = NULL, \Exception $previous = NULL) {
+			$this->parsedFile = $parsedFile;
+			$this->parsedLine = $parsedLine;
+			$this->snippet = $snippet;
+			$this->rawMessage = $message;
 
-        $this->updateRepr();
+			$this->updateRepr();
 
-        parent::__construct($this->message, 0, $previous);
-    }
+			parent::__construct($this->message, 0, $previous);
+		}
 
-    /**
-     * Gets the snippet of code near the error.
-     *
-     * @return string The snippet of code
-     */
-    public function getSnippet()
-    {
-        return $this->snippet;
-    }
+		private function updateRepr() {
+			$this->message = $this->rawMessage;
 
-    /**
-     * Sets the snippet of code near the error.
-     *
-     * @param string $snippet The code snippet
-     */
-    public function setSnippet($snippet)
-    {
-        $this->snippet = $snippet;
+			$dot = FALSE;
+			if ('.' === substr($this->message, -1)) {
+				$this->message = substr($this->message, 0, -1);
+				$dot = TRUE;
+			}
 
-        $this->updateRepr();
-    }
+			if (NULL !== $this->parsedFile) {
+				$this->message .= sprintf(' in %s', json_encode($this->parsedFile, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+			}
 
-    /**
-     * Gets the filename where the error occurred.
-     *
-     * This method returns null if a string is parsed.
-     *
-     * @return string The filename
-     */
-    public function getParsedFile()
-    {
-        return $this->parsedFile;
-    }
+			if ($this->parsedLine >= 0) {
+				$this->message .= sprintf(' at line %d', $this->parsedLine);
+			}
 
-    /**
-     * Sets the filename where the error occurred.
-     *
-     * @param string $parsedFile The filename
-     */
-    public function setParsedFile($parsedFile)
-    {
-        $this->parsedFile = $parsedFile;
+			if ($this->snippet) {
+				$this->message .= sprintf(' (near "%s")', $this->snippet);
+			}
 
-        $this->updateRepr();
-    }
+			if ($dot) {
+				$this->message .= '.';
+			}
+		}
 
-    /**
-     * Gets the line where the error occurred.
-     *
-     * @return int The file line
-     */
-    public function getParsedLine()
-    {
-        return $this->parsedLine;
-    }
+		/**
+		 * Gets the snippet of code near the error.
+		 *
+		 * @return string The snippet of code
+		 */
+		public function getSnippet() {
+			return $this->snippet;
+		}
 
-    /**
-     * Sets the line where the error occurred.
-     *
-     * @param int $parsedLine The file line
-     */
-    public function setParsedLine($parsedLine)
-    {
-        $this->parsedLine = $parsedLine;
+		/**
+		 * Sets the snippet of code near the error.
+		 *
+		 * @param string $snippet The code snippet
+		 */
+		public function setSnippet($snippet) {
+			$this->snippet = $snippet;
 
-        $this->updateRepr();
-    }
+			$this->updateRepr();
+		}
 
-    private function updateRepr()
-    {
-        $this->message = $this->rawMessage;
+		/**
+		 * Gets the filename where the error occurred.
+		 *
+		 * This method returns null if a string is parsed.
+		 *
+		 * @return string The filename
+		 */
+		public function getParsedFile() {
+			return $this->parsedFile;
+		}
 
-        $dot = false;
-        if ('.' === substr($this->message, -1)) {
-            $this->message = substr($this->message, 0, -1);
-            $dot = true;
-        }
+		/**
+		 * Sets the filename where the error occurred.
+		 *
+		 * @param string $parsedFile The filename
+		 */
+		public function setParsedFile($parsedFile) {
+			$this->parsedFile = $parsedFile;
 
-        if (null !== $this->parsedFile) {
-            $this->message .= sprintf(' in %s', json_encode($this->parsedFile, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
-        }
+			$this->updateRepr();
+		}
 
-        if ($this->parsedLine >= 0) {
-            $this->message .= sprintf(' at line %d', $this->parsedLine);
-        }
+		/**
+		 * Gets the line where the error occurred.
+		 *
+		 * @return int The file line
+		 */
+		public function getParsedLine() {
+			return $this->parsedLine;
+		}
 
-        if ($this->snippet) {
-            $this->message .= sprintf(' (near "%s")', $this->snippet);
-        }
+		/**
+		 * Sets the line where the error occurred.
+		 *
+		 * @param int $parsedLine The file line
+		 */
+		public function setParsedLine($parsedLine) {
+			$this->parsedLine = $parsedLine;
 
-        if ($dot) {
-            $this->message .= '.';
-        }
-    }
-}
+			$this->updateRepr();
+		}
+	}

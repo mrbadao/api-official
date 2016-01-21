@@ -1,24 +1,20 @@
 <?php
 
-namespace spec\Prophecy\Exception\Doubler;
+	namespace spec\Prophecy\Exception\Doubler;
 
-use PhpSpec\ObjectBehavior;
-use spec\Prophecy\Exception\Prophecy;
+	use PhpSpec\ObjectBehavior;
+	use spec\Prophecy\Exception\Prophecy;
 
-class InterfaceNotFoundExceptionSpec extends ObjectBehavior
-{
-    function let()
-    {
-        $this->beConstructedWith('msg', 'CustomInterface');
-    }
+	class InterfaceNotFoundExceptionSpec extends ObjectBehavior {
+		function let() {
+			$this->beConstructedWith('msg', 'CustomInterface');
+		}
 
-    function it_extends_ClassNotFoundException()
-    {
-        $this->shouldBeAnInstanceOf('Prophecy\Exception\Doubler\ClassNotFoundException');
-    }
+		function it_extends_ClassNotFoundException() {
+			$this->shouldBeAnInstanceOf('Prophecy\Exception\Doubler\ClassNotFoundException');
+		}
 
-    function its_getClassname_returns_classname()
-    {
-        $this->getClassname()->shouldReturn('CustomInterface');
-    }
-}
+		function its_getClassname_returns_classname() {
+			$this->getClassname()->shouldReturn('CustomInterface');
+		}
+	}

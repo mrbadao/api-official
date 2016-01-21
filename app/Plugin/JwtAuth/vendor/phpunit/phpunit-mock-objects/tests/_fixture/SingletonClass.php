@@ -1,28 +1,21 @@
 <?php
 
-class SingletonClass
-{
-    public static function getInstance()
-    {
-    }
+	class SingletonClass {
+		protected function __construct() {
+		}
 
-    public function doSomething()
-    {
-    }
+		public static function getInstance() {
+		}
 
-    protected function __construct()
-    {
-    }
+		public function doSomething() {
+		}
 
-    final private function __sleep()
-    {
-    }
+		final private function __sleep() {
+		}
 
-    final private function __wakeup()
-    {
-    }
+		final private function __wakeup() {
+		}
 
-    final private function __clone()
-    {
-    }
-}
+		final private function __clone() {
+		}
+	}

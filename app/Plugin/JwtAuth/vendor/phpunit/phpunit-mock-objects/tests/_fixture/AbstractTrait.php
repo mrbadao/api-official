@@ -1,15 +1,13 @@
 <?php
-trait AbstractTrait
-{
-    abstract public function doSomething();
 
-    public function mockableMethod()
-    {
-        return true;
-    }
+	trait AbstractTrait {
+		abstract public function doSomething();
 
-    public function anotherMockableMethod()
-    {
-        return true;
-    }
-}
+		public function mockableMethod() {
+			return TRUE;
+		}
+
+		public function anotherMockableMethod() {
+			return TRUE;
+		}
+	}

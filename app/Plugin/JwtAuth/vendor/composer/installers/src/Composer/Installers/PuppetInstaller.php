@@ -1,11 +1,10 @@
 <?php
 
-namespace Composer\Installers;
+	namespace Composer\Installers;
 
-class PuppetInstaller extends BaseInstaller
-{
+	class PuppetInstaller extends BaseInstaller {
 
-    protected $locations = array(
-        'module' => 'modules/{$name}/',
-    );
-}
+		protected $locations = array(
+				'module' => 'modules/{$name}/',
+		);
+	}

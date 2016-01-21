@@ -1,61 +1,58 @@
 <?php
-/**
- * phpDocumentor
- *
- * PHP Version 5.3
- *
- * @author    Vasil Rangelov <boen.robot@gmail.com>
- * @copyright 2010-2011 Mike van Riel / Naenius (http://www.naenius.com)
- * @license   http://www.opensource.org/licenses/mit-license.php MIT
- * @link      http://phpdoc.org
- */
+	/**
+	 * phpDocumentor
+	 *
+	 * PHP Version 5.3
+	 *
+	 * @author    Vasil Rangelov <boen.robot@gmail.com>
+	 * @copyright 2010-2011 Mike van Riel / Naenius (http://www.naenius.com)
+	 * @license   http://www.opensource.org/licenses/mit-license.php MIT
+	 * @link      http://phpdoc.org
+	 */
 
-namespace phpDocumentor\Reflection\DocBlock\Tag;
+	namespace phpDocumentor\Reflection\DocBlock\Tag;
 
-use phpDocumentor\Reflection\DocBlock\Tag;
+	use phpDocumentor\Reflection\DocBlock\Tag;
 
-/**
- * Reflection class for a @source tag in a Docblock.
- *
- * @author  Vasil Rangelov <boen.robot@gmail.com>
- * @license http://www.opensource.org/licenses/mit-license.php MIT
- * @link    http://phpdoc.org
- */
-class SourceTag extends Tag
-{
-    /**
-     * @var int The starting line, relative to the structural element's
-     *     location.
-     */
-    protected $startingLine = 1;
+	/**
+	 * Reflection class for a @source tag in a Docblock.
+	 *
+	 * @author  Vasil Rangelov <boen.robot@gmail.com>
+	 * @license http://www.opensource.org/licenses/mit-license.php MIT
+	 * @link    http://phpdoc.org
+	 */
+	class SourceTag extends Tag {
+		/**
+		 * @var int The starting line, relative to the structural element's
+		 *     location.
+		 */
+		protected $startingLine = 1;
 
-    /** 
-     * @var int|null The number of lines, relative to the starting line. NULL
-     *     means "to the end".
-     */
-    protected $lineCount = null;
+		/**
+		 * @var int|null The number of lines, relative to the starting line. NULL
+		 *     means "to the end".
+		 */
+		protected $lineCount = NULL;
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getContent()
-    {
-        if (null === $this->content) {
-            $this->content
-                = "{$this->startingLine} {$this->lineCount} {$this->description}";
-        }
+		/**
+		 * {@inheritdoc}
+		 */
+		public function getContent() {
+			if (NULL === $this->content) {
+				$this->content
+						= "{$this->startingLine} {$this->lineCount} {$this->description}";
+			}
 
-        return $this->content;
-    }
+			return $this->content;
+		}
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setContent($content)
-    {
-        parent::setContent($content);
-        if (preg_match(
-            '/^
+		/**
+		 * {@inheritdoc}
+		 */
+		public function setContent($content) {
+			parent::setContent($content);
+			if (preg_match(
+					'/^
                 # Starting line
                 ([1-9]\d*)
                 \s*
@@ -67,71 +64,69 @@ class SourceTag extends Tag
                 # Description
                 (.*)
             $/sux',
-            $this->description,
-            $matches
-        )) {
-            $this->startingLine = (int)$matches[1];
-            if (isset($matches[2]) && '' !== $matches[2]) {
-                $this->lineCount = (int)$matches[2];
-            }
-            $this->setDescription($matches[3]);
-            $this->content = $content;
-        }
+					$this->description,
+					$matches
+			)) {
+				$this->startingLine = (int)$matches[1];
+				if (isset($matches[2]) && '' !== $matches[2]) {
+					$this->lineCount = (int)$matches[2];
+				}
+				$this->setDescription($matches[3]);
+				$this->content = $content;
+			}
 
-        return $this;
-    }
+			return $this;
+		}
 
-    /**
-     * Gets the starting line.
-     *
-     * @return int The starting line, relative to the structural element's
-     *     location.
-     */
-    public function getStartingLine()
-    {
-        return $this->startingLine;
-    }
+		/**
+		 * Gets the starting line.
+		 *
+		 * @return int The starting line, relative to the structural element's
+		 *     location.
+		 */
+		public function getStartingLine() {
+			return $this->startingLine;
+		}
 
-    /**
-     * Sets the starting line.
-     * 
-     * @param int $startingLine The new starting line, relative to the
-     *     structural element's location.
-     * 
-     * @return $this
-     */
-    public function setStartingLine($startingLine)
-    {
-        $this->startingLine = $startingLine;
+		/**
+		 * Sets the starting line.
+		 *
+		 * @param int $startingLine The new starting line, relative to the
+		 *                          structural element's location.
+		 *
+		 * @return $this
+		 */
+		public function setStartingLine($startingLine) {
+			$this->startingLine = $startingLine;
 
-        $this->content = null;
-        return $this;
-    }
+			$this->content = NULL;
 
-    /**
-     * Returns the number of lines.
-     *
-     * @return int|null The number of lines, relative to the starting line. NULL
-     *     means "to the end".
-     */
-    public function getLineCount()
-    {
-        return $this->lineCount;
-    }
+			return $this;
+		}
 
-    /**
-     * Sets the number of lines.
-     * 
-     * @param int|null $lineCount The new number of lines, relative to the
-     *     starting line. NULL means "to the end".
-     * 
-     * @return $this
-     */
-    public function setLineCount($lineCount)
-    {
-        $this->lineCount = $lineCount;
+		/**
+		 * Returns the number of lines.
+		 *
+		 * @return int|null The number of lines, relative to the starting line. NULL
+		 *     means "to the end".
+		 */
+		public function getLineCount() {
+			return $this->lineCount;
+		}
 
-        $this->content = null;
-        return $this;
-    }
-}
+		/**
+		 * Sets the number of lines.
+		 *
+		 * @param int|null $lineCount The new number of lines, relative to the
+		 *                            starting line. NULL means "to the end".
+		 *
+		 * @return $this
+		 */
+		public function setLineCount($lineCount) {
+			$this->lineCount = $lineCount;
+
+			$this->content = NULL;
+
+			return $this;
+		}
+	}

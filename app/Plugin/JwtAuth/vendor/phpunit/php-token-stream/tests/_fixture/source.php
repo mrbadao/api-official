@@ -1,36 +1,34 @@
 <?php
-/**
- * Some comment
- */
-class Foo{function foo(){}
 
-    /**
-     * @param Baz $baz
-     */
-    public function bar(Baz $baz)
-    {
-    }
+	/**
+	 * Some comment
+	 */
+	class Foo {
+		function foo() {
+		}
 
-    /**
-     * @param Foobar $foobar
-     */
-    static public function foobar(Foobar $foobar)
-    {
-    }
+		/**
+		 * @param Foobar $foobar
+		 */
+		static public function foobar(Foobar $foobar) {
+		}
 
-    public function barfoo(Barfoo $barfoo)
-    {
-    }
+		/**
+		 * @param Baz $baz
+		 */
+		public function bar(Baz $baz) {
+		}
 
-    /**
-     * This docblock does not belong to the baz function
-     */
+		public function barfoo(Barfoo $barfoo) {
+		}
 
-    public function baz()
-    {
-    }
+		/**
+		 * This docblock does not belong to the baz function
+		 */
 
-    public function blaz($x, $y)
-    {
-    }
-}
+		public function baz() {
+		}
+
+		public function blaz($x, $y) {
+		}
+	}

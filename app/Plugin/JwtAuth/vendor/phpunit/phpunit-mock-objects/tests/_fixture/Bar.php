@@ -1,8 +1,7 @@
 <?php
-class Bar
-{
-    public function doSomethingElse()
-    {
-        return 'result';
-    }
-}
+
+	class Bar {
+		public function doSomethingElse() {
+			return 'result';
+		}
+	}

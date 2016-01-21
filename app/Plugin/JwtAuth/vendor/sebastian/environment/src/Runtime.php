@@ -1,192 +1,180 @@
 <?php
-/*
- * This file is part of the Environment package.
- *
- * (c) Sebastian Bergmann <sebastian@phpunit.de>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+	/*
+	 * This file is part of the Environment package.
+	 *
+	 * (c) Sebastian Bergmann <sebastian@phpunit.de>
+	 *
+	 * For the full copyright and license information, please view the LICENSE
+	 * file that was distributed with this source code.
+	 */
 
-namespace SebastianBergmann\Environment;
+	namespace SebastianBergmann\Environment;
 
-/**
- * Utility class for HHVM/PHP environment handling.
- */
-class Runtime
-{
-    /**
-     * @var string
-     */
-    private static $binary;
+	/**
+	 * Utility class for HHVM/PHP environment handling.
+	 */
+	class Runtime {
+		/**
+		 * @var string
+		 */
+		private static $binary;
 
-    /**
-     * Returns true when Xdebug is supported or
-     * the runtime used is PHPDBG (PHP >= 7.0).
-     *
-     * @return bool
-     */
-    public function canCollectCodeCoverage()
-    {
-        return $this->hasXdebug() || $this->hasPHPDBGCodeCoverage();
-    }
+		/**
+		 * Returns true when Xdebug is supported or
+		 * the runtime used is PHPDBG (PHP >= 7.0).
+		 *
+		 * @return bool
+		 */
+		public function canCollectCodeCoverage() {
+			return $this->hasXdebug() || $this->hasPHPDBGCodeCoverage();
+		}
 
-    /**
-     * Returns the path to the binary of the current runtime.
-     * Appends ' --php' to the path when the runtime is HHVM.
-     *
-     * @return string
-     */
-    public function getBinary()
-    {
-        // HHVM
-        if (self::$binary === null && $this->isHHVM()) {
-            if ((self::$binary = getenv('PHP_BINARY')) === false) {
-                self::$binary = PHP_BINARY;
-            }
+		/**
+		 * Returns true when the runtime used is PHP and Xdebug is loaded.
+		 *
+		 * @return bool
+		 */
+		public function hasXdebug() {
+			return ($this->isPHP() || $this->isHHVM()) && extension_loaded('xdebug');
+		}
 
-            self::$binary = escapeshellarg(self::$binary) . ' --php';
-        }
+		/**
+		 * Returns true when the runtime used is PHP without the PHPDBG SAPI.
+		 *
+		 * @return bool
+		 */
+		public function isPHP() {
+			return !$this->isHHVM() && !$this->isPHPDBG();
+		}
 
-        // PHP >= 5.4.0
-        if (self::$binary === null && defined('PHP_BINARY')) {
-            self::$binary = escapeshellarg(PHP_BINARY);
-        }
+		/**
+		 * Returns true when the runtime used is HHVM.
+		 *
+		 * @return bool
+		 */
+		public function isHHVM() {
+			return defined('HHVM_VERSION');
+		}
 
-        // PHP < 5.4.0
-        if (self::$binary === null) {
-            if (PHP_SAPI == 'cli' && isset($_SERVER['_'])) {
-                if (strpos($_SERVER['_'], 'phpunit') !== false) {
-                    $file = file($_SERVER['_']);
+		/**
+		 * Returns true when the runtime used is PHP with the PHPDBG SAPI.
+		 *
+		 * @return bool
+		 */
+		public function isPHPDBG() {
+			return PHP_SAPI === 'phpdbg' && !$this->isHHVM();
+		}
 
-                    if (strpos($file[0], ' ') !== false) {
-                        $tmp          = explode(' ', $file[0]);
-                        self::$binary = escapeshellarg(trim($tmp[1]));
-                    } else {
-                        self::$binary = escapeshellarg(ltrim(trim($file[0]), '#!'));
-                    }
-                } elseif (strpos(basename($_SERVER['_']), 'php') !== false) {
-                    self::$binary = escapeshellarg($_SERVER['_']);
-                }
-            }
-        }
+		/**
+		 * Returns true when the runtime used is PHP with the PHPDBG SAPI
+		 * and the phpdbg_*_oplog() functions are available (PHP >= 7.0).
+		 *
+		 * @return bool
+		 */
+		public function hasPHPDBGCodeCoverage() {
+			return $this->isPHPDBG() && function_exists('phpdbg_start_oplog');
+		}
 
-        if (self::$binary === null) {
-            $possibleBinaryLocations = array(
-                PHP_BINDIR . '/php',
-                PHP_BINDIR . '/php-cli.exe',
-                PHP_BINDIR . '/php.exe'
-            );
+		/**
+		 * Returns the path to the binary of the current runtime.
+		 * Appends ' --php' to the path when the runtime is HHVM.
+		 *
+		 * @return string
+		 */
+		public function getBinary() {
+			// HHVM
+			if (self::$binary === NULL && $this->isHHVM()) {
+				if ((self::$binary = getenv('PHP_BINARY')) === FALSE) {
+					self::$binary = PHP_BINARY;
+				}
 
-            foreach ($possibleBinaryLocations as $binary) {
-                if (is_readable($binary)) {
-                    self::$binary = escapeshellarg($binary);
-                    break;
-                }
-            }
-        }
+				self::$binary = escapeshellarg(self::$binary) . ' --php';
+			}
 
-        if (self::$binary === null) {
-            self::$binary = 'php';
-        }
+			// PHP >= 5.4.0
+			if (self::$binary === NULL && defined('PHP_BINARY')) {
+				self::$binary = escapeshellarg(PHP_BINARY);
+			}
 
-        return self::$binary;
-    }
+			// PHP < 5.4.0
+			if (self::$binary === NULL) {
+				if (PHP_SAPI == 'cli' && isset($_SERVER['_'])) {
+					if (strpos($_SERVER['_'], 'phpunit') !== FALSE) {
+						$file = file($_SERVER['_']);
 
-    /**
-     * @return string
-     */
-    public function getNameWithVersion()
-    {
-        return $this->getName() . ' ' . $this->getVersion();
-    }
+						if (strpos($file[0], ' ') !== FALSE) {
+							$tmp = explode(' ', $file[0]);
+							self::$binary = escapeshellarg(trim($tmp[1]));
+						} else {
+							self::$binary = escapeshellarg(ltrim(trim($file[0]), '#!'));
+						}
+					} elseif (strpos(basename($_SERVER['_']), 'php') !== FALSE) {
+						self::$binary = escapeshellarg($_SERVER['_']);
+					}
+				}
+			}
 
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        if ($this->isHHVM()) {
-            return 'HHVM';
-        } elseif ($this->isPHPDBG()) {
-            return 'PHPDBG';
-        } else {
-            return 'PHP';
-        }
-    }
+			if (self::$binary === NULL) {
+				$possibleBinaryLocations = array(
+						PHP_BINDIR . '/php',
+						PHP_BINDIR . '/php-cli.exe',
+						PHP_BINDIR . '/php.exe'
+				);
 
-    /**
-     * @return string
-     */
-    public function getVendorUrl()
-    {
-        if ($this->isHHVM()) {
-            return 'http://hhvm.com/';
-        } else {
-            return 'http://php.net/';
-        }
-    }
+				foreach ($possibleBinaryLocations as $binary) {
+					if (is_readable($binary)) {
+						self::$binary = escapeshellarg($binary);
+						break;
+					}
+				}
+			}
 
-    /**
-     * @return string
-     */
-    public function getVersion()
-    {
-        if ($this->isHHVM()) {
-            return HHVM_VERSION;
-        } else {
-            return PHP_VERSION;
-        }
-    }
+			if (self::$binary === NULL) {
+				self::$binary = 'php';
+			}
 
-    /**
-     * Returns true when the runtime used is PHP and Xdebug is loaded.
-     *
-     * @return bool
-     */
-    public function hasXdebug()
-    {
-        return ($this->isPHP() || $this->isHHVM()) && extension_loaded('xdebug');
-    }
+			return self::$binary;
+		}
 
-    /**
-     * Returns true when the runtime used is HHVM.
-     *
-     * @return bool
-     */
-    public function isHHVM()
-    {
-        return defined('HHVM_VERSION');
-    }
+		/**
+		 * @return string
+		 */
+		public function getNameWithVersion() {
+			return $this->getName() . ' ' . $this->getVersion();
+		}
 
-    /**
-     * Returns true when the runtime used is PHP without the PHPDBG SAPI.
-     *
-     * @return bool
-     */
-    public function isPHP()
-    {
-        return !$this->isHHVM() && !$this->isPHPDBG();
-    }
+		/**
+		 * @return string
+		 */
+		public function getName() {
+			if ($this->isHHVM()) {
+				return 'HHVM';
+			} elseif ($this->isPHPDBG()) {
+				return 'PHPDBG';
+			} else {
+				return 'PHP';
+			}
+		}
 
-    /**
-     * Returns true when the runtime used is PHP with the PHPDBG SAPI.
-     *
-     * @return bool
-     */
-    public function isPHPDBG()
-    {
-        return PHP_SAPI === 'phpdbg' && !$this->isHHVM();
-    }
+		/**
+		 * @return string
+		 */
+		public function getVersion() {
+			if ($this->isHHVM()) {
+				return HHVM_VERSION;
+			} else {
+				return PHP_VERSION;
+			}
+		}
 
-    /**
-     * Returns true when the runtime used is PHP with the PHPDBG SAPI
-     * and the phpdbg_*_oplog() functions are available (PHP >= 7.0).
-     *
-     * @return bool
-     */
-    public function hasPHPDBGCodeCoverage()
-    {
-        return $this->isPHPDBG() && function_exists('phpdbg_start_oplog');
-    }
-}
+		/**
+		 * @return string
+		 */
+		public function getVendorUrl() {
+			if ($this->isHHVM()) {
+				return 'http://hhvm.com/';
+			} else {
+				return 'http://php.net/';
+			}
+		}
+	}

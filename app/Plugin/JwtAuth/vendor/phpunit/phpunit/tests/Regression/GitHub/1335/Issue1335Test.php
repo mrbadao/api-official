@@ -1,67 +1,55 @@
 <?php
-/**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState enabled
- */
-class Issue1335Test extends PHPUnit_Framework_TestCase
-{
-    public function testGlobalString()
-    {
-        $this->assertEquals('Hello', $GLOBALS['globalString']);
-    }
 
-    public function testGlobalIntTruthy()
-    {
-        $this->assertEquals(1, $GLOBALS['globalIntTruthy']);
-    }
+	/**
+	 * @runTestsInSeparateProcesses
+	 * @preserveGlobalState enabled
+	 */
+	class Issue1335Test extends PHPUnit_Framework_TestCase {
+		public function testGlobalString() {
+			$this->assertEquals('Hello', $GLOBALS['globalString']);
+		}
 
-    public function testGlobalIntFalsey()
-    {
-        $this->assertEquals(0, $GLOBALS['globalIntFalsey']);
-    }
+		public function testGlobalIntTruthy() {
+			$this->assertEquals(1, $GLOBALS['globalIntTruthy']);
+		}
 
-    public function testGlobalFloat()
-    {
-        $this->assertEquals(1.123, $GLOBALS['globalFloat']);
-    }
+		public function testGlobalIntFalsey() {
+			$this->assertEquals(0, $GLOBALS['globalIntFalsey']);
+		}
 
-    public function testGlobalBoolTrue()
-    {
-        $this->assertEquals(true, $GLOBALS['globalBoolTrue']);
-    }
+		public function testGlobalFloat() {
+			$this->assertEquals(1.123, $GLOBALS['globalFloat']);
+		}
 
-    public function testGlobalBoolFalse()
-    {
-        $this->assertEquals(false, $GLOBALS['globalBoolFalse']);
-    }
+		public function testGlobalBoolTrue() {
+			$this->assertEquals(TRUE, $GLOBALS['globalBoolTrue']);
+		}
 
-    public function testGlobalNull()
-    {
-        $this->assertEquals(null, $GLOBALS['globalNull']);
-    }
+		public function testGlobalBoolFalse() {
+			$this->assertEquals(FALSE, $GLOBALS['globalBoolFalse']);
+		}
 
-    public function testGlobalArray()
-    {
-        $this->assertEquals(array('foo'), $GLOBALS['globalArray']);
-    }
+		public function testGlobalNull() {
+			$this->assertEquals(NULL, $GLOBALS['globalNull']);
+		}
 
-    public function testGlobalNestedArray()
-    {
-        $this->assertEquals(array(array('foo')), $GLOBALS['globalNestedArray']);
-    }
+		public function testGlobalArray() {
+			$this->assertEquals(array('foo'), $GLOBALS['globalArray']);
+		}
 
-    public function testGlobalObject()
-    {
-        $this->assertEquals((object) array('foo'=> 'bar'), $GLOBALS['globalObject']);
-    }
+		public function testGlobalNestedArray() {
+			$this->assertEquals(array(array('foo')), $GLOBALS['globalNestedArray']);
+		}
 
-    public function testGlobalObjectWithBackSlashString()
-    {
-        $this->assertEquals((object) array('foo'=> 'back\\slash'), $GLOBALS['globalObjectWithBackSlashString']);
-    }
+		public function testGlobalObject() {
+			$this->assertEquals((object)array('foo' => 'bar'), $GLOBALS['globalObject']);
+		}
 
-    public function testGlobalObjectWithDoubleBackSlashString()
-    {
-        $this->assertEquals((object) array('foo'=> 'back\\\\slash'), $GLOBALS['globalObjectWithDoubleBackSlashString']);
-    }
-}
+		public function testGlobalObjectWithBackSlashString() {
+			$this->assertEquals((object)array('foo' => 'back\\slash'), $GLOBALS['globalObjectWithBackSlashString']);
+		}
+
+		public function testGlobalObjectWithDoubleBackSlashString() {
+			$this->assertEquals((object)array('foo' => 'back\\\\slash'), $GLOBALS['globalObjectWithDoubleBackSlashString']);
+		}
+	}

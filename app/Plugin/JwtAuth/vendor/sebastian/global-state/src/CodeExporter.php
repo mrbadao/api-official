@@ -1,93 +1,93 @@
 <?php
-/*
- * This file is part of the GlobalState package.
- *
- * (c) Sebastian Bergmann <sebastian@phpunit.de>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+	/*
+	 * This file is part of the GlobalState package.
+	 *
+	 * (c) Sebastian Bergmann <sebastian@phpunit.de>
+	 *
+	 * For the full copyright and license information, please view the LICENSE
+	 * file that was distributed with this source code.
+	 */
 
-namespace SebastianBergmann\GlobalState;
+	namespace SebastianBergmann\GlobalState;
 
-/**
- * Exports parts of a Snapshot as PHP code.
- */
-class CodeExporter
-{
-    /**
-     * @param  Snapshot $snapshot
-     * @return string
-     */
-    public function constants(Snapshot $snapshot)
-    {
-        $result = '';
+	/**
+	 * Exports parts of a Snapshot as PHP code.
+	 */
+	class CodeExporter {
+		/**
+		 * @param  Snapshot $snapshot
+		 *
+		 * @return string
+		 */
+		public function constants(Snapshot $snapshot) {
+			$result = '';
 
-        foreach ($snapshot->constants() as $name => $value) {
-            $result .= sprintf(
-                'if (!defined(\'%s\')) define(\'%s\', %s);' . "\n",
-                $name,
-                $name,
-                $this->exportVariable($value)
-            );
-        }
+			foreach ($snapshot->constants() as $name => $value) {
+				$result .= sprintf(
+						'if (!defined(\'%s\')) define(\'%s\', %s);' . "\n",
+						$name,
+						$name,
+						$this->exportVariable($value)
+				);
+			}
 
-        return $result;
-    }
+			return $result;
+		}
 
-    /**
-     * @param  Snapshot $snapshot
-     * @return string
-     */
-    public function iniSettings(Snapshot $snapshot)
-    {
-        $result = '';
+		/**
+		 * @param  mixed $variable
+		 *
+		 * @return string
+		 */
+		private function exportVariable($variable) {
+			if (is_scalar($variable) || is_null($variable) ||
+					(is_array($variable) && $this->arrayOnlyContainsScalars($variable))
+			) {
+				return var_export($variable, TRUE);
+			}
 
-        foreach ($snapshot->iniSettings() as $key => $value) {
-            $result .= sprintf(
-                '@ini_set(%s, %s);' . "\n",
-                $this->exportVariable($key),
-                $this->exportVariable($value)
-            );
-        }
+			return 'unserialize(' . var_export(serialize($variable), TRUE) . ')';
+		}
 
-        return $result;
-    }
+		/**
+		 * @param  array $array
+		 *
+		 * @return bool
+		 */
+		private function arrayOnlyContainsScalars(array $array) {
+			$result = TRUE;
 
-    /**
-     * @param  mixed  $variable
-     * @return string
-     */
-    private function exportVariable($variable)
-    {
-        if (is_scalar($variable) || is_null($variable) ||
-            (is_array($variable) && $this->arrayOnlyContainsScalars($variable))) {
-            return var_export($variable, true);
-        }
+			foreach ($array as $element) {
+				if (is_array($element)) {
+					$result = self::arrayOnlyContainsScalars($element);
+				} elseif (!is_scalar($element) && !is_null($element)) {
+					$result = FALSE;
+				}
 
-        return 'unserialize(' . var_export(serialize($variable), true) . ')';
-    }
+				if ($result === FALSE) {
+					break;
+				}
+			}
 
-    /**
-     * @param  array $array
-     * @return bool
-     */
-    private function arrayOnlyContainsScalars(array $array)
-    {
-        $result = true;
+			return $result;
+		}
 
-        foreach ($array as $element) {
-            if (is_array($element)) {
-                $result = self::arrayOnlyContainsScalars($element);
-            } elseif (!is_scalar($element) && !is_null($element)) {
-                $result = false;
-            }
+		/**
+		 * @param  Snapshot $snapshot
+		 *
+		 * @return string
+		 */
+		public function iniSettings(Snapshot $snapshot) {
+			$result = '';
 
-            if ($result === false) {
-                break;
-            }
-        }
+			foreach ($snapshot->iniSettings() as $key => $value) {
+				$result .= sprintf(
+						'@ini_set(%s, %s);' . "\n",
+						$this->exportVariable($key),
+						$this->exportVariable($value)
+				);
+			}
 
-        return $result;
-    }
-}
+			return $result;
+		}
+	}

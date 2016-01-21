@@ -1,84 +1,84 @@
 <?php
-/**
- * phpDocumentor
- *
- * PHP Version 5.3
- *
- * @author    Mike van Riel <mike.vanriel@naenius.com>
- * @copyright 2010-2011 Mike van Riel / Naenius (http://www.naenius.com)
- * @license   http://www.opensource.org/licenses/mit-license.php MIT
- * @link      http://phpdoc.org
- */
+	/**
+	 * phpDocumentor
+	 *
+	 * PHP Version 5.3
+	 *
+	 * @author    Mike van Riel <mike.vanriel@naenius.com>
+	 * @copyright 2010-2011 Mike van Riel / Naenius (http://www.naenius.com)
+	 * @license   http://www.opensource.org/licenses/mit-license.php MIT
+	 * @link      http://phpdoc.org
+	 */
 
-namespace phpDocumentor\Reflection\DocBlock;
+	namespace phpDocumentor\Reflection\DocBlock;
 
-use phpDocumentor\Reflection\DocBlock;
+	use phpDocumentor\Reflection\DocBlock;
 
-/**
- * Parses a Description of a DocBlock or tag.
- *
- * @author  Mike van Riel <mike.vanriel@naenius.com>
- * @license http://www.opensource.org/licenses/mit-license.php MIT
- * @link    http://phpdoc.org
- */
-class Description implements \Reflector
-{
-    /** @var string */
-    protected $contents = '';
+	/**
+	 * Parses a Description of a DocBlock or tag.
+	 *
+	 * @author  Mike van Riel <mike.vanriel@naenius.com>
+	 * @license http://www.opensource.org/licenses/mit-license.php MIT
+	 * @link    http://phpdoc.org
+	 */
+	class Description implements \Reflector {
+		/** @var string */
+		protected $contents = '';
 
-    /** @var array The contents, as an array of strings and Tag objects. */
-    protected $parsedContents = null;
+		/** @var array The contents, as an array of strings and Tag objects. */
+		protected $parsedContents = NULL;
 
-    /** @var DocBlock The DocBlock which this description belongs to. */
-    protected $docblock = null;
+		/** @var DocBlock The DocBlock which this description belongs to. */
+		protected $docblock = NULL;
 
-    /**
-     * Populates the fields of a description.
-     *
-     * @param string   $content  The description's conetnts.
-     * @param DocBlock $docblock The DocBlock which this description belongs to.
-     */
-    public function __construct($content, DocBlock $docblock = null)
-    {
-        $this->setContent($content)->setDocBlock($docblock);
-    }
+		/**
+		 * Populates the fields of a description.
+		 *
+		 * @param string   $content  The description's conetnts.
+		 * @param DocBlock $docblock The DocBlock which this description belongs to.
+		 */
+		public function __construct($content, DocBlock $docblock = NULL) {
+			$this->setContent($content)->setDocBlock($docblock);
+		}
 
-    /**
-     * Gets the text of this description.
-     *
-     * @return string
-     */
-    public function getContents()
-    {
-        return $this->contents;
-    }
+		/**
+		 * Sets the text of this description.
+		 *
+		 * @param string $content The new text of this description.
+		 *
+		 * @return $this
+		 */
+		public function setContent($content) {
+			$this->contents = trim($content);
 
-    /**
-     * Sets the text of this description.
-     *
-     * @param string $content The new text of this description.
-     *
-     * @return $this
-     */
-    public function setContent($content)
-    {
-        $this->contents = trim($content);
+			$this->parsedContents = NULL;
 
-        $this->parsedContents = null;
-        return $this;
-    }
+			return $this;
+		}
 
-    /**
-     * Returns the parsed text of this description.
-     *
-     * @return array An array of strings and tag objects, in the order they
-     *     occur within the description.
-     */
-    public function getParsedContents()
-    {
-        if (null === $this->parsedContents) {
-            $this->parsedContents = preg_split(
-                '/\{
+		/**
+		 * Builds a string representation of this object.
+		 *
+		 * @todo               determine the exact format as used by PHP Reflection
+		 *     and implement it.
+		 *
+		 * @return void
+		 * @codeCoverageIgnore Not yet implemented
+		 */
+		public static function export() {
+			throw new \Exception('Not yet implemented');
+		}
+
+		/**
+		 * Returns the parsed text of this description.
+		 *
+		 * @return array An array of strings and tag objects, in the order they
+		 *     occur within the description.
+		 */
+		public function getParsedContents() {
+			if (NULL === $this->parsedContents) {
+				$this->parsedContents = preg_split(
+						'/\{
                     # "{@}" is not a valid inline tag. This ensures that
                     # we do not treat it as one, but treat it literally.
                     (?!@\})
@@ -108,116 +108,108 @@ class Description implements \Reflector
                            # tags.
                     )
                 \}/Sux',
-                $this->contents,
-                null,
-                PREG_SPLIT_DELIM_CAPTURE
-            );
+						$this->contents,
+						NULL,
+						PREG_SPLIT_DELIM_CAPTURE
+				);
 
-            $count = count($this->parsedContents);
-            for ($i=1; $i<$count; $i += 2) {
-                $this->parsedContents[$i] = Tag::createInstance(
-                    $this->parsedContents[$i],
-                    $this->docblock
-                );
-            }
+				$count = count($this->parsedContents);
+				for ($i = 1; $i < $count; $i += 2) {
+					$this->parsedContents[$i] = Tag::createInstance(
+							$this->parsedContents[$i],
+							$this->docblock
+					);
+				}
 
-            //In order to allow "literal" inline tags, the otherwise invalid
-            //sequence "{@}" is changed to "@", and "{}" is changed to "}".
-            //See unit tests for examples.
-            for ($i=0; $i<$count; $i += 2) {
-                $this->parsedContents[$i] = str_replace(
-                    array('{@}', '{}'),
-                    array('@', '}'),
-                    $this->parsedContents[$i]
-                );
-            }
-        }
-        return $this->parsedContents;
-    }
+				//In order to allow "literal" inline tags, the otherwise invalid
+				//sequence "{@}" is changed to "@", and "{}" is changed to "}".
+				//See unit tests for examples.
+				for ($i = 0; $i < $count; $i += 2) {
+					$this->parsedContents[$i] = str_replace(
+							array('{@}', '{}'),
+							array('@', '}'),
+							$this->parsedContents[$i]
+					);
+				}
+			}
 
-    /**
-     * Return a formatted variant of the Long Description using MarkDown.
-     *
-     * @todo this should become a more intelligent piece of code where the
-     *     configuration contains a setting what format long descriptions are.
-     *
-     * @codeCoverageIgnore Will be removed soon, in favor of adapters at
-     *     PhpDocumentor itself that will process text in various formats.
-     *
-     * @return string
-     */
-    public function getFormattedContents()
-    {
-        $result = $this->contents;
+			return $this->parsedContents;
+		}
 
-        // if the long description contains a plain HTML <code> element, surround
-        // it with a pre element. Please note that we explicitly used str_replace
-        // and not preg_replace to gain performance
-        if (strpos($result, '<code>') !== false) {
-            $result = str_replace(
-                array('<code>', "<code>\r\n", "<code>\n", "<code>\r", '</code>'),
-                array('<pre><code>', '<code>', '<code>', '<code>', '</code></pre>'),
-                $result
-            );
-        }
+		/**
+		 * Return a formatted variant of the Long Description using MarkDown.
+		 *
+		 * @todo               this should become a more intelligent piece of code where the
+		 *     configuration contains a setting what format long descriptions are.
+		 *
+		 * @codeCoverageIgnore Will be removed soon, in favor of adapters at
+		 *     PhpDocumentor itself that will process text in various formats.
+		 *
+		 * @return string
+		 */
+		public function getFormattedContents() {
+			$result = $this->contents;
 
-        if (class_exists('Parsedown')) {
-            $markdown = \Parsedown::instance();
-            $result = $markdown->parse($result);
-        } elseif (class_exists('dflydev\markdown\MarkdownExtraParser')) {
-            $markdown = new \dflydev\markdown\MarkdownExtraParser();
-            $result = $markdown->transformMarkdown($result);
-        }
+			// if the long description contains a plain HTML <code> element, surround
+			// it with a pre element. Please note that we explicitly used str_replace
+			// and not preg_replace to gain performance
+			if (strpos($result, '<code>') !== FALSE) {
+				$result = str_replace(
+						array('<code>', "<code>\r\n", "<code>\n", "<code>\r", '</code>'),
+						array('<pre><code>', '<code>', '<code>', '<code>', '</code></pre>'),
+						$result
+				);
+			}
 
-        return trim($result);
-    }
+			if (class_exists('Parsedown')) {
+				$markdown = \Parsedown::instance();
+				$result = $markdown->parse($result);
+			} elseif (class_exists('dflydev\markdown\MarkdownExtraParser')) {
+				$markdown = new \dflydev\markdown\MarkdownExtraParser();
+				$result = $markdown->transformMarkdown($result);
+			}
 
-    /**
-     * Gets the docblock this tag belongs to.
-     *
-     * @return DocBlock The docblock this description belongs to.
-     */
-    public function getDocBlock()
-    {
-        return $this->docblock;
-    }
+			return trim($result);
+		}
 
-    /**
-     * Sets the docblock this tag belongs to.
-     *
-     * @param DocBlock $docblock The new docblock this description belongs to.
-     *     Setting NULL removes any association.
-     *
-     * @return $this
-     */
-    public function setDocBlock(DocBlock $docblock = null)
-    {
-        $this->docblock = $docblock;
+		/**
+		 * Gets the docblock this tag belongs to.
+		 *
+		 * @return DocBlock The docblock this description belongs to.
+		 */
+		public function getDocBlock() {
+			return $this->docblock;
+		}
 
-        return $this;
-    }
+		/**
+		 * Sets the docblock this tag belongs to.
+		 *
+		 * @param DocBlock $docblock The new docblock this description belongs to.
+		 *                           Setting NULL removes any association.
+		 *
+		 * @return $this
+		 */
+		public function setDocBlock(DocBlock $docblock = NULL) {
+			$this->docblock = $docblock;
 
-    /**
-     * Builds a string representation of this object.
-     *
-     * @todo determine the exact format as used by PHP Reflection
-     *     and implement it.
-     *
-     * @return void
-     * @codeCoverageIgnore Not yet implemented
-     */
-    public static function export()
-    {
-        throw new \Exception('Not yet implemented');
-    }
+			return $this;
+		}
 
-    /**
-     * Returns the long description as a string.
-     *
-     * @return string
-     */
-    public function __toString()
-    {
-        return $this->getContents();
-    }
-}
+		/**
+		 * Returns the long description as a string.
+		 *
+		 * @return string
+		 */
+		public function __toString() {
+			return $this->getContents();
+		}
+
+		/**
+		 * Gets the text of this description.
+		 *
+		 * @return string
+		 */
+		public function getContents() {
+			return $this->contents;
+		}
+	}

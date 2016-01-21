@@ -1,7 +1,6 @@
 <?php
-namespace foo;
+	namespace foo;
 
-function func()
-{
-    return true;
-}
+	function func() {
+		return TRUE;
+	}

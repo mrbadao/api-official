@@ -1,152 +1,150 @@
 <?php
-/*
- * This file is part of the PHPUnit_MockObject package.
- *
- * (c) Sebastian Bergmann <sebastian@phpunit.de>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+	/*
+	 * This file is part of the PHPUnit_MockObject package.
+	 *
+	 * (c) Sebastian Bergmann <sebastian@phpunit.de>
+	 *
+	 * For the full copyright and license information, please view the LICENSE
+	 * file that was distributed with this source code.
+	 */
 
-use SebastianBergmann\Exporter\Exporter;
+	use SebastianBergmann\Exporter\Exporter;
 
-/**
- * Represents a static invocation.
- *
- * @since Class available since Release 1.0.0
- */
-class PHPUnit_Framework_MockObject_Invocation_Static implements PHPUnit_Framework_MockObject_Invocation, PHPUnit_Framework_SelfDescribing
-{
-    /**
-     * @var array
-     */
-    protected static $uncloneableExtensions = array(
-      'mysqli'    => true,
-      'SQLite'    => true,
-      'sqlite3'   => true,
-      'tidy'      => true,
-      'xmlwriter' => true,
-      'xsl'       => true
-    );
+	/**
+	 * Represents a static invocation.
+	 *
+	 * @since Class available since Release 1.0.0
+	 */
+	class PHPUnit_Framework_MockObject_Invocation_Static implements PHPUnit_Framework_MockObject_Invocation, PHPUnit_Framework_SelfDescribing {
+		/**
+		 * @var array
+		 */
+		protected static $uncloneableExtensions = array(
+				'mysqli' => TRUE,
+				'SQLite' => TRUE,
+				'sqlite3' => TRUE,
+				'tidy' => TRUE,
+				'xmlwriter' => TRUE,
+				'xsl' => TRUE
+		);
 
-    /**
-     * @var array
-     */
-    protected static $uncloneableClasses = array(
-      'Closure',
-      'COMPersistHelper',
-      'IteratorIterator',
-      'RecursiveIteratorIterator',
-      'SplFileObject',
-      'PDORow',
-      'ZipArchive'
-    );
+		/**
+		 * @var array
+		 */
+		protected static $uncloneableClasses = array(
+				'Closure',
+				'COMPersistHelper',
+				'IteratorIterator',
+				'RecursiveIteratorIterator',
+				'SplFileObject',
+				'PDORow',
+				'ZipArchive'
+		);
 
-    /**
-     * @var string
-     */
-    public $className;
+		/**
+		 * @var string
+		 */
+		public $className;
 
-    /**
-     * @var string
-     */
-    public $methodName;
+		/**
+		 * @var string
+		 */
+		public $methodName;
 
-    /**
-     * @var array
-     */
-    public $parameters;
+		/**
+		 * @var array
+		 */
+		public $parameters;
 
-    /**
-     * @param string $className
-     * @param string $methodname
-     * @param array  $parameters
-     * @param bool   $cloneObjects
-     */
-    public function __construct($className, $methodName, array $parameters, $cloneObjects = false)
-    {
-        $this->className  = $className;
-        $this->methodName = $methodName;
-        $this->parameters = $parameters;
+		/**
+		 * @param string $className
+		 * @param string $methodname
+		 * @param array  $parameters
+		 * @param bool   $cloneObjects
+		 */
+		public function __construct($className, $methodName, array $parameters, $cloneObjects = FALSE) {
+			$this->className = $className;
+			$this->methodName = $methodName;
+			$this->parameters = $parameters;
 
-        if (!$cloneObjects) {
-            return;
-        }
+			if (!$cloneObjects) {
+				return;
+			}
 
-        foreach ($this->parameters as $key => $value) {
-            if (is_object($value)) {
-                $this->parameters[$key] = $this->cloneObject($value);
-            }
-        }
-    }
+			foreach ($this->parameters as $key => $value) {
+				if (is_object($value)) {
+					$this->parameters[$key] = $this->cloneObject($value);
+				}
+			}
+		}
 
-    /**
-     * @return string
-     */
-    public function toString()
-    {
-        $exporter = new Exporter;
+		/**
+		 * @param  object $original
+		 *
+		 * @return object
+		 */
+		protected function cloneObject($original) {
+			$cloneable = NULL;
+			$object = new ReflectionObject($original);
 
-        return sprintf(
-            '%s::%s(%s)',
-            $this->className,
-            $this->methodName,
-            implode(
-                ', ',
-                array_map(
-                    array($exporter, 'shortenedExport'),
-                    $this->parameters
-                )
-            )
-        );
-    }
+			// Check the blacklist before asking PHP reflection to work around
+			// https://bugs.php.net/bug.php?id=53967
+			if ($object->isInternal() &&
+					isset(self::$uncloneableExtensions[$object->getExtensionName()])
+			) {
+				$cloneable = FALSE;
+			}
 
-    /**
-     * @param  object $original
-     * @return object
-     */
-    protected function cloneObject($original)
-    {
-        $cloneable = null;
-        $object    = new ReflectionObject($original);
+			if ($cloneable === NULL) {
+				foreach (self::$uncloneableClasses as $class) {
+					if ($original instanceof $class) {
+						$cloneable = FALSE;
+						break;
+					}
+				}
+			}
 
-        // Check the blacklist before asking PHP reflection to work around
-        // https://bugs.php.net/bug.php?id=53967
-        if ($object->isInternal() &&
-            isset(self::$uncloneableExtensions[$object->getExtensionName()])) {
-            $cloneable = false;
-        }
+			if ($cloneable === NULL && method_exists($object, 'isCloneable')) {
+				$cloneable = $object->isCloneable();
+			}
 
-        if ($cloneable === null) {
-            foreach (self::$uncloneableClasses as $class) {
-                if ($original instanceof $class) {
-                    $cloneable = false;
-                    break;
-                }
-            }
-        }
+			if ($cloneable === NULL && $object->hasMethod('__clone')) {
+				$method = $object->getMethod('__clone');
+				$cloneable = $method->isPublic();
+			}
 
-        if ($cloneable === null && method_exists($object, 'isCloneable')) {
-            $cloneable = $object->isCloneable();
-        }
+			if ($cloneable === NULL) {
+				$cloneable = TRUE;
+			}
 
-        if ($cloneable === null && $object->hasMethod('__clone')) {
-            $method    = $object->getMethod('__clone');
-            $cloneable = $method->isPublic();
-        }
+			if ($cloneable) {
+				try {
+					return clone $original;
+				} catch (Exception $e) {
+					return $original;
+				}
+			} else {
+				return $original;
+			}
+		}
 
-        if ($cloneable === null) {
-            $cloneable = true;
-        }
+		/**
+		 * @return string
+		 */
+		public function toString() {
+			$exporter = new Exporter;
 
-        if ($cloneable) {
-            try {
-                return clone $original;
-            } catch (Exception $e) {
-                return $original;
-            }
-        } else {
-            return $original;
-        }
-    }
-}
+			return sprintf(
+					'%s::%s(%s)',
+					$this->className,
+					$this->methodName,
+					implode(
+							', ',
+							array_map(
+									array($exporter, 'shortenedExport'),
+									$this->parameters
+							)
+					)
+			);
+		}
+	}

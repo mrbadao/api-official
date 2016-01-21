@@ -1,82 +1,76 @@
 <?php
 
-/*
- * This file is part of the Prophecy.
- * (c) Konstantin Kudryashov <ever.zet@gmail.com>
- *     Marcello Duarte <marcello.duarte@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+	/*
+	 * This file is part of the Prophecy.
+	 * (c) Konstantin Kudryashov <ever.zet@gmail.com>
+	 *     Marcello Duarte <marcello.duarte@gmail.com>
+	 *
+	 * For the full copyright and license information, please view the LICENSE
+	 * file that was distributed with this source code.
+	 */
 
-namespace Prophecy\Argument\Token;
+	namespace Prophecy\Argument\Token;
 
-/**
- * Array every entry token.
- *
- * @author Adrien Brault <adrien.brault@gmail.com>
- */
-class ArrayEveryEntryToken implements TokenInterface
-{
-    /**
-     * @var TokenInterface
-     */
-    private $value;
+	/**
+	 * Array every entry token.
+	 *
+	 * @author Adrien Brault <adrien.brault@gmail.com>
+	 */
+	class ArrayEveryEntryToken implements TokenInterface {
+		/**
+		 * @var TokenInterface
+		 */
+		private $value;
 
-    /**
-     * @param mixed $value exact value or token
-     */
-    public function __construct($value)
-    {
-        if (!$value instanceof TokenInterface) {
-            $value = new ExactValueToken($value);
-        }
+		/**
+		 * @param mixed $value exact value or token
+		 */
+		public function __construct($value) {
+			if (!$value instanceof TokenInterface) {
+				$value = new ExactValueToken($value);
+			}
 
-        $this->value = $value;
-    }
+			$this->value = $value;
+		}
 
-    /**
-     * {@inheritdoc}
-     */
-    public function scoreArgument($argument)
-    {
-        if (!$argument instanceof \Traversable && !is_array($argument)) {
-            return false;
-        }
+		/**
+		 * {@inheritdoc}
+		 */
+		public function scoreArgument($argument) {
+			if (!$argument instanceof \Traversable && !is_array($argument)) {
+				return FALSE;
+			}
 
-        $scores = array();
-        foreach ($argument as $key => $argumentEntry) {
-            $scores[] = $this->value->scoreArgument($argumentEntry);
-        }
+			$scores = array();
+			foreach ($argument as $key => $argumentEntry) {
+				$scores[] = $this->value->scoreArgument($argumentEntry);
+			}
 
-        if (empty($scores) || in_array(false, $scores, true)) {
-            return false;
-        }
+			if (empty($scores) || in_array(FALSE, $scores, TRUE)) {
+				return FALSE;
+			}
 
-        return array_sum($scores) / count($scores);
-    }
+			return array_sum($scores) / count($scores);
+		}
 
-    /**
-     * {@inheritdoc}
-     */
-    public function isLast()
-    {
-        return false;
-    }
+		/**
+		 * {@inheritdoc}
+		 */
+		public function isLast() {
+			return FALSE;
+		}
 
-    /**
-     * {@inheritdoc}
-     */
-    public function __toString()
-    {
-        return sprintf('[%s, ..., %s]', $this->value, $this->value);
-    }
+		/**
+		 * {@inheritdoc}
+		 */
+		public function __toString() {
+			return sprintf('[%s, ..., %s]', $this->value, $this->value);
+		}
 
-    /**
-     * @return TokenInterface
-     */
-    public function getValue()
-    {
-        return $this->value;
-    }
-}
+		/**
+		 * @return TokenInterface
+		 */
+		public function getValue() {
+			return $this->value;
+		}
+	}

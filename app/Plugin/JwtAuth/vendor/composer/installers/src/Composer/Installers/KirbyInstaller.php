@@ -1,9 +1,8 @@
 <?php
-namespace Composer\Installers;
+	namespace Composer\Installers;
 
-class KirbyInstaller extends BaseInstaller
-{
-    protected $locations = array(
-        'plugin'    => 'site/plugins/{$name}/',
-    );
-}
+	class KirbyInstaller extends BaseInstaller {
+		protected $locations = array(
+				'plugin' => 'site/plugins/{$name}/',
+		);
+	}
