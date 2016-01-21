@@ -22,7 +22,7 @@ if (!defined('DS')) {
 }
 
 $dispatcher = 'Cake' . DS . 'Console' . DS . 'ShellDispatcher.php';
-$found = false;
+$found = FALSE;
 $paths = explode(PATH_SEPARATOR, ini_get('include_path'));
 
 foreach ($paths as $path) {

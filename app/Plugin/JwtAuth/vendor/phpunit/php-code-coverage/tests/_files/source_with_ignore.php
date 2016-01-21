@@ -1,31 +1,31 @@
 <?php
-	if ($neverHappens) {
-		// @codeCoverageIgnoreStart
-		print '*';
-		// @codeCoverageIgnoreEnd
+if ($neverHappens) {
+	// @codeCoverageIgnoreStart
+	print '*';
+	// @codeCoverageIgnoreEnd
+}
+
+interface Bor {
+	public function foo();
+
+}
+
+/**
+ * @codeCoverageIgnore
+ */
+class Foo {
+	public function bar() {
 	}
+}
 
-	interface Bor {
-		public function foo();
+function baz() {
+	print '*'; // @codeCoverageIgnore
+}
 
-	}
-
+class Bar {
 	/**
 	 * @codeCoverageIgnore
 	 */
-	class Foo {
-		public function bar() {
-		}
+	public function foo() {
 	}
-
-	function baz() {
-		print '*'; // @codeCoverageIgnore
-	}
-
-	class Bar {
-		/**
-		 * @codeCoverageIgnore
-		 */
-		public function foo() {
-		}
-	}
+}

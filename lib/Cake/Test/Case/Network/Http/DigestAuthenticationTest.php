@@ -26,24 +26,26 @@ App::uses('DigestAuthentication', 'Network/Http');
  */
 class DigestHttpSocket extends HttpSocket {
 
-/**
- * nextHeader attribute
- *
- * @var string
- */
+	/**
+	 * nextHeader attribute
+	 *
+	 * @var string
+	 */
 	public $nextHeader = '';
 
-/**
- * request method
- *
- * @param mixed $request
- * @return void
- */
+	/**
+	 * request method
+	 *
+	 * @param mixed $request
+	 *
+	 * @return void
+	 */
 	public function request($request = array()) {
-		if ($request === false) {
+		if ($request === FALSE) {
 			if (isset($this->response['header']['WWW-Authenticate'])) {
 				unset($this->response['header']['WWW-Authenticate']);
 			}
+
 			return;
 		}
 		$this->response['header']['WWW-Authenticate'] = $this->nextHeader;
@@ -58,18 +60,18 @@ class DigestHttpSocket extends HttpSocket {
  */
 class DigestAuthenticationTest extends CakeTestCase {
 
-/**
- * Socket property
- *
- * @var mixed
- */
-	public $HttpSocket = null;
+	/**
+	 * Socket property
+	 *
+	 * @var mixed
+	 */
+	public $HttpSocket = NULL;
 
-/**
- * This function sets up a HttpSocket instance we are going to use for testing
- *
- * @return void
- */
+	/**
+	 * This function sets up a HttpSocket instance we are going to use for testing
+	 *
+	 * @return void
+	 */
 	public function setUp() {
 		parent::setUp();
 		$this->HttpSocket = new DigestHttpSocket();
@@ -77,21 +79,21 @@ class DigestAuthenticationTest extends CakeTestCase {
 		$this->HttpSocket->request['uri']['path'] = '/';
 	}
 
-/**
- * We use this function to clean up after the test case was executed
- *
- * @return void
- */
+	/**
+	 * We use this function to clean up after the test case was executed
+	 *
+	 * @return void
+	 */
 	public function tearDown() {
 		parent::tearDown();
 		unset($this->HttpSocket);
 	}
 
-/**
- * testBasic method
- *
- * @return void
- */
+	/**
+	 * testBasic method
+	 *
+	 * @return void
+	 */
 	public function testBasic() {
 		$this->HttpSocket->nextHeader = 'Digest realm="The batcave",nonce="4cded326c6c51"';
 		$this->assertFalse(isset($this->HttpSocket->request['header']['Authorization']));
@@ -103,11 +105,11 @@ class DigestAuthenticationTest extends CakeTestCase {
 		$this->assertEquals('4cded326c6c51', $auth['nonce']);
 	}
 
-/**
- * testQop method
- *
- * @return void
- */
+	/**
+	 * testQop method
+	 *
+	 * @return void
+	 */
 	public function testQop() {
 		$this->HttpSocket->nextHeader = 'Digest realm="The batcave",nonce="4cded326c6c51"';
 		$auth = array('user' => 'admin', 'pass' => '1234');
@@ -126,11 +128,11 @@ class DigestAuthenticationTest extends CakeTestCase {
 		$this->assertEquals(2, $auth['nc']);
 	}
 
-/**
- * testOpaque method
- *
- * @return void
- */
+	/**
+	 * testOpaque method
+	 *
+	 * @return void
+	 */
 	public function testOpaque() {
 		$this->HttpSocket->nextHeader = 'Digest realm="The batcave",nonce="4cded326c6c51"';
 		$auth = array('user' => 'admin', 'pass' => '1234');
@@ -143,11 +145,11 @@ class DigestAuthenticationTest extends CakeTestCase {
 		$this->assertTrue(strpos($this->HttpSocket->request['header']['Authorization'], 'opaque="d8ea7aa61a1693024c4cc3a516f49b3c"') > 0);
 	}
 
-/**
- * testMultipleRequest method
- *
- * @return void
- */
+	/**
+	 * testMultipleRequest method
+	 *
+	 * @return void
+	 */
 	public function testMultipleRequest() {
 		$this->HttpSocket->nextHeader = 'Digest realm="The batcave",nonce="4cded326c6c51",qop="auth"';
 		$auth = array('user' => 'admin', 'pass' => '1234');
@@ -170,11 +172,11 @@ class DigestAuthenticationTest extends CakeTestCase {
 		$this->assertNotEquals($response, $responseB);
 	}
 
-/**
- * testPathChanged method
- *
- * @return void
- */
+	/**
+	 * testPathChanged method
+	 *
+	 * @return void
+	 */
 	public function testPathChanged() {
 		$this->HttpSocket->nextHeader = 'Digest realm="The batcave",nonce="4cded326c6c51"';
 		$this->HttpSocket->request['uri']['path'] = '/admin';
@@ -185,13 +187,13 @@ class DigestAuthenticationTest extends CakeTestCase {
 		$this->assertNotEquals('da7e2a46b471d77f70a9bb3698c8902b', $response);
 	}
 
-/**
- * testNoDigestResponse method
- *
- * @return void
- */
+	/**
+	 * testNoDigestResponse method
+	 *
+	 * @return void
+	 */
 	public function testNoDigestResponse() {
-		$this->HttpSocket->nextHeader = false;
+		$this->HttpSocket->nextHeader = FALSE;
 		$this->HttpSocket->request['uri']['path'] = '/admin';
 		$auth = array('user' => 'admin', 'pass' => '1234');
 		DigestAuthentication::authentication($this->HttpSocket, $auth);

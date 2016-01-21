@@ -23,29 +23,29 @@
  */
 class DeviceTypeFixture extends CakeTestFixture {
 
-/**
- * fields property
- *
- * @var array
- */
+	/**
+	 * fields property
+	 *
+	 * @var array
+	 */
 	public $fields = array(
-		'id' => array('type' => 'integer', 'key' => 'primary'),
-		'device_type_category_id' => array('type' => 'integer', 'null' => false),
-		'feature_set_id' => array('type' => 'integer', 'null' => false),
-		'exterior_type_category_id' => array('type' => 'integer', 'null' => false),
-		'image_id' => array('type' => 'integer', 'null' => false),
-		'extra1_id' => array('type' => 'integer', 'null' => false),
-		'extra2_id' => array('type' => 'integer', 'null' => false),
-		'name' => array('type' => 'string', 'null' => false),
-		'order' => array('type' => 'integer', 'null' => false)
+			'id' => array('type' => 'integer', 'key' => 'primary'),
+			'device_type_category_id' => array('type' => 'integer', 'null' => FALSE),
+			'feature_set_id' => array('type' => 'integer', 'null' => FALSE),
+			'exterior_type_category_id' => array('type' => 'integer', 'null' => FALSE),
+			'image_id' => array('type' => 'integer', 'null' => FALSE),
+			'extra1_id' => array('type' => 'integer', 'null' => FALSE),
+			'extra2_id' => array('type' => 'integer', 'null' => FALSE),
+			'name' => array('type' => 'string', 'null' => FALSE),
+			'order' => array('type' => 'integer', 'null' => FALSE)
 	);
 
-/**
- * records property
- *
- * @var array
- */
+	/**
+	 * records property
+	 *
+	 * @var array
+	 */
 	public $records = array(
-		array('device_type_category_id' => 1, 'feature_set_id' => 1, 'exterior_type_category_id' => 1, 'image_id' => 1, 'extra1_id' => 1, 'extra2_id' => 1, 'name' => 'DeviceType 1', 'order' => 0)
+			array('device_type_category_id' => 1, 'feature_set_id' => 1, 'exterior_type_category_id' => 1, 'image_id' => 1, 'extra1_id' => 1, 'extra2_id' => 1, 'name' => 'DeviceType 1', 'order' => 0)
 	);
 }

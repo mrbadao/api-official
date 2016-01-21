@@ -23,20 +23,20 @@
  */
 class ThePaperMonkiesFixture extends CakeTestFixture {
 
-/**
- * fields property
- *
- * @var array
- */
+	/**
+	 * fields property
+	 *
+	 * @var array
+	 */
 	public $fields = array(
-		'apple_id' => array('type' => 'integer', 'length' => 10, 'null' => true),
-		'device_id' => array('type' => 'integer', 'length' => 10, 'null' => true)
+			'apple_id' => array('type' => 'integer', 'length' => 10, 'null' => TRUE),
+			'device_id' => array('type' => 'integer', 'length' => 10, 'null' => TRUE)
 	);
 
-/**
- * records property
- *
- * @var array
- */
+	/**
+	 * records property
+	 *
+	 * @var array
+	 */
 	public $records = array();
 }

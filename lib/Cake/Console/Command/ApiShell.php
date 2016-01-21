@@ -29,36 +29,36 @@ App::uses('File', 'Utility');
  */
 class ApiShell extends AppShell {
 
-/**
- * Map between short name for paths and real paths.
- *
- * @var array
- */
+	/**
+	 * Map between short name for paths and real paths.
+	 *
+	 * @var array
+	 */
 	public $paths = array();
 
-/**
- * Override initialize of the Shell
- *
- * @return void
- */
+	/**
+	 * Override initialize of the Shell
+	 *
+	 * @return void
+	 */
 	public function initialize() {
 		$this->paths = array_merge($this->paths, array(
-			'behavior' => CAKE . 'Model' . DS . 'Behavior' . DS,
-			'cache' => CAKE . 'Cache' . DS,
-			'controller' => CAKE . 'Controller' . DS,
-			'component' => CAKE . 'Controller' . DS . 'Component' . DS,
-			'helper' => CAKE . 'View' . DS . 'Helper' . DS,
-			'model' => CAKE . 'Model' . DS,
-			'view' => CAKE . 'View' . DS,
-			'core' => CAKE
+				'behavior' => CAKE . 'Model' . DS . 'Behavior' . DS,
+				'cache' => CAKE . 'Cache' . DS,
+				'controller' => CAKE . 'Controller' . DS,
+				'component' => CAKE . 'Controller' . DS . 'Component' . DS,
+				'helper' => CAKE . 'View' . DS . 'Helper' . DS,
+				'model' => CAKE . 'Model' . DS,
+				'view' => CAKE . 'View' . DS,
+				'core' => CAKE
 		));
 	}
 
-/**
- * Override main() to handle action
- *
- * @return void
- */
+	/**
+	 * Override main() to handle action
+	 *
+	 * @return void
+	 */
 	public function main() {
 		if (empty($this->args)) {
 			return $this->out($this->OptionParser->help());
@@ -98,12 +98,13 @@ class ApiShell extends AppShell {
 			if (isset($this->params['method'])) {
 				if (!isset($parsed[$this->params['method']])) {
 					$this->err(__d('cake_console', '%s::%s() could not be found', $class, $this->params['method']));
+
 					return $this->_stop();
 				}
 				$method = $parsed[$this->params['method']];
 				$this->out($class . '::' . $method['method'] . $method['parameters']);
 				$this->hr();
-				$this->out($method['comment'], true);
+				$this->out($method['comment'], TRUE);
 			} else {
 				$this->out(ucwords($class));
 				$this->hr();
@@ -114,9 +115,10 @@ class ApiShell extends AppShell {
 				$this->out($list);
 
 				$methods = array_keys($parsed);
-				while ($number = strtolower($this->in(__d('cake_console', 'Select a number to see the more information about a specific method. q to quit. l to list.'), null, 'q'))) {
+				while ($number = strtolower($this->in(__d('cake_console', 'Select a number to see the more information about a specific method. q to quit. l to list.'), NULL, 'q'))) {
 					if ($number === 'q') {
 						$this->out(__d('cake_console', 'Done'));
+
 						return $this->_stop();
 					}
 
@@ -129,80 +131,22 @@ class ApiShell extends AppShell {
 						$this->hr();
 						$this->out($class . '::' . $method['method'] . $method['parameters']);
 						$this->hr();
-						$this->out($method['comment'], true);
+						$this->out($method['comment'], TRUE);
 					}
 				}
 			}
 		}
 	}
 
-/**
- * Gets the option parser instance and configures it.
- *
- * @return ConsoleOptionParser
- */
-	public function getOptionParser() {
-		$parser = parent::getOptionParser();
-
-		$parser->description(
-			__d('cake_console', 'Lookup doc block comments for classes in CakePHP.')
-		)->addArgument('type', array(
-			'help' => __d('cake_console', 'Either a full path or type of class (model, behavior, controller, component, view, helper)')
-		))->addArgument('className', array(
-			'help' => __d('cake_console', 'A CakePHP core class name (e.g: Component, HtmlHelper).')
-		))->addOption('method', array(
-			'short' => 'm',
-			'help' => __d('cake_console', 'The specific method you want help on.')
-		));
-
-		return $parser;
-	}
-
-/**
- * Show help for this shell.
- *
- * @return void
- */
-	public function help() {
-		$head = "Usage: cake api [<type>] <className> [-m <method>]\n";
-		$head .= "-----------------------------------------------\n";
-		$head .= "Parameters:\n\n";
-
-		$commands = array(
-			'path' => "\t<type>\n" .
-				"\t\tEither a full path or type of class (model, behavior, controller, component, view, helper).\n" .
-				"\t\tAvailable values:\n\n" .
-				"\t\tbehavior\tLook for class in CakePHP behavior path\n" .
-				"\t\tcache\tLook for class in CakePHP cache path\n" .
-				"\t\tcontroller\tLook for class in CakePHP controller path\n" .
-				"\t\tcomponent\tLook for class in CakePHP component path\n" .
-				"\t\thelper\tLook for class in CakePHP helper path\n" .
-				"\t\tmodel\tLook for class in CakePHP model path\n" .
-				"\t\tview\tLook for class in CakePHP view path\n",
-			'className' => "\t<className>\n" .
-				"\t\tA CakePHP core class name (e.g: Component, HtmlHelper).\n"
-		);
-
-		$this->out($head);
-		if (!isset($this->args[1])) {
-			foreach ($commands as $cmd) {
-				$this->out("{$cmd}\n\n");
-			}
-		} elseif (isset($commands[strtolower($this->args[1])])) {
-			$this->out($commands[strtolower($this->args[1])] . "\n\n");
-		} else {
-			$this->out(__d('cake_console', 'Command %s not found', $this->args[1]));
-		}
-	}
-
-/**
- * Parse a given class (located on given file) and get public methods and their
- * signatures.
- *
- * @param string $path File path
- * @param string $class Class name
- * @return array Methods and signatures indexed by method name
- */
+	/**
+	 * Parse a given class (located on given file) and get public methods and their
+	 * signatures.
+	 *
+	 * @param string $path  File path
+	 * @param string $class Class name
+	 *
+	 * @return array Methods and signatures indexed by method name
+	 */
 	protected function _parseClass($path, $class) {
 		$parsed = array();
 
@@ -225,18 +169,78 @@ class ApiShell extends AppShell {
 			foreach ($method->getParameters() as $param) {
 				$paramString = '$' . $param->getName();
 				if ($param->isDefaultValueAvailable()) {
-					$paramString .= ' = ' . str_replace("\n", '', var_export($param->getDefaultValue(), true));
+					$paramString .= ' = ' . str_replace("\n", '', var_export($param->getDefaultValue(), TRUE));
 				}
 				$args[] = $paramString;
 			}
 			$parsed[$method->getName()] = array(
-				'comment' => str_replace(array('/*', '*/', '*'), '', $method->getDocComment()),
-				'method' => $method->getName(),
-				'parameters' => '(' . implode(', ', $args) . ')'
+					'comment' => str_replace(array('/*', '*/', '*'), '', $method->getDocComment()),
+					'method' => $method->getName(),
+					'parameters' => '(' . implode(', ', $args) . ')'
 			);
 		}
 		ksort($parsed);
+
 		return $parsed;
+	}
+
+	/**
+	 * Gets the option parser instance and configures it.
+	 *
+	 * @return ConsoleOptionParser
+	 */
+	public function getOptionParser() {
+		$parser = parent::getOptionParser();
+
+		$parser->description(
+				__d('cake_console', 'Lookup doc block comments for classes in CakePHP.')
+		)->addArgument('type', array(
+				'help' => __d('cake_console', 'Either a full path or type of class (model, behavior, controller, component, view, helper)')
+		))->addArgument('className', array(
+				'help' => __d('cake_console', 'A CakePHP core class name (e.g: Component, HtmlHelper).')
+		))->addOption('method', array(
+				'short' => 'm',
+				'help' => __d('cake_console', 'The specific method you want help on.')
+		));
+
+		return $parser;
+	}
+
+	/**
+	 * Show help for this shell.
+	 *
+	 * @return void
+	 */
+	public function help() {
+		$head = "Usage: cake api [<type>] <className> [-m <method>]\n";
+		$head .= "-----------------------------------------------\n";
+		$head .= "Parameters:\n\n";
+
+		$commands = array(
+				'path' => "\t<type>\n" .
+						"\t\tEither a full path or type of class (model, behavior, controller, component, view, helper).\n" .
+						"\t\tAvailable values:\n\n" .
+						"\t\tbehavior\tLook for class in CakePHP behavior path\n" .
+						"\t\tcache\tLook for class in CakePHP cache path\n" .
+						"\t\tcontroller\tLook for class in CakePHP controller path\n" .
+						"\t\tcomponent\tLook for class in CakePHP component path\n" .
+						"\t\thelper\tLook for class in CakePHP helper path\n" .
+						"\t\tmodel\tLook for class in CakePHP model path\n" .
+						"\t\tview\tLook for class in CakePHP view path\n",
+				'className' => "\t<className>\n" .
+						"\t\tA CakePHP core class name (e.g: Component, HtmlHelper).\n"
+		);
+
+		$this->out($head);
+		if (!isset($this->args[1])) {
+			foreach ($commands as $cmd) {
+				$this->out("{$cmd}\n\n");
+			}
+		} elseif (isset($commands[strtolower($this->args[1])])) {
+			$this->out($commands[strtolower($this->args[1])] . "\n\n");
+		} else {
+			$this->out(__d('cake_console', 'Command %s not found', $this->args[1]));
+		}
 	}
 
 }

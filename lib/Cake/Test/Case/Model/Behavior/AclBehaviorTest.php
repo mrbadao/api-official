@@ -31,52 +31,52 @@ App::uses('DbAcl', 'Model');
  */
 class AclPerson extends CakeTestModel {
 
-/**
- * useTable property
- *
- * @var string
- */
+	/**
+	 * useTable property
+	 *
+	 * @var string
+	 */
 	public $useTable = 'people';
 
-/**
- * actsAs property
- *
- * @var array
- */
+	/**
+	 * actsAs property
+	 *
+	 * @var array
+	 */
 	public $actsAs = array('Acl' => 'both');
 
-/**
- * belongsTo property
- *
- * @var array
- */
+	/**
+	 * belongsTo property
+	 *
+	 * @var array
+	 */
 	public $belongsTo = array(
-		'Mother' => array(
-			'className' => 'AclPerson',
-			'foreignKey' => 'mother_id',
-		)
+			'Mother' => array(
+					'className' => 'AclPerson',
+					'foreignKey' => 'mother_id',
+			)
 	);
 
-/**
- * hasMany property
- *
- * @var array
- */
+	/**
+	 * hasMany property
+	 *
+	 * @var array
+	 */
 	public $hasMany = array(
-		'Child' => array(
-			'className' => 'AclPerson',
-			'foreignKey' => 'mother_id'
-		)
+			'Child' => array(
+					'className' => 'AclPerson',
+					'foreignKey' => 'mother_id'
+			)
 	);
 
-/**
- * parentNode method
- *
- * @return void
- */
+	/**
+	 * parentNode method
+	 *
+	 * @return void
+	 */
 	public function parentNode() {
 		if (!$this->id && empty($this->data)) {
-			return null;
+			return NULL;
 		}
 		if (isset($this->data['AclPerson']['mother_id'])) {
 			$motherId = $this->data['AclPerson']['mother_id'];
@@ -84,8 +84,9 @@ class AclPerson extends CakeTestModel {
 			$motherId = $this->field('mother_id');
 		}
 		if (!$motherId) {
-			return null;
+			return NULL;
 		}
+
 		return array('AclPerson' => array('id' => $motherId));
 	}
 
@@ -98,34 +99,34 @@ class AclPerson extends CakeTestModel {
  */
 class AclUser extends CakeTestModel {
 
-/**
- * name property
- *
- * @var string
- */
+	/**
+	 * name property
+	 *
+	 * @var string
+	 */
 	public $name = 'User';
 
-/**
- * useTable property
- *
- * @var string
- */
+	/**
+	 * useTable property
+	 *
+	 * @var string
+	 */
 	public $useTable = 'users';
 
-/**
- * actsAs property
- *
- * @var array
- */
+	/**
+	 * actsAs property
+	 *
+	 * @var array
+	 */
 	public $actsAs = array('Acl' => array('type' => 'requester'));
 
-/**
- * parentNode
- *
- * @return null
- */
+	/**
+	 * parentNode
+	 *
+	 * @return null
+	 */
 	public function parentNode() {
-		return null;
+		return NULL;
 	}
 
 }
@@ -137,34 +138,34 @@ class AclUser extends CakeTestModel {
  */
 class AclPost extends CakeTestModel {
 
-/**
- * name property
- *
- * @var string
- */
+	/**
+	 * name property
+	 *
+	 * @var string
+	 */
 	public $name = 'Post';
 
-/**
- * useTable property
- *
- * @var string
- */
+	/**
+	 * useTable property
+	 *
+	 * @var string
+	 */
 	public $useTable = 'posts';
 
-/**
- * actsAs property
- *
- * @var array
- */
+	/**
+	 * actsAs property
+	 *
+	 * @var array
+	 */
 	public $actsAs = array('Acl' => array('type' => 'Controlled'));
 
-/**
- * parentNode
- *
- * @return null
- */
+	/**
+	 * parentNode
+	 *
+	 * @return null
+	 */
 	public function parentNode() {
-		return null;
+		return NULL;
 	}
 
 }
@@ -176,32 +177,32 @@ class AclPost extends CakeTestModel {
  */
 class AclBehaviorTest extends CakeTestCase {
 
-/**
- * Aco property
- *
- * @var Aco
- */
+	/**
+	 * Aco property
+	 *
+	 * @var Aco
+	 */
 	public $Aco;
 
-/**
- * Aro property
- *
- * @var Aro
- */
+	/**
+	 * Aro property
+	 *
+	 * @var Aro
+	 */
 	public $Aro;
 
-/**
- * fixtures property
- *
- * @var array
- */
+	/**
+	 * fixtures property
+	 *
+	 * @var array
+	 */
 	public $fixtures = array('core.person', 'core.user', 'core.post', 'core.aco', 'core.aro', 'core.aros_aco');
 
-/**
- * Set up the test
- *
- * @return void
- */
+	/**
+	 * Set up the test
+	 *
+	 * @return void
+	 */
 	public function setUp() {
 		parent::setUp();
 		Configure::write('Acl.database', 'test');
@@ -210,21 +211,21 @@ class AclBehaviorTest extends CakeTestCase {
 		$this->Aro = new Aro();
 	}
 
-/**
- * tearDown method
- *
- * @return void
- */
+	/**
+	 * tearDown method
+	 *
+	 * @return void
+	 */
 	public function tearDown() {
 		parent::tearDown();
 		unset($this->Aro, $this->Aco);
 	}
 
-/**
- * Test Setup of AclBehavior
- *
- * @return void
- */
+	/**
+	 * Test Setup of AclBehavior
+	 *
+	 * @return void
+	 */
 	public function testSetup() {
 		parent::setUp();
 		$User = new AclUser();
@@ -238,11 +239,11 @@ class AclBehaviorTest extends CakeTestCase {
 		$this->assertTrue(is_object($Post->Aco));
 	}
 
-/**
- * Test Setup of AclBehavior as both requester and controlled
- *
- * @return void
- */
+	/**
+	 * Test Setup of AclBehavior as both requester and controlled
+	 *
+	 * @return void
+	 */
 	public function testSetupMulti() {
 		$User = new AclPerson();
 		$this->assertTrue(isset($User->Behaviors->Acl->settings['AclPerson']));
@@ -251,58 +252,58 @@ class AclBehaviorTest extends CakeTestCase {
 		$this->assertTrue(is_object($User->Aco));
 	}
 
-/**
- * test After Save
- *
- * @return void
- */
+	/**
+	 * test After Save
+	 *
+	 * @return void
+	 */
 	public function testAfterSave() {
 		$Post = new AclPost();
 		$data = array(
-			'Post' => array(
-				'author_id' => 1,
-				'title' => 'Acl Post',
-				'body' => 'post body',
-				'published' => 1
-			),
+				'Post' => array(
+						'author_id' => 1,
+						'title' => 'Acl Post',
+						'body' => 'post body',
+						'published' => 1
+				),
 		);
 		$Post->save($data);
 		$result = $this->Aco->find('first', array(
-			'conditions' => array('Aco.model' => 'Post', 'Aco.foreign_key' => $Post->id)
+				'conditions' => array('Aco.model' => 'Post', 'Aco.foreign_key' => $Post->id)
 		));
 		$this->assertTrue(is_array($result));
 		$this->assertEquals('Post', $result['Aco']['model']);
 		$this->assertEquals($Post->id, $result['Aco']['foreign_key']);
 
 		$aroData = array(
-			'Aro' => array(
-				'model' => 'AclPerson',
-				'foreign_key' => 2,
-				'parent_id' => null
-			)
+				'Aro' => array(
+						'model' => 'AclPerson',
+						'foreign_key' => 2,
+						'parent_id' => NULL
+				)
 		);
 		$this->Aro->save($aroData);
 
 		$acoData = array(
-			'Aco' => array(
-				'model' => 'AclPerson',
-				'foreign_key' => 2,
-				'parent_id' => null
-			)
+				'Aco' => array(
+						'model' => 'AclPerson',
+						'foreign_key' => 2,
+						'parent_id' => NULL
+				)
 		);
 		$this->Aco->save($acoData);
 
 		$Person = new AclPerson();
 		$data = array(
-			'AclPerson' => array(
-				'name' => 'Trent',
-				'mother_id' => 2,
-				'father_id' => 3,
-			),
+				'AclPerson' => array(
+						'name' => 'Trent',
+						'mother_id' => 2,
+						'father_id' => 3,
+				),
 		);
 		$Person->save($data);
 		$result = $this->Aro->find('first', array(
-			'conditions' => array('Aro.model' => 'AclPerson', 'Aro.foreign_key' => $Person->id)
+				'conditions' => array('Aro.model' => 'AclPerson', 'Aro.foreign_key' => $Person->id)
 		));
 		$this->assertTrue(is_array($result));
 		$this->assertEquals(5, $result['Aro']['parent_id']);
@@ -310,30 +311,30 @@ class AclBehaviorTest extends CakeTestCase {
 		$node = $Person->node(array('model' => 'AclPerson', 'foreign_key' => 8), 'Aro');
 		$this->assertEquals(2, count($node));
 		$this->assertEquals(5, $node[0]['Aro']['parent_id']);
-		$this->assertEquals(null, $node[1]['Aro']['parent_id']);
+		$this->assertEquals(NULL, $node[1]['Aro']['parent_id']);
 
 		$aroData = array(
-			'Aro' => array(
-			'model' => 'AclPerson',
-				'foreign_key' => 1,
-				'parent_id' => null
-			)
+				'Aro' => array(
+						'model' => 'AclPerson',
+						'foreign_key' => 1,
+						'parent_id' => NULL
+				)
 		);
 		$this->Aro->create();
 		$this->Aro->save($aroData);
 		$acoData = array(
-			'Aco' => array(
-				'model' => 'AclPerson',
-				'foreign_key' => 1,
-				'parent_id' => null
-		));
+				'Aco' => array(
+						'model' => 'AclPerson',
+						'foreign_key' => 1,
+						'parent_id' => NULL
+				));
 		$this->Aco->create();
 		$this->Aco->save($acoData);
-		$Person->read(null, 8);
+		$Person->read(NULL, 8);
 		$Person->set('mother_id', 1);
 		$Person->save();
 		$result = $this->Aro->find('first', array(
-			'conditions' => array('Aro.model' => 'AclPerson', 'Aro.foreign_key' => $Person->id)
+				'conditions' => array('Aro.model' => 'AclPerson', 'Aro.foreign_key' => $Person->id)
 		));
 		$this->assertTrue(is_array($result));
 		$this->assertEquals(7, $result['Aro']['parent_id']);
@@ -341,143 +342,143 @@ class AclBehaviorTest extends CakeTestCase {
 		$node = $Person->node(array('model' => 'AclPerson', 'foreign_key' => 8), 'Aro');
 		$this->assertEquals(2, count($node));
 		$this->assertEquals(7, $node[0]['Aro']['parent_id']);
-		$this->assertEquals(null, $node[1]['Aro']['parent_id']);
+		$this->assertEquals(NULL, $node[1]['Aro']['parent_id']);
 	}
 
-/**
- * test that an afterSave on an update does not cause parent_id to become null.
- *
- * @return void
- */
+	/**
+	 * test that an afterSave on an update does not cause parent_id to become null.
+	 *
+	 * @return void
+	 */
 	public function testAfterSaveUpdateParentIdNotNull() {
 		$aroData = array(
-			'Aro' => array(
-				'model' => 'AclPerson',
-				'foreign_key' => 2,
-				'parent_id' => null
-			)
+				'Aro' => array(
+						'model' => 'AclPerson',
+						'foreign_key' => 2,
+						'parent_id' => NULL
+				)
 		);
 		$this->Aro->save($aroData);
 
 		$acoData = array(
-			'Aco' => array(
-				'model' => 'AclPerson',
-				'foreign_key' => 2,
-				'parent_id' => null
-			)
+				'Aco' => array(
+						'model' => 'AclPerson',
+						'foreign_key' => 2,
+						'parent_id' => NULL
+				)
 		);
 		$this->Aco->save($acoData);
 
 		$Person = new AclPerson();
 		$data = array(
-			'AclPerson' => array(
-				'name' => 'Trent',
-				'mother_id' => 2,
-				'father_id' => 3,
-			),
+				'AclPerson' => array(
+						'name' => 'Trent',
+						'mother_id' => 2,
+						'father_id' => 3,
+				),
 		);
 		$Person->save($data);
 		$result = $this->Aro->find('first', array(
-			'conditions' => array('Aro.model' => 'AclPerson', 'Aro.foreign_key' => $Person->id)
+				'conditions' => array('Aro.model' => 'AclPerson', 'Aro.foreign_key' => $Person->id)
 		));
 		$this->assertTrue(is_array($result));
 		$this->assertEquals(5, $result['Aro']['parent_id']);
 
 		$Person->save(array('id' => $Person->id, 'name' => 'Bruce'));
 		$result = $this->Aro->find('first', array(
-			'conditions' => array('Aro.model' => 'AclPerson', 'Aro.foreign_key' => $Person->id)
+				'conditions' => array('Aro.model' => 'AclPerson', 'Aro.foreign_key' => $Person->id)
 		));
 		$this->assertEquals(5, $result['Aro']['parent_id']);
 	}
 
-/**
- * Test After Delete
- *
- * @return void
- */
+	/**
+	 * Test After Delete
+	 *
+	 * @return void
+	 */
 	public function testAfterDelete() {
 		$aroData = array(
-			'Aro' => array(
-				'model' => 'AclPerson',
-				'foreign_key' => 2,
-				'parent_id' => null
-			)
+				'Aro' => array(
+						'model' => 'AclPerson',
+						'foreign_key' => 2,
+						'parent_id' => NULL
+				)
 		);
 		$this->Aro->save($aroData);
 
 		$acoData = array(
-			'Aco' => array(
-				'model' => 'AclPerson',
-				'foreign_key' => 2,
-				'parent_id' => null
-			)
+				'Aco' => array(
+						'model' => 'AclPerson',
+						'foreign_key' => 2,
+						'parent_id' => NULL
+				)
 		);
 		$this->Aco->save($acoData);
 		$Person = new AclPerson();
 
 		$data = array(
-			'AclPerson' => array(
-				'name' => 'Trent',
-				'mother_id' => 2,
-				'father_id' => 3,
-			),
+				'AclPerson' => array(
+						'name' => 'Trent',
+						'mother_id' => 2,
+						'father_id' => 3,
+				),
 		);
 		$Person->save($data);
 		$id = $Person->id;
-		$node = $Person->node(null, 'Aro');
+		$node = $Person->node(NULL, 'Aro');
 		$this->assertEquals(2, count($node));
 		$this->assertEquals(5, $node[0]['Aro']['parent_id']);
-		$this->assertEquals(null, $node[1]['Aro']['parent_id']);
+		$this->assertEquals(NULL, $node[1]['Aro']['parent_id']);
 
 		$Person->delete($id);
 		$result = $this->Aro->find('first', array(
-			'conditions' => array('Aro.model' => 'AclPerson', 'Aro.foreign_key' => $id)
+				'conditions' => array('Aro.model' => 'AclPerson', 'Aro.foreign_key' => $id)
 		));
 		$this->assertTrue(empty($result));
 		$result = $this->Aro->find('first', array(
-			'conditions' => array('Aro.model' => 'AclPerson', 'Aro.foreign_key' => 2)
+				'conditions' => array('Aro.model' => 'AclPerson', 'Aro.foreign_key' => 2)
 		));
 		$this->assertFalse(empty($result));
 
 		$data = array(
-			'AclPerson' => array(
-				'name' => 'Trent',
-				'mother_id' => 2,
-				'father_id' => 3,
-			),
+				'AclPerson' => array(
+						'name' => 'Trent',
+						'mother_id' => 2,
+						'father_id' => 3,
+				),
 		);
 		$Person->save($data);
 		$id = $Person->id;
 		$Person->delete(2);
 		$result = $this->Aro->find('first', array(
-			'conditions' => array('Aro.model' => 'AclPerson', 'Aro.foreign_key' => $id)
+				'conditions' => array('Aro.model' => 'AclPerson', 'Aro.foreign_key' => $id)
 		));
 		$this->assertTrue(empty($result));
 
 		$result = $this->Aro->find('first', array(
-			'conditions' => array('Aro.model' => 'AclPerson', 'Aro.foreign_key' => 2)
+				'conditions' => array('Aro.model' => 'AclPerson', 'Aro.foreign_key' => 2)
 		));
 		$this->assertTrue(empty($result));
 	}
 
-/**
- * Test Node()
- *
- * @return void
- */
+	/**
+	 * Test Node()
+	 *
+	 * @return void
+	 */
 	public function testNode() {
 		$Person = new AclPerson();
 		$aroData = array(
-			'Aro' => array(
-				'model' => 'AclPerson',
-				'foreign_key' => 2,
-				'parent_id' => null
-			)
+				'Aro' => array(
+						'model' => 'AclPerson',
+						'foreign_key' => 2,
+						'parent_id' => NULL
+				)
 		);
 		$this->Aro->save($aroData);
 
 		$Person->id = 2;
-		$result = $Person->node(null, 'Aro');
+		$result = $Person->node(NULL, 'Aro');
 		$this->assertTrue(is_array($result));
 		$this->assertEquals(1, count($result));
 	}

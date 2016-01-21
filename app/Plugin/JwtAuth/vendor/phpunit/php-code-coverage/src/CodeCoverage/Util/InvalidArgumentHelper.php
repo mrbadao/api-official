@@ -1,37 +1,37 @@
 <?php
-	/*
-	 * This file is part of the PHP_CodeCoverage package.
-	 *
-	 * (c) Sebastian Bergmann <sebastian@phpunit.de>
-	 *
-	 * For the full copyright and license information, please view the LICENSE
-	 * file that was distributed with this source code.
-	 */
+/*
+ * This file is part of the PHP_CodeCoverage package.
+ *
+ * (c) Sebastian Bergmann <sebastian@phpunit.de>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
+/**
+ * Factory for PHP_CodeCoverage_Exception objects that are used to describe
+ * invalid arguments passed to a function or method.
+ *
+ * @since Class available since Release 1.2.0
+ */
+class PHP_CodeCoverage_Util_InvalidArgumentHelper {
 	/**
-	 * Factory for PHP_CodeCoverage_Exception objects that are used to describe
-	 * invalid arguments passed to a function or method.
-	 *
-	 * @since Class available since Release 1.2.0
+	 * @param int    $argument
+	 * @param string $type
+	 * @param mixed  $value
 	 */
-	class PHP_CodeCoverage_Util_InvalidArgumentHelper {
-		/**
-		 * @param int    $argument
-		 * @param string $type
-		 * @param mixed  $value
-		 */
-		public static function factory($argument, $type, $value = NULL) {
-			$stack = debug_backtrace(FALSE);
+	public static function factory($argument, $type, $value = NULL) {
+		$stack = debug_backtrace(FALSE);
 
-			return new PHP_CodeCoverage_Exception(
-					sprintf(
-							'Argument #%d%sof %s::%s() must be a %s',
-							$argument,
-							$value !== NULL ? ' (' . gettype($value) . '#' . $value . ')' : ' (No Value) ',
-							$stack[1]['class'],
-							$stack[1]['function'],
-							$type
-					)
-			);
-		}
+		return new PHP_CodeCoverage_Exception(
+				sprintf(
+						'Argument #%d%sof %s::%s() must be a %s',
+						$argument,
+						$value !== NULL ? ' (' . gettype($value) . '#' . $value . ')' : ' (No Value) ',
+						$stack[1]['class'],
+						$stack[1]['function'],
+						$type
+				)
+		);
 	}
+}

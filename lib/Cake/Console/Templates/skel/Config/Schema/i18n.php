@@ -27,45 +27,46 @@
  */
 class I18nSchema extends CakeSchema {
 
-/**
- * The name property
- *
- * @var string
- */
+	/**
+	 * The name property
+	 *
+	 * @var string
+	 */
 	public $name = 'i18n';
+	/**
+	 * The i18n table definition
+	 *
+	 * @var array
+	 */
+	public $i18n = array(
+			'id' => array('type' => 'integer', 'null' => FALSE, 'default' => NULL, 'length' => 10, 'key' => 'primary'),
+			'locale' => array('type' => 'string', 'null' => FALSE, 'length' => 6, 'key' => 'index'),
+			'model' => array('type' => 'string', 'null' => FALSE, 'key' => 'index'),
+			'foreign_key' => array('type' => 'integer', 'null' => FALSE, 'length' => 10, 'key' => 'index'),
+			'field' => array('type' => 'string', 'null' => FALSE, 'key' => 'index'),
+			'content' => array('type' => 'text', 'null' => TRUE, 'default' => NULL),
+			'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1), 'locale' => array('column' => 'locale', 'unique' => 0), 'model' => array('column' => 'model', 'unique' => 0), 'row_id' => array('column' => 'foreign_key', 'unique' => 0), 'field' => array('column' => 'field', 'unique' => 0))
+	);
 
-/**
- * Before callback.
- *
- * @param array $event Schema object properties
- * @return bool Should process continue
- */
+	/**
+	 * Before callback.
+	 *
+	 * @param array $event Schema object properties
+	 *
+	 * @return bool Should process continue
+	 */
 	public function before($event = array()) {
-		return true;
+		return TRUE;
 	}
 
-/**
- * After callback.
- *
- * @param array $event Schema object properties
- * @return void
- */
+	/**
+	 * After callback.
+	 *
+	 * @param array $event Schema object properties
+	 *
+	 * @return void
+	 */
 	public function after($event = array()) {
 	}
-
-/**
- * The i18n table definition
- *
- * @var array
- */
-	public $i18n = array(
-		'id' => array('type' => 'integer', 'null' => false, 'default' => null, 'length' => 10, 'key' => 'primary'),
-		'locale' => array('type' => 'string', 'null' => false, 'length' => 6, 'key' => 'index'),
-		'model' => array('type' => 'string', 'null' => false, 'key' => 'index'),
-		'foreign_key' => array('type' => 'integer', 'null' => false, 'length' => 10, 'key' => 'index'),
-		'field' => array('type' => 'string', 'null' => false, 'key' => 'index'),
-		'content' => array('type' => 'text', 'null' => true, 'default' => null),
-		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1), 'locale' => array('column' => 'locale', 'unique' => 0), 'model' => array('column' => 'model', 'unique' => 0), 'row_id' => array('column' => 'foreign_key', 'unique' => 0), 'field' => array('column' => 'field', 'unique' => 0))
-	);
 
 }

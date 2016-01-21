@@ -25,15 +25,16 @@ App::uses('Folder', 'Utility');
  */
 class CakeTestSuite extends PHPUnit_Framework_TestSuite {
 
-/**
- * Adds all the files in a directory to the test suite. Does not recurse through directories.
- *
- * @param string $directory The directory to add tests from.
- * @return void
- */
+	/**
+	 * Adds all the files in a directory to the test suite. Does not recurse through directories.
+	 *
+	 * @param string $directory The directory to add tests from.
+	 *
+	 * @return void
+	 */
 	public function addTestDirectory($directory = '.') {
 		$Folder = new Folder($directory);
-		list(, $files) = $Folder->read(true, true, true);
+		list(, $files) = $Folder->read(TRUE, TRUE, TRUE);
 
 		foreach ($files as $file) {
 			if (substr($file, -4) === '.php') {
@@ -42,15 +43,16 @@ class CakeTestSuite extends PHPUnit_Framework_TestSuite {
 		}
 	}
 
-/**
- * Recursively adds all the files in a directory to the test suite.
- *
- * @param string $directory The directory subtree to add tests from.
- * @return void
- */
+	/**
+	 * Recursively adds all the files in a directory to the test suite.
+	 *
+	 * @param string $directory The directory subtree to add tests from.
+	 *
+	 * @return void
+	 */
 	public function addTestDirectoryRecursive($directory = '.') {
 		$Folder = new Folder($directory);
-		$files = $Folder->tree(null, true, 'files');
+		$files = $Folder->tree(NULL, TRUE, 'files');
 
 		foreach ($files as $file) {
 			if (substr($file, -4) === '.php') {

@@ -25,22 +25,22 @@ App::uses('MailTransport', 'Network/Email');
  */
 class MailTransportTest extends CakeTestCase {
 
-/**
- * Setup
- *
- * @return void
- */
+	/**
+	 * Setup
+	 *
+	 * @return void
+	 */
 	public function setUp() {
 		parent::setUp();
 		$this->MailTransport = $this->getMock('MailTransport', array('_mail'));
 		$this->MailTransport->config(array('additionalParameters' => '-f'));
 	}
 
-/**
- * testSend method
- *
- * @return void
- */
+	/**
+	 * testSend method
+	 *
+	 * @return void
+	 */
 	public function testSendData() {
 		$email = $this->getMock('CakeEmail', array('message'), array());
 		$email->from('noreply@cakephp.org', 'CakePHP Test');
@@ -53,12 +53,12 @@ class MailTransportTest extends CakeTestCase {
 		$email->subject($longNonAscii);
 		$date = date(DATE_RFC2822);
 		$email->setHeaders(array(
-			'X-Mailer' => 'CakePHP Email',
-			'Date' => $date,
-			'X-add' => mb_encode_mimeheader($longNonAscii, 'utf8', 'B'),
+				'X-Mailer' => 'CakePHP Email',
+				'Date' => $date,
+				'X-add' => mb_encode_mimeheader($longNonAscii, 'utf8', 'B'),
 		));
 		$email->expects($this->any())->method('message')
-			->will($this->returnValue(array('First Line', 'Second Line', '.Third Line', '')));
+				->will($this->returnValue(array('First Line', 'Second Line', '.Third Line', '')));
 
 		$encoded = '=?UTF-8?B?Rm/DuCBCw6VyIELDqXogRm/DuCBCw6VyIELDqXogRm/DuCBCw6VyIELDqXog?=';
 		$encoded .= ' =?UTF-8?B?Rm/DuCBCw6VyIELDqXo=?=';
@@ -76,13 +76,13 @@ class MailTransportTest extends CakeTestCase {
 		$data .= "Content-Transfer-Encoding: 8bit";
 
 		$this->MailTransport->expects($this->once())->method('_mail')
-			->with(
-				'CakePHP <cake@cakephp.org>',
-				$encoded,
-				implode(PHP_EOL, array('First Line', 'Second Line', '.Third Line', '')),
-				$data,
-				'-f'
-			);
+				->with(
+						'CakePHP <cake@cakephp.org>',
+						$encoded,
+						implode(PHP_EOL, array('First Line', 'Second Line', '.Third Line', '')),
+						$data,
+						'-f'
+				);
 
 		$this->MailTransport->send($email);
 	}

@@ -23,23 +23,24 @@ App::uses('DispatcherFilter', 'Routing');
  */
 class CacheDispatcher extends DispatcherFilter {
 
-/**
- * Default priority for all methods in this filter
- * This filter should run before the request gets parsed by router
- *
- * @var int
- */
+	/**
+	 * Default priority for all methods in this filter
+	 * This filter should run before the request gets parsed by router
+	 *
+	 * @var int
+	 */
 	public $priority = 9;
 
-/**
- * Checks whether the response was cached and set the body accordingly.
- *
- * @param CakeEvent $event containing the request and response object
- * @return CakeResponse with cached content if found, null otherwise
- */
+	/**
+	 * Checks whether the response was cached and set the body accordingly.
+	 *
+	 * @param CakeEvent $event containing the request and response object
+	 *
+	 * @return CakeResponse with cached content if found, null otherwise
+	 */
 	public function beforeDispatch(CakeEvent $event) {
-		if (Configure::read('Cache.check') !== true) {
-			return null;
+		if (Configure::read('Cache.check') !== TRUE) {
+			return NULL;
 		}
 
 		$path = $event->data['request']->here();
@@ -58,13 +59,14 @@ class CacheDispatcher extends DispatcherFilter {
 			$filename = CACHE . 'views' . DS . $path . '_index.php';
 		}
 		if (file_exists($filename)) {
-			$controller = null;
+			$controller = NULL;
 			$view = new View($controller);
 			$view->response = $event->data['response'];
-			$result = $view->renderCache($filename, microtime(true));
-			if ($result !== false) {
+			$result = $view->renderCache($filename, microtime(TRUE));
+			if ($result !== FALSE) {
 				$event->stopPropagation();
 				$event->data['response']->body($result);
+
 				return $event->data['response'];
 			}
 		}

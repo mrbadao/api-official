@@ -32,30 +32,30 @@ App::uses('ExtractTask', 'Console/Command/Task');
  */
 class ExtractTaskTest extends CakeTestCase {
 
-/**
- * setUp method
- *
- * @return void
- */
+	/**
+	 * setUp method
+	 *
+	 * @return void
+	 */
 	public function setUp() {
 		parent::setUp();
-		$out = $this->getMock('ConsoleOutput', array(), array(), '', false);
-		$in = $this->getMock('ConsoleInput', array(), array(), '', false);
+		$out = $this->getMock('ConsoleOutput', array(), array(), '', FALSE);
+		$in = $this->getMock('ConsoleInput', array(), array(), '', FALSE);
 
 		$this->Task = $this->getMock(
-			'ExtractTask',
-			array('in', 'out', 'err', '_stop'),
-			array($out, $out, $in)
+				'ExtractTask',
+				array('in', 'out', 'err', '_stop'),
+				array($out, $out, $in)
 		);
 		$this->path = TMP . 'tests' . DS . 'extract_task_test';
-		new Folder($this->path . DS . 'locale', true);
+		new Folder($this->path . DS . 'locale', TRUE);
 	}
 
-/**
- * tearDown method
- *
- * @return void
- */
+	/**
+	 * tearDown method
+	 *
+	 * @return void
+	 */
 	public function tearDown() {
 		parent::tearDown();
 		unset($this->Task);
@@ -65,20 +65,20 @@ class ExtractTaskTest extends CakeTestCase {
 		CakePlugin::unload();
 	}
 
-/**
- * testExecute method
- *
- * @return void
- */
+	/**
+	 * testExecute method
+	 *
+	 * @return void
+	 */
 	public function testExecute() {
-		$this->Task->interactive = false;
+		$this->Task->interactive = FALSE;
 
 		$this->Task->params['paths'] = CAKE . 'Test' . DS . 'test_app' . DS . 'View' . DS . 'Pages';
 		$this->Task->params['output'] = $this->path . DS;
 		$this->Task->params['extract-core'] = 'no';
 		$this->Task->expects($this->never())->method('err');
 		$this->Task->expects($this->any())->method('in')
-			->will($this->returnValue('y'));
+				->will($this->returnValue('y'));
 		$this->Task->expects($this->never())->method('_stop');
 
 		$this->Task->execute();
@@ -191,13 +191,13 @@ class ExtractTaskTest extends CakeTestCase {
 		$this->assertRegExp($pattern, $result);
 	}
 
-/**
- * testExtractCategory method
- *
- * @return void
- */
+	/**
+	 * testExtractCategory method
+	 *
+	 * @return void
+	 */
 	public function testExtractCategory() {
-		$this->Task->interactive = false;
+		$this->Task->interactive = FALSE;
 
 		$this->Task->params['paths'] = CAKE . 'Test' . DS . 'test_app' . DS . 'View' . DS . 'Pages';
 		$this->Task->params['output'] = $this->path . DS;
@@ -205,7 +205,7 @@ class ExtractTaskTest extends CakeTestCase {
 		$this->Task->params['merge'] = 'no';
 		$this->Task->expects($this->never())->method('err');
 		$this->Task->expects($this->any())->method('in')
-			->will($this->returnValue('y'));
+				->will($this->returnValue('y'));
 		$this->Task->expects($this->never())->method('_stop');
 
 		$this->Task->execute();
@@ -221,13 +221,13 @@ class ExtractTaskTest extends CakeTestCase {
 		$this->assertNotRegExp($pattern, $result);
 	}
 
-/**
- * test exclusions
- *
- * @return void
- */
+	/**
+	 * test exclusions
+	 *
+	 * @return void
+	 */
 	public function testExtractWithExclude() {
-		$this->Task->interactive = false;
+		$this->Task->interactive = FALSE;
 
 		$this->Task->params['paths'] = CAKE . 'Test' . DS . 'test_app' . DS . 'View';
 		$this->Task->params['output'] = $this->path . DS;
@@ -235,7 +235,7 @@ class ExtractTaskTest extends CakeTestCase {
 		$this->Task->params['extract-core'] = 'no';
 
 		$this->Task->expects($this->any())->method('in')
-			->will($this->returnValue('y'));
+				->will($this->returnValue('y'));
 
 		$this->Task->execute();
 		$this->assertTrue(file_exists($this->path . DS . 'default.pot'));
@@ -248,17 +248,17 @@ class ExtractTaskTest extends CakeTestCase {
 		$this->assertNotRegExp($pattern, $result);
 	}
 
-/**
- * test extract can read more than one path.
- *
- * @return void
- */
+	/**
+	 * test extract can read more than one path.
+	 *
+	 * @return void
+	 */
 	public function testExtractMultiplePaths() {
-		$this->Task->interactive = false;
+		$this->Task->interactive = FALSE;
 
 		$this->Task->params['paths'] =
-			CAKE . 'Test' . DS . 'test_app' . DS . 'View' . DS . 'Pages,' .
-			CAKE . 'Test' . DS . 'test_app' . DS . 'View' . DS . 'Posts';
+				CAKE . 'Test' . DS . 'test_app' . DS . 'View' . DS . 'Pages,' .
+				CAKE . 'Test' . DS . 'test_app' . DS . 'View' . DS . 'Posts';
 
 		$this->Task->params['output'] = $this->path . DS;
 		$this->Task->params['extract-core'] = 'no';
@@ -272,47 +272,47 @@ class ExtractTaskTest extends CakeTestCase {
 		$this->assertRegExp($pattern, $result);
 	}
 
-/**
- * Tests that it is possible to exclude plugin paths by enabling the param option for the ExtractTask
- *
- * @return void
- */
+	/**
+	 * Tests that it is possible to exclude plugin paths by enabling the param option for the ExtractTask
+	 *
+	 * @return void
+	 */
 	public function testExtractExcludePlugins() {
 		App::build(array(
-			'Plugin' => array(CAKE . 'Test' . DS . 'test_app' . DS . 'Plugin' . DS)
+				'Plugin' => array(CAKE . 'Test' . DS . 'test_app' . DS . 'Plugin' . DS)
 		));
-		$this->out = $this->getMock('ConsoleOutput', array(), array(), '', false);
-		$this->in = $this->getMock('ConsoleInput', array(), array(), '', false);
+		$this->out = $this->getMock('ConsoleOutput', array(), array(), '', FALSE);
+		$this->in = $this->getMock('ConsoleInput', array(), array(), '', FALSE);
 		$this->Task = $this->getMock('ExtractTask',
-			array('_isExtractingApp', '_extractValidationMessages', 'in', 'out', 'err', 'clear', '_stop'),
-			array($this->out, $this->out, $this->in)
+				array('_isExtractingApp', '_extractValidationMessages', 'in', 'out', 'err', 'clear', '_stop'),
+				array($this->out, $this->out, $this->in)
 		);
-		$this->Task->expects($this->exactly(2))->method('_isExtractingApp')->will($this->returnValue(true));
+		$this->Task->expects($this->exactly(2))->method('_isExtractingApp')->will($this->returnValue(TRUE));
 
 		$this->Task->params['paths'] = CAKE . 'Test' . DS . 'test_app' . DS;
 		$this->Task->params['output'] = $this->path . DS;
-		$this->Task->params['exclude-plugins'] = true;
+		$this->Task->params['exclude-plugins'] = TRUE;
 
 		$this->Task->execute();
 		$result = file_get_contents($this->path . DS . 'default.pot');
 		$this->assertNotRegExp('#TestPlugin#', $result);
 	}
 
-/**
- * Test that is possible to extract messages form a single plugin
- *
- * @return void
- */
+	/**
+	 * Test that is possible to extract messages form a single plugin
+	 *
+	 * @return void
+	 */
 	public function testExtractPlugin() {
 		App::build(array(
-			'Plugin' => array(CAKE . 'Test' . DS . 'test_app' . DS . 'Plugin' . DS)
+				'Plugin' => array(CAKE . 'Test' . DS . 'test_app' . DS . 'Plugin' . DS)
 		));
 
-		$this->out = $this->getMock('ConsoleOutput', array(), array(), '', false);
-		$this->in = $this->getMock('ConsoleInput', array(), array(), '', false);
+		$this->out = $this->getMock('ConsoleOutput', array(), array(), '', FALSE);
+		$this->in = $this->getMock('ConsoleInput', array(), array(), '', FALSE);
 		$this->Task = $this->getMock('ExtractTask',
-			array('_isExtractingApp', 'in', 'out', 'err', 'clear', '_stop'),
-			array($this->out, $this->out, $this->in)
+				array('_isExtractingApp', 'in', 'out', 'err', 'clear', '_stop'),
+				array($this->out, $this->out, $this->in)
 		);
 
 		$this->Task->params['output'] = $this->path . DS;
@@ -326,29 +326,29 @@ class ExtractTaskTest extends CakeTestCase {
 		$this->assertContains('I can haz plugin model validation message', $result);
 	}
 
-/**
- * Tests that the task will inspect application models and extract the validation messages from them
- *
- * @return void
- */
+	/**
+	 * Tests that the task will inspect application models and extract the validation messages from them
+	 *
+	 * @return void
+	 */
 	public function testExtractModelValidation() {
 		App::build(array(
-			'Model' => array(CAKE . 'Test' . DS . 'test_app' . DS . 'Model' . DS),
-			'Plugin' => array(CAKE . 'Test' . DS . 'test_app' . DS . 'Plugin' . DS)
+				'Model' => array(CAKE . 'Test' . DS . 'test_app' . DS . 'Model' . DS),
+				'Plugin' => array(CAKE . 'Test' . DS . 'test_app' . DS . 'Plugin' . DS)
 		), App::RESET);
-		$this->out = $this->getMock('ConsoleOutput', array(), array(), '', false);
-		$this->in = $this->getMock('ConsoleInput', array(), array(), '', false);
+		$this->out = $this->getMock('ConsoleOutput', array(), array(), '', FALSE);
+		$this->in = $this->getMock('ConsoleInput', array(), array(), '', FALSE);
 		$this->Task = $this->getMock('ExtractTask',
-			array('_isExtractingApp', 'in', 'out', 'err', 'clear', '_stop'),
-			array($this->out, $this->out, $this->in)
+				array('_isExtractingApp', 'in', 'out', 'err', 'clear', '_stop'),
+				array($this->out, $this->out, $this->in)
 		);
-		$this->Task->expects($this->exactly(2))->method('_isExtractingApp')->will($this->returnValue(true));
+		$this->Task->expects($this->exactly(2))->method('_isExtractingApp')->will($this->returnValue(TRUE));
 
 		$this->Task->params['paths'] = CAKE . 'Test' . DS . 'test_app' . DS;
 		$this->Task->params['output'] = $this->path . DS;
 		$this->Task->params['extract-core'] = 'no';
-		$this->Task->params['exclude-plugins'] = true;
-		$this->Task->params['ignore-model-validation'] = false;
+		$this->Task->params['exclude-plugins'] = TRUE;
+		$this->Task->params['ignore-model-validation'] = FALSE;
 
 		$this->Task->execute();
 		$result = file_get_contents($this->path . DS . 'default.pot');
@@ -375,29 +375,29 @@ class ExtractTaskTest extends CakeTestCase {
 		$this->assertContains("msgid \"single 'quoted' validation\"", $result, 'Strings with quotes not handled correctly');
 	}
 
-/**
- *  Tests that the task will inspect application models and extract the validation messages from them
- *	while using a custom validation domain for the messages set on the model itself
- *
- * @return void
- */
+	/**
+	 *  Tests that the task will inspect application models and extract the validation messages from them
+	 *    while using a custom validation domain for the messages set on the model itself
+	 *
+	 * @return void
+	 */
 	public function testExtractModelValidationWithDomainInModel() {
 		App::build(array(
-			'Model' => array(CAKE . 'Test' . DS . 'test_app' . DS . 'Plugin' . DS . 'TestPlugin' . DS . 'Model' . DS)
+				'Model' => array(CAKE . 'Test' . DS . 'test_app' . DS . 'Plugin' . DS . 'TestPlugin' . DS . 'Model' . DS)
 		));
-		$this->out = $this->getMock('ConsoleOutput', array(), array(), '', false);
-		$this->in = $this->getMock('ConsoleInput', array(), array(), '', false);
+		$this->out = $this->getMock('ConsoleOutput', array(), array(), '', FALSE);
+		$this->in = $this->getMock('ConsoleInput', array(), array(), '', FALSE);
 		$this->Task = $this->getMock('ExtractTask',
-			array('_isExtractingApp', 'in', 'out', 'err', 'clear', '_stop'),
-			array($this->out, $this->out, $this->in)
+				array('_isExtractingApp', 'in', 'out', 'err', 'clear', '_stop'),
+				array($this->out, $this->out, $this->in)
 		);
-		$this->Task->expects($this->exactly(2))->method('_isExtractingApp')->will($this->returnValue(true));
+		$this->Task->expects($this->exactly(2))->method('_isExtractingApp')->will($this->returnValue(TRUE));
 
 		$this->Task->params['paths'] = CAKE . 'Test' . DS . 'test_app' . DS;
 		$this->Task->params['output'] = $this->path . DS;
 		$this->Task->params['extract-core'] = 'no';
-		$this->Task->params['exclude-plugins'] = true;
-		$this->Task->params['ignore-model-validation'] = false;
+		$this->Task->params['exclude-plugins'] = TRUE;
+		$this->Task->params['ignore-model-validation'] = FALSE;
 
 		$this->Task->execute();
 		$result = file_get_contents($this->path . DS . 'test_plugin.pot');
@@ -418,24 +418,24 @@ class ExtractTaskTest extends CakeTestCase {
 		$this->assertRegExp($pattern, $result);
 	}
 
-/**
- *  Test that the extract shell can obtain validation messages from models inside a specific plugin
- *
- * @return void
- */
+	/**
+	 *  Test that the extract shell can obtain validation messages from models inside a specific plugin
+	 *
+	 * @return void
+	 */
 	public function testExtractModelValidationInPlugin() {
 		App::build(array(
-			'Plugin' => array(CAKE . 'Test' . DS . 'test_app' . DS . 'Plugin' . DS)
+				'Plugin' => array(CAKE . 'Test' . DS . 'test_app' . DS . 'Plugin' . DS)
 		));
-		$this->out = $this->getMock('ConsoleOutput', array(), array(), '', false);
-		$this->in = $this->getMock('ConsoleInput', array(), array(), '', false);
+		$this->out = $this->getMock('ConsoleOutput', array(), array(), '', FALSE);
+		$this->in = $this->getMock('ConsoleInput', array(), array(), '', FALSE);
 		$this->Task = $this->getMock('ExtractTask',
-			array('_isExtractingApp', 'in', 'out', 'err', 'clear', '_stop'),
-			array($this->out, $this->out, $this->in)
+				array('_isExtractingApp', 'in', 'out', 'err', 'clear', '_stop'),
+				array($this->out, $this->out, $this->in)
 		);
 
 		$this->Task->params['output'] = $this->path . DS;
-		$this->Task->params['ignore-model-validation'] = false;
+		$this->Task->params['ignore-model-validation'] = FALSE;
 		$this->Task->params['plugin'] = 'TestPlugin';
 
 		$this->Task->execute();
@@ -460,18 +460,18 @@ class ExtractTaskTest extends CakeTestCase {
 		$this->assertNotRegExp($pattern, $result);
 	}
 
-/**
- *  Test that the extract shell overwrites existing files with the overwrite parameter
- *
- * @return void
- */
+	/**
+	 *  Test that the extract shell overwrites existing files with the overwrite parameter
+	 *
+	 * @return void
+	 */
 	public function testExtractOverwrite() {
-		$this->Task->interactive = false;
+		$this->Task->interactive = FALSE;
 
 		$this->Task->params['paths'] = CAKE . 'Test' . DS . 'test_app' . DS;
 		$this->Task->params['output'] = $this->path . DS;
 		$this->Task->params['extract-core'] = 'no';
-		$this->Task->params['overwrite'] = true;
+		$this->Task->params['overwrite'] = TRUE;
 
 		file_put_contents($this->path . DS . 'default.pot', 'will be overwritten');
 		$this->assertTrue(file_exists($this->path . DS . 'default.pot'));
@@ -482,13 +482,13 @@ class ExtractTaskTest extends CakeTestCase {
 		$this->assertNotEquals($original, $result);
 	}
 
-/**
- *  Test that the extract shell scans the core libs
- *
- * @return void
- */
+	/**
+	 *  Test that the extract shell scans the core libs
+	 *
+	 * @return void
+	 */
 	public function testExtractCore() {
-		$this->Task->interactive = false;
+		$this->Task->interactive = FALSE;
 
 		$this->Task->params['paths'] = CAKE . 'Test' . DS . 'test_app' . DS;
 		$this->Task->params['output'] = $this->path . DS;

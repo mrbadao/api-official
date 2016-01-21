@@ -1,7 +1,7 @@
 <?php
 
-	interface MockTestInterface {
-		public function returnAnything();
+interface MockTestInterface {
+	public function returnAnything();
 
-		public function returnAnythingElse();
-	}
+	public function returnAnythingElse();
+}

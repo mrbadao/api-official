@@ -26,50 +26,51 @@ App::uses('CakeRoute', 'Routing/Route');
  */
 class RedirectRoute extends CakeRoute {
 
-/**
- * A CakeResponse object
- *
- * @var CakeResponse
- */
-	public $response = null;
+	/**
+	 * A CakeResponse object
+	 *
+	 * @var CakeResponse
+	 */
+	public $response = NULL;
 
-/**
- * The location to redirect to. Either a string or a CakePHP array URL.
- *
- * @var mixed
- */
+	/**
+	 * The location to redirect to. Either a string or a CakePHP array URL.
+	 *
+	 * @var mixed
+	 */
 	public $redirect;
 
-/**
- * Flag for disabling exit() when this route parses a URL.
- *
- * @var bool
- */
-	public $stop = true;
+	/**
+	 * Flag for disabling exit() when this route parses a URL.
+	 *
+	 * @var bool
+	 */
+	public $stop = TRUE;
 
-/**
- * Constructor
- *
- * @param string $template Template string with parameter placeholders
- * @param array $defaults Array of defaults for the route.
- * @param array $options Array of additional options for the Route
- */
+	/**
+	 * Constructor
+	 *
+	 * @param string $template Template string with parameter placeholders
+	 * @param array  $defaults Array of defaults for the route.
+	 * @param array  $options  Array of additional options for the Route
+	 */
 	public function __construct($template, $defaults = array(), $options = array()) {
 		parent::__construct($template, $defaults, $options);
 		$this->redirect = (array)$defaults;
 	}
 
-/**
- * Parses a string URL into an array. Parsed URLs will result in an automatic
- * redirection
- *
- * @param string $url The URL to parse
- * @return bool False on failure
- */
+	/**
+	 * Parses a string URL into an array. Parsed URLs will result in an automatic
+	 * redirection
+	 *
+	 * @param string $url The URL to parse
+	 *
+	 * @return bool False on failure
+	 */
 	public function parse($url) {
 		$params = parent::parse($url);
 		if (!$params) {
-			return false;
+			return FALSE;
 		}
 		if (!$this->response) {
 			$this->response = new CakeResponse();
@@ -93,33 +94,35 @@ class RedirectRoute extends CakeRoute {
 		if (isset($this->options['status']) && ($this->options['status'] >= 300 && $this->options['status'] < 400)) {
 			$status = $this->options['status'];
 		}
-		$this->response->header(array('Location' => Router::url($redirect, true)));
+		$this->response->header(array('Location' => Router::url($redirect, TRUE)));
 		$this->response->statusCode($status);
 		$this->response->send();
 		$this->_stop();
 	}
 
-/**
- * There is no reverse routing redirection routes
- *
- * @param array $url Array of parameters to convert to a string.
- * @return mixed either false or a string URL.
- */
-	public function match($url) {
-		return false;
-	}
-
-/**
- * Stop execution of the current script. Wraps exit() making
- * testing easier.
- *
- * @param int|string $code See http://php.net/exit for values
- * @return void
- */
+	/**
+	 * Stop execution of the current script. Wraps exit() making
+	 * testing easier.
+	 *
+	 * @param int|string $code See http://php.net/exit for values
+	 *
+	 * @return void
+	 */
 	protected function _stop($code = 0) {
 		if ($this->stop) {
 			exit($code);
 		}
+	}
+
+	/**
+	 * There is no reverse routing redirection routes
+	 *
+	 * @param array $url Array of parameters to convert to a string.
+	 *
+	 * @return mixed either false or a string URL.
+	 */
+	public function match($url) {
+		return FALSE;
 	}
 
 }

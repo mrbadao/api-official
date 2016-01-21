@@ -26,28 +26,28 @@ App::uses('Router', 'Routing');
  * being visited.
  *
  * @package       Cake.Controller.Component.Auth
- * @since 2.0
- * @see AuthComponent::$authenticate
- * @see AclComponent::check()
+ * @since         2.0
+ * @see           AuthComponent::$authenticate
+ * @see           AclComponent::check()
  */
 class CrudAuthorize extends BaseAuthorize {
 
-/**
- * Sets up additional actionMap values that match the configured `Routing.prefixes`.
- *
- * @param ComponentCollection $collection The component collection from the controller.
- * @param string $settings An array of settings. This class does not use any settings.
- */
+	/**
+	 * Sets up additional actionMap values that match the configured `Routing.prefixes`.
+	 *
+	 * @param ComponentCollection $collection The component collection from the controller.
+	 * @param string              $settings   An array of settings. This class does not use any settings.
+	 */
 	public function __construct(ComponentCollection $collection, $settings = array()) {
 		parent::__construct($collection, $settings);
 		$this->_setPrefixMappings();
 	}
 
-/**
- * sets the Crud mappings for prefix routes.
- *
- * @return void
- */
+	/**
+	 * sets the Crud mappings for prefix routes.
+	 *
+	 * @return void
+	 */
 	protected function _setPrefixMappings() {
 		$crud = array('create', 'read', 'update', 'delete');
 		$map = array_combine($crud, $crud);
@@ -56,45 +56,48 @@ class CrudAuthorize extends BaseAuthorize {
 		if (!empty($prefixes)) {
 			foreach ($prefixes as $prefix) {
 				$map = array_merge($map, array(
-					$prefix . '_index' => 'read',
-					$prefix . '_add' => 'create',
-					$prefix . '_edit' => 'update',
-					$prefix . '_view' => 'read',
-					$prefix . '_remove' => 'delete',
-					$prefix . '_create' => 'create',
-					$prefix . '_read' => 'read',
-					$prefix . '_update' => 'update',
-					$prefix . '_delete' => 'delete'
+						$prefix . '_index' => 'read',
+						$prefix . '_add' => 'create',
+						$prefix . '_edit' => 'update',
+						$prefix . '_view' => 'read',
+						$prefix . '_remove' => 'delete',
+						$prefix . '_create' => 'create',
+						$prefix . '_read' => 'read',
+						$prefix . '_update' => 'update',
+						$prefix . '_delete' => 'delete'
 				));
 			}
 		}
 		$this->mapActions($map);
 	}
 
-/**
- * Authorize a user using the mapped actions and the AclComponent.
- *
- * @param array $user The user to authorize
- * @param CakeRequest $request The request needing authorization.
- * @return bool
- */
+	/**
+	 * Authorize a user using the mapped actions and the AclComponent.
+	 *
+	 * @param array       $user    The user to authorize
+	 * @param CakeRequest $request The request needing authorization.
+	 *
+	 * @return bool
+	 */
 	public function authorize($user, CakeRequest $request) {
 		if (!isset($this->settings['actionMap'][$request->params['action']])) {
 			trigger_error(__d('cake_dev',
-				'CrudAuthorize::authorize() - Attempted access of un-mapped action "%1$s" in controller "%2$s"',
-				$request->action,
-				$request->controller
-				),
-				E_USER_WARNING
+					'CrudAuthorize::authorize() - Attempted access of un-mapped action "%1$s" in controller "%2$s"',
+					$request->action,
+					$request->controller
+			),
+					E_USER_WARNING
 			);
-			return false;
+
+			return FALSE;
 		}
 		$user = array($this->settings['userModel'] => $user);
 		$Acl = $this->_Collection->load('Acl');
+
 		return $Acl->check(
-			$user,
-			$this->action($request, ':controller'),
-			$this->settings['actionMap'][$request->params['action']]
+				$user,
+				$this->action($request, ':controller'),
+				$this->settings['actionMap'][$request->params['action']]
 		);
 	}
 

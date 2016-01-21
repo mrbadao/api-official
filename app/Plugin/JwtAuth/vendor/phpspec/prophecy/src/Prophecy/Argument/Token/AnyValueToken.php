@@ -1,48 +1,48 @@
 <?php
 
-	/*
-	 * This file is part of the Prophecy.
-	 * (c) Konstantin Kudryashov <ever.zet@gmail.com>
-	 *     Marcello Duarte <marcello.duarte@gmail.com>
-	 *
-	 * For the full copyright and license information, please view the LICENSE
-	 * file that was distributed with this source code.
-	 */
+/*
+ * This file is part of the Prophecy.
+ * (c) Konstantin Kudryashov <ever.zet@gmail.com>
+ *     Marcello Duarte <marcello.duarte@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
-	namespace Prophecy\Argument\Token;
+namespace Prophecy\Argument\Token;
+
+/**
+ * Any single value token.
+ *
+ * @author Konstantin Kudryashov <ever.zet@gmail.com>
+ */
+class AnyValueToken implements TokenInterface {
+	/**
+	 * Always scores 3 for any argument.
+	 *
+	 * @param $argument
+	 *
+	 * @return int
+	 */
+	public function scoreArgument($argument) {
+		return 3;
+	}
 
 	/**
-	 * Any single value token.
+	 * Returns false.
 	 *
-	 * @author Konstantin Kudryashov <ever.zet@gmail.com>
+	 * @return bool
 	 */
-	class AnyValueToken implements TokenInterface {
-		/**
-		 * Always scores 3 for any argument.
-		 *
-		 * @param $argument
-		 *
-		 * @return int
-		 */
-		public function scoreArgument($argument) {
-			return 3;
-		}
-
-		/**
-		 * Returns false.
-		 *
-		 * @return bool
-		 */
-		public function isLast() {
-			return FALSE;
-		}
-
-		/**
-		 * Returns string representation for token.
-		 *
-		 * @return string
-		 */
-		public function __toString() {
-			return '*';
-		}
+	public function isLast() {
+		return FALSE;
 	}
+
+	/**
+	 * Returns string representation for token.
+	 *
+	 * @return string
+	 */
+	public function __toString() {
+		return '*';
+	}
+}

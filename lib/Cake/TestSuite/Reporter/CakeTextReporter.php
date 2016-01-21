@@ -25,51 +25,42 @@ App::uses('TextCoverageReport', 'TestSuite/Coverage');
  */
 class CakeTextReporter extends CakeBaseReporter {
 
-/**
- * Sets the text/plain header if the test is not a CLI test.
- *
- * @return void
- */
-	public function paintDocumentStart() {
-		if (!headers_sent()) {
-			header('Content-type: text/plain');
-		}
-	}
-
-/**
- * Paints a pass
- *
- * @return void
- */
+	/**
+	 * Paints a pass
+	 *
+	 * @return void
+	 */
 	public function paintPass() {
 		echo '.';
 	}
 
-/**
- * Paints a failing test.
- *
- * @param PHPUnit_Framework_AssertionFailedError $message Failure object displayed in
- *   the context of the other tests.
- * @return void
- */
+	/**
+	 * Paints a failing test.
+	 *
+	 * @param PHPUnit_Framework_AssertionFailedError $message Failure object displayed in
+	 *                                                        the context of the other tests.
+	 *
+	 * @return void
+	 */
 	public function paintFail($message) {
 		$context = $message->getTrace();
 		$realContext = $context[3];
 		$context = $context[2];
 
 		printf(
-			"FAIL on line %s\n%s in\n%s %s()\n\n",
-			$context['line'], $message->toString(), $context['file'], $realContext['function']
+				"FAIL on line %s\n%s in\n%s %s()\n\n",
+				$context['line'], $message->toString(), $context['file'], $realContext['function']
 		);
 	}
 
-/**
- * Paints the end of the test with a summary of
- * the passes and failures.
- *
- * @param PHPUnit_Framework_TestResult $result Result object
- * @return void
- */
+	/**
+	 * Paints the end of the test with a summary of
+	 * the passes and failures.
+	 *
+	 * @param PHPUnit_Framework_TestResult $result Result object
+	 *
+	 * @return void
+	 */
 	public function paintFooter($result) {
 		if ($result->failureCount() + $result->errorCount()) {
 			echo "FAILURES!!!\n";
@@ -78,10 +69,10 @@ class CakeTextReporter extends CakeBaseReporter {
 		}
 
 		echo "Test cases run: " . $result->count() .
-			"/" . ($result->count() - $result->skippedCount()) .
-			', Passes: ' . $this->numAssertions .
-			', Failures: ' . $result->failureCount() .
-			', Exceptions: ' . $result->errorCount() . "\n";
+				"/" . ($result->count() - $result->skippedCount()) .
+				', Passes: ' . $this->numAssertions .
+				', Failures: ' . $result->failureCount() .
+				', Exceptions: ' . $result->errorCount() . "\n";
 
 		echo 'Time: ' . $result->time() . " seconds\n";
 		echo 'Peak memory: ' . number_format(memory_get_peak_usage()) . " bytes\n";
@@ -92,58 +83,84 @@ class CakeTextReporter extends CakeBaseReporter {
 		}
 	}
 
-/**
- * Paints the title only.
- *
- * @return void
- */
+	/**
+	 * Generates a Text summary of the coverage data.
+	 *
+	 * @param array $coverage Array of coverage data.
+	 *
+	 * @return void
+	 */
+	public function paintCoverage($coverage) {
+		$reporter = new TextCoverageReport($coverage, $this);
+		echo $reporter->report();
+	}
+
+	/**
+	 * Paints the title only.
+	 *
+	 * @return void
+	 */
 	public function paintHeader() {
 		$this->paintDocumentStart();
 		flush();
 	}
 
-/**
- * Paints a PHP exception.
- *
- * @param Exception $exception Exception to describe.
- * @return void
- */
+	/**
+	 * Sets the text/plain header if the test is not a CLI test.
+	 *
+	 * @return void
+	 */
+	public function paintDocumentStart() {
+		if (!headers_sent()) {
+			header('Content-type: text/plain');
+		}
+	}
+
+	/**
+	 * Paints a PHP exception.
+	 *
+	 * @param Exception $exception Exception to describe.
+	 *
+	 * @return void
+	 */
 	public function paintException($exception) {
 		$message = 'Unexpected exception of type [' . get_class($exception) .
-			'] with message [' . $exception->getMessage() .
-			'] in [' . $exception->getFile() .
-			' line ' . $exception->getLine() . ']';
+				'] with message [' . $exception->getMessage() .
+				'] in [' . $exception->getFile() .
+				' line ' . $exception->getLine() . ']';
 		echo $message . "\n\n";
 	}
 
-/**
- * Prints the message for skipping tests.
- *
- * @param string $message Text of skip condition.
- * @return void
- */
+	/**
+	 * Prints the message for skipping tests.
+	 *
+	 * @param string $message Text of skip condition.
+	 *
+	 * @return void
+	 */
 	public function paintSkip($message) {
 		printf("Skip: %s\n", $message->getMessage());
 	}
 
-/**
- * Paints formatted text such as dumped variables.
- *
- * @param string $message Text to show.
- * @return void
- */
+	/**
+	 * Paints formatted text such as dumped variables.
+	 *
+	 * @param string $message Text to show.
+	 *
+	 * @return void
+	 */
 	public function paintFormattedMessage($message) {
 		echo "$message\n";
 		flush();
 	}
 
-/**
- * Generate a test case list in plain text.
- * Creates as series of URLs for tests that can be run.
- * One case per line.
- *
- * @return void
- */
+	/**
+	 * Generate a test case list in plain text.
+	 * Creates as series of URLs for tests that can be run.
+	 * One case per line.
+	 *
+	 * @return void
+	 */
 	public function testCaseList() {
 		$testCases = parent::testCaseList();
 		$app = $this->params['app'];
@@ -167,17 +184,6 @@ class CakeTextReporter extends CakeBaseReporter {
 
 		$buffer .= "\n";
 		echo $buffer;
-	}
-
-/**
- * Generates a Text summary of the coverage data.
- *
- * @param array $coverage Array of coverage data.
- * @return void
- */
-	public function paintCoverage($coverage) {
-		$reporter = new TextCoverageReport($coverage, $this);
-		echo $reporter->report();
 	}
 
 }

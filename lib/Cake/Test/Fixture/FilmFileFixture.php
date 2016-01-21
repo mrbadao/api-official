@@ -23,23 +23,23 @@
  */
 class FilmFileFixture extends CakeTestFixture {
 
-/**
- * fields property
- *
- * @var array
- */
+	/**
+	 * fields property
+	 *
+	 * @var array
+	 */
 	public $fields = array(
-		'id' => array('type' => 'integer', 'key' => 'primary'),
-		'name' => array('type' => 'string', 'length' => 255)
+			'id' => array('type' => 'integer', 'key' => 'primary'),
+			'name' => array('type' => 'string', 'length' => 255)
 	);
 
-/**
- * records property
- *
- * @var array
- */
+	/**
+	 * records property
+	 *
+	 * @var array
+	 */
 	public $records = array(
-		array('id' => 1, 'name' => 'one'),
-		array('id' => 2, 'name' => 'two')
+			array('id' => 1, 'name' => 'one'),
+			array('id' => 2, 'name' => 'two')
 	);
 }

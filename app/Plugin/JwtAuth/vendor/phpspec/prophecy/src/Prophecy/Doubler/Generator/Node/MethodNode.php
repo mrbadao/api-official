@@ -1,161 +1,161 @@
 <?php
 
-	/*
-	 * This file is part of the Prophecy.
-	 * (c) Konstantin Kudryashov <ever.zet@gmail.com>
-	 *     Marcello Duarte <marcello.duarte@gmail.com>
-	 *
-	 * For the full copyright and license information, please view the LICENSE
-	 * file that was distributed with this source code.
-	 */
+/*
+ * This file is part of the Prophecy.
+ * (c) Konstantin Kudryashov <ever.zet@gmail.com>
+ *     Marcello Duarte <marcello.duarte@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
-	namespace Prophecy\Doubler\Generator\Node;
+namespace Prophecy\Doubler\Generator\Node;
 
-	use Prophecy\Exception\InvalidArgumentException;
+use Prophecy\Exception\InvalidArgumentException;
+
+/**
+ * Method node.
+ *
+ * @author Konstantin Kudryashov <ever.zet@gmail.com>
+ */
+class MethodNode {
+	private $name;
+	private $code;
+	private $visibility = 'public';
+	private $static = FALSE;
+	private $returnsReference = FALSE;
+	private $returnType;
 
 	/**
-	 * Method node.
-	 *
-	 * @author Konstantin Kudryashov <ever.zet@gmail.com>
+	 * @var ArgumentNode[]
 	 */
-	class MethodNode {
-		private $name;
-		private $code;
-		private $visibility = 'public';
-		private $static = FALSE;
-		private $returnsReference = FALSE;
-		private $returnType;
+	private $arguments = array();
 
-		/**
-		 * @var ArgumentNode[]
-		 */
-		private $arguments = array();
+	/**
+	 * @param string $name
+	 * @param string $code
+	 */
+	public function __construct($name, $code = NULL) {
+		$this->name = $name;
+		$this->code = $code;
+	}
 
-		/**
-		 * @param string $name
-		 * @param string $code
-		 */
-		public function __construct($name, $code = NULL) {
-			$this->name = $name;
-			$this->code = $code;
+	public function getVisibility() {
+		return $this->visibility;
+	}
+
+	/**
+	 * @param string $visibility
+	 */
+	public function setVisibility($visibility) {
+		$visibility = strtolower($visibility);
+
+		if (!in_array($visibility, array('public', 'private', 'protected'))) {
+			throw new InvalidArgumentException(sprintf(
+					'`%s` method visibility is not supported.', $visibility
+			));
 		}
 
-		public function getVisibility() {
-			return $this->visibility;
-		}
+		$this->visibility = $visibility;
+	}
 
-		/**
-		 * @param string $visibility
-		 */
-		public function setVisibility($visibility) {
-			$visibility = strtolower($visibility);
+	public function isStatic() {
+		return $this->static;
+	}
 
-			if (!in_array($visibility, array('public', 'private', 'protected'))) {
-				throw new InvalidArgumentException(sprintf(
-						'`%s` method visibility is not supported.', $visibility
-				));
-			}
+	public function setStatic($static = TRUE) {
+		$this->static = (bool)$static;
+	}
 
-			$this->visibility = $visibility;
-		}
+	public function returnsReference() {
+		return $this->returnsReference;
+	}
 
-		public function isStatic() {
-			return $this->static;
-		}
+	public function setReturnsReference() {
+		$this->returnsReference = TRUE;
+	}
 
-		public function setStatic($static = TRUE) {
-			$this->static = (bool)$static;
-		}
+	public function addArgument(ArgumentNode $argument) {
+		$this->arguments[] = $argument;
+	}
 
-		public function returnsReference() {
-			return $this->returnsReference;
-		}
+	/**
+	 * @return ArgumentNode[]
+	 */
+	public function getArguments() {
+		return $this->arguments;
+	}
 
-		public function setReturnsReference() {
-			$this->returnsReference = TRUE;
-		}
+	public function hasReturnType() {
+		return NULL !== $this->returnType;
+	}
 
-		public function addArgument(ArgumentNode $argument) {
-			$this->arguments[] = $argument;
-		}
+	public function getReturnType() {
+		return $this->returnType;
+	}
 
-		/**
-		 * @return ArgumentNode[]
-		 */
-		public function getArguments() {
-			return $this->arguments;
-		}
+	/**
+	 * @param string $type
+	 */
+	public function setReturnType($type = NULL) {
+		switch ($type) {
+			case '':
+				$this->returnType = NULL;
+				break;
 
-		public function hasReturnType() {
-			return NULL !== $this->returnType;
-		}
+			case 'string';
+			case 'float':
+			case 'int':
+			case 'bool':
+			case 'array':
+			case 'callable':
+				$this->returnType = $type;
+				break;
 
-		public function getReturnType() {
-			return $this->returnType;
-		}
+			case 'double':
+			case 'real':
+				$this->returnType = 'float';
+				break;
 
-		/**
-		 * @param string $type
-		 */
-		public function setReturnType($type = NULL) {
-			switch ($type) {
-				case '':
-					$this->returnType = NULL;
-					break;
+			case 'boolean':
+				$this->returnType = 'bool';
+				break;
 
-				case 'string';
-				case 'float':
-				case 'int':
-				case 'bool':
-				case 'array':
-				case 'callable':
-					$this->returnType = $type;
-					break;
+			case 'integer':
+				$this->returnType = 'int';
+				break;
 
-				case 'double':
-				case 'real':
-					$this->returnType = 'float';
-					break;
-
-				case 'boolean':
-					$this->returnType = 'bool';
-					break;
-
-				case 'integer':
-					$this->returnType = 'int';
-					break;
-
-				default:
-					$this->returnType = '\\' . ltrim($type, '\\');
-			}
-		}
-
-		public function getCode() {
-			if ($this->returnsReference) {
-				return "throw new \Prophecy\Exception\Doubler\ReturnByReferenceException('Returning by reference not supported', get_class(\$this), '{$this->name}');";
-			}
-
-			return (string)$this->code;
-		}
-
-		/**
-		 * @param string $code
-		 */
-		public function setCode($code) {
-			$this->code = $code;
-		}
-
-		public function useParentCode() {
-			$this->code = sprintf(
-					'return parent::%s(%s);', $this->getName(), implode(', ',
-							array_map(function (ArgumentNode $arg) {
-								return '$' . $arg->getName();
-							}, $this->arguments)
-					)
-			);
-		}
-
-		public function getName() {
-			return $this->name;
+			default:
+				$this->returnType = '\\' . ltrim($type, '\\');
 		}
 	}
+
+	public function getCode() {
+		if ($this->returnsReference) {
+			return "throw new \Prophecy\Exception\Doubler\ReturnByReferenceException('Returning by reference not supported', get_class(\$this), '{$this->name}');";
+		}
+
+		return (string)$this->code;
+	}
+
+	/**
+	 * @param string $code
+	 */
+	public function setCode($code) {
+		$this->code = $code;
+	}
+
+	public function useParentCode() {
+		$this->code = sprintf(
+				'return parent::%s(%s);', $this->getName(), implode(', ',
+						array_map(function (ArgumentNode $arg) {
+							return '$' . $arg->getName();
+						}, $this->arguments)
+				)
+		);
+	}
+
+	public function getName() {
+		return $this->name;
+	}
+}

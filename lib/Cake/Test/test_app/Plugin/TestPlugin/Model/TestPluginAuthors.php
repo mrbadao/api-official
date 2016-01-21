@@ -28,12 +28,12 @@ class TestPluginAuthors extends TestPluginAppModel {
 	public $name = 'TestPluginAuthors';
 
 	public $validate = array(
-		'field' => array(
-			'notBlank' => array(
-				'rule' => 'notBlank',
-				'message' => 'I can haz plugin model validation message',
+			'field' => array(
+					'notBlank' => array(
+							'rule' => 'notBlank',
+							'message' => 'I can haz plugin model validation message',
+					),
 			),
-		),
 	);
 
 }

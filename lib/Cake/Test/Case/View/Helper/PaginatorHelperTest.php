@@ -33,37 +33,37 @@ if (!defined('FULL_BASE_URL')) {
  */
 class PaginatorHelperTest extends CakeTestCase {
 
-/**
- * setUp method
- *
- * @return void
- */
+	/**
+	 * setUp method
+	 *
+	 * @return void
+	 */
 	public function setUp() {
 		parent::setUp();
 		Configure::write('Config.language', 'eng');
-		$controller = null;
+		$controller = NULL;
 		$this->View = new View($controller);
 		$this->Paginator = new PaginatorHelper($this->View);
 		$this->Paginator->Js = $this->getMock('PaginatorHelper', array(), array($this->View));
-		$this->Paginator->request = new CakeRequest(null, false);
+		$this->Paginator->request = new CakeRequest(NULL, FALSE);
 		$this->Paginator->request->addParams(array(
-			'paging' => array(
-				'Article' => array(
-					'page' => 2,
-					'current' => 9,
-					'count' => 62,
-					'prevPage' => false,
-					'nextPage' => true,
-					'pageCount' => 7,
-					'order' => null,
-					'limit' => 20,
-					'options' => array(
-						'page' => 1,
-						'conditions' => array()
-					),
-					'paramType' => 'named'
+				'paging' => array(
+						'Article' => array(
+								'page' => 2,
+								'current' => 9,
+								'count' => 62,
+								'prevPage' => FALSE,
+								'nextPage' => TRUE,
+								'pageCount' => 7,
+								'order' => NULL,
+								'limit' => 20,
+								'options' => array(
+										'page' => 1,
+										'conditions' => array()
+								),
+								'paramType' => 'named'
+						)
 				)
-			)
 		));
 		$this->Paginator->Html = new HtmlHelper($this->View);
 
@@ -71,350 +71,350 @@ class PaginatorHelperTest extends CakeTestCase {
 		Router::reload();
 	}
 
-/**
- * tearDown method
- *
- * @return void
- */
+	/**
+	 * tearDown method
+	 *
+	 * @return void
+	 */
 	public function tearDown() {
 		parent::tearDown();
 		unset($this->View, $this->Paginator);
 	}
 
-/**
- * testHasPrevious method
- *
- * @return void
- */
+	/**
+	 * testHasPrevious method
+	 *
+	 * @return void
+	 */
 	public function testHasPrevious() {
 		$this->assertFalse($this->Paginator->hasPrev());
-		$this->Paginator->request->params['paging']['Article']['prevPage'] = true;
+		$this->Paginator->request->params['paging']['Article']['prevPage'] = TRUE;
 		$this->assertTrue($this->Paginator->hasPrev());
-		$this->Paginator->request->params['paging']['Article']['prevPage'] = false;
+		$this->Paginator->request->params['paging']['Article']['prevPage'] = FALSE;
 	}
 
-/**
- * testHasNext method
- *
- * @return void
- */
+	/**
+	 * testHasNext method
+	 *
+	 * @return void
+	 */
 	public function testHasNext() {
 		$this->assertTrue($this->Paginator->hasNext());
-		$this->Paginator->request->params['paging']['Article']['nextPage'] = false;
+		$this->Paginator->request->params['paging']['Article']['nextPage'] = FALSE;
 		$this->assertFalse($this->Paginator->hasNext());
-		$this->Paginator->request->params['paging']['Article']['nextPage'] = true;
+		$this->Paginator->request->params['paging']['Article']['nextPage'] = TRUE;
 	}
 
-/**
- * testDisabledLink method
- *
- * @return void
- */
+	/**
+	 * testDisabledLink method
+	 *
+	 * @return void
+	 */
 	public function testDisabledLink() {
-		$this->Paginator->request->params['paging']['Article']['nextPage'] = false;
+		$this->Paginator->request->params['paging']['Article']['nextPage'] = FALSE;
 		$this->Paginator->request->params['paging']['Article']['page'] = 1;
-		$result = $this->Paginator->next('Next', array(), true);
+		$result = $this->Paginator->next('Next', array(), TRUE);
 		$expected = '<span class="next">Next</span>';
 		$this->assertEquals($expected, $result);
 
-		$this->Paginator->request->params['paging']['Article']['prevPage'] = false;
-		$result = $this->Paginator->prev('prev', array('update' => 'theList', 'indicator' => 'loading', 'url' => array('controller' => 'posts')), null, array('class' => 'disabled', 'tag' => 'span'));
+		$this->Paginator->request->params['paging']['Article']['prevPage'] = FALSE;
+		$result = $this->Paginator->prev('prev', array('update' => 'theList', 'indicator' => 'loading', 'url' => array('controller' => 'posts')), NULL, array('class' => 'disabled', 'tag' => 'span'));
 		$expected = array(
-			'span' => array('class' => 'disabled'), 'prev', '/span'
+				'span' => array('class' => 'disabled'), 'prev', '/span'
 		);
 		$this->assertTags($result, $expected);
 	}
 
-/**
- * testSortLinks method
- *
- * @return void
- */
+	/**
+	 * testSortLinks method
+	 *
+	 * @return void
+	 */
 	public function testSortLinks() {
 		Router::reload();
 		Router::parse('/');
 		Router::setRequestInfo(array(
-			array('plugin' => null, 'controller' => 'accounts', 'action' => 'index', 'pass' => array(), 'url' => array('url' => 'accounts/')),
-			array('base' => '/officespace', 'here' => '/officespace/accounts/', 'webroot' => '/officespace/')
+				array('plugin' => NULL, 'controller' => 'accounts', 'action' => 'index', 'pass' => array(), 'url' => array('url' => 'accounts/')),
+				array('base' => '/officespace', 'here' => '/officespace/accounts/', 'webroot' => '/officespace/')
 		));
 		$this->Paginator->options(array('url' => array('param')));
 		$this->Paginator->request['paging'] = array(
-			'Article' => array(
-				'current' => 9,
-				'count' => 62,
-				'prevPage' => false,
-				'nextPage' => true,
-				'pageCount' => 7,
-				'options' => array(
-					'page' => 1,
-					'order' => array('date' => 'asc'),
-					'conditions' => array()
-				),
-				'paramType' => 'named'
-			)
+				'Article' => array(
+						'current' => 9,
+						'count' => 62,
+						'prevPage' => FALSE,
+						'nextPage' => TRUE,
+						'pageCount' => 7,
+						'options' => array(
+								'page' => 1,
+								'order' => array('date' => 'asc'),
+								'conditions' => array()
+						),
+						'paramType' => 'named'
+				)
 		);
 
 		$result = $this->Paginator->sort('title');
 		$expected = array(
-			'a' => array('href' => '/officespace/accounts/index/param/sort:title/direction:asc'),
-			'Title',
-			'/a'
+				'a' => array('href' => '/officespace/accounts/index/param/sort:title/direction:asc'),
+				'Title',
+				'/a'
 		);
 		$this->assertTags($result, $expected);
 
 		$result = $this->Paginator->sort('date');
 		$expected = array(
-			'a' => array('href' => '/officespace/accounts/index/param/sort:date/direction:desc', 'class' => 'asc'),
-			'Date',
-			'/a'
+				'a' => array('href' => '/officespace/accounts/index/param/sort:date/direction:desc', 'class' => 'asc'),
+				'Date',
+				'/a'
 		);
 		$this->assertTags($result, $expected);
 
 		$result = $this->Paginator->sort('title', 'TestTitle');
 		$expected = array(
-			'a' => array('href' => '/officespace/accounts/index/param/sort:title/direction:asc'),
-			'TestTitle',
-			'/a'
+				'a' => array('href' => '/officespace/accounts/index/param/sort:title/direction:asc'),
+				'TestTitle',
+				'/a'
 		);
 		$this->assertTags($result, $expected);
 
 		$result = $this->Paginator->sort('title', array('asc' => 'ascending', 'desc' => 'descending'));
 		$expected = array(
-			'a' => array('href' => '/officespace/accounts/index/param/sort:title/direction:asc'),
-			'ascending',
-			'/a'
+				'a' => array('href' => '/officespace/accounts/index/param/sort:title/direction:asc'),
+				'ascending',
+				'/a'
 		);
 		$this->assertTags($result, $expected);
 
 		$this->Paginator->request->params['paging']['Article']['options']['sort'] = 'title';
 		$result = $this->Paginator->sort('title', array('asc' => 'ascending', 'desc' => 'descending'));
 		$expected = array(
-			'a' => array('href' => '/officespace/accounts/index/param/sort:title/direction:desc', 'class' => 'asc'),
-			'descending',
-			'/a'
+				'a' => array('href' => '/officespace/accounts/index/param/sort:title/direction:desc', 'class' => 'asc'),
+				'descending',
+				'/a'
 		);
 		$this->assertTags($result, $expected);
 
 		$this->Paginator->request->params['paging']['Article']['options']['order'] = array('Article.title' => 'desc');
-		$this->Paginator->request->params['paging']['Article']['options']['sort'] = null;
+		$this->Paginator->request->params['paging']['Article']['options']['sort'] = NULL;
 		$result = $this->Paginator->sort('title');
 		$this->assertRegExp('/\/accounts\/index\/param\/sort:title\/direction:asc" class="desc">Title<\/a>$/', $result);
 
 		$this->Paginator->request->params['paging']['Article']['options']['order'] = array('Article.title' => 'asc');
-		$this->Paginator->request->params['paging']['Article']['options']['sort'] = null;
+		$this->Paginator->request->params['paging']['Article']['options']['sort'] = NULL;
 		$result = $this->Paginator->sort('title');
 		$this->assertRegExp('/\/accounts\/index\/param\/sort:title\/direction:desc" class="asc">Title<\/a>$/', $result);
 
 		$this->Paginator->request->params['paging']['Article']['options']['order'] = array('Article.title' => 'desc');
-		$this->Paginator->request->params['paging']['Article']['options']['sort'] = null;
+		$this->Paginator->request->params['paging']['Article']['options']['sort'] = NULL;
 		$result = $this->Paginator->sort('title', 'Title', array('direction' => 'desc'));
 		$this->assertRegExp('/\/accounts\/index\/param\/sort:title\/direction:asc" class="desc">Title<\/a>$/', $result);
 
 		$this->Paginator->request->params['paging']['Article']['options']['order'] = array('Article.title' => 'desc');
-		$this->Paginator->request->params['paging']['Article']['options']['sort'] = null;
+		$this->Paginator->request->params['paging']['Article']['options']['sort'] = NULL;
 		$result = $this->Paginator->sort('title', 'Title', array('direction' => 'asc'));
 		$this->assertRegExp('/\/accounts\/index\/param\/sort:title\/direction:asc" class="desc">Title<\/a>$/', $result);
 
 		$this->Paginator->request->params['paging']['Article']['options']['order'] = array('Article.title' => 'asc');
-		$this->Paginator->request->params['paging']['Article']['options']['sort'] = null;
+		$this->Paginator->request->params['paging']['Article']['options']['sort'] = NULL;
 		$result = $this->Paginator->sort('title', 'Title', array('direction' => 'asc'));
 		$this->assertRegExp('/\/accounts\/index\/param\/sort:title\/direction:desc" class="asc">Title<\/a>$/', $result);
 
 		$this->Paginator->request->params['paging']['Article']['options']['order'] = array('Article.title' => 'asc');
-		$this->Paginator->request->params['paging']['Article']['options']['sort'] = null;
+		$this->Paginator->request->params['paging']['Article']['options']['sort'] = NULL;
 		$result = $this->Paginator->sort('title', 'Title', array('direction' => 'desc'));
 		$this->assertRegExp('/\/accounts\/index\/param\/sort:title\/direction:desc" class="asc">Title<\/a>$/', $result);
 
 		$this->Paginator->request->params['paging']['Article']['options']['order'] = array('Article.title' => 'asc');
-		$this->Paginator->request->params['paging']['Article']['options']['sort'] = null;
+		$this->Paginator->request->params['paging']['Article']['options']['sort'] = NULL;
 		$result = $this->Paginator->sort('title', 'Title', array('direction' => 'desc', 'class' => 'foo'));
 		$this->assertRegExp('/\/accounts\/index\/param\/sort:title\/direction:desc" class="foo asc">Title<\/a>$/', $result);
 	}
 
-/**
- * testSortLinksWithLockOption method
- *
- * @return void
- */
+	/**
+	 * testSortLinksWithLockOption method
+	 *
+	 * @return void
+	 */
 	public function testSortLinksWithLockOption() {
 		Router::reload();
 		Router::parse('/');
 		Router::setRequestInfo(array(
-			array('plugin' => null, 'controller' => 'accounts', 'action' => 'index', 'pass' => array(), 'url' => array('url' => 'accounts/')),
-			array('base' => '/officespace', 'here' => '/officespace/accounts/', 'webroot' => '/officespace/')
+				array('plugin' => NULL, 'controller' => 'accounts', 'action' => 'index', 'pass' => array(), 'url' => array('url' => 'accounts/')),
+				array('base' => '/officespace', 'here' => '/officespace/accounts/', 'webroot' => '/officespace/')
 		));
 		$this->Paginator->options(array('url' => array('param')));
 		$this->Paginator->request['paging'] = array(
-			'Article' => array(
-				'current' => 9,
-				'count' => 62,
-				'prevPage' => false,
-				'nextPage' => true,
-				'pageCount' => 7,
-				'options' => array(
-					'page' => 1,
-					'order' => array('date' => 'asc'),
-					'conditions' => array()
-				),
-				'paramType' => 'named'
-			)
+				'Article' => array(
+						'current' => 9,
+						'count' => 62,
+						'prevPage' => FALSE,
+						'nextPage' => TRUE,
+						'pageCount' => 7,
+						'options' => array(
+								'page' => 1,
+								'order' => array('date' => 'asc'),
+								'conditions' => array()
+						),
+						'paramType' => 'named'
+				)
 		);
 
-		$result = $this->Paginator->sort('distance', null, array('lock' => true));
+		$result = $this->Paginator->sort('distance', NULL, array('lock' => TRUE));
 		$expected = array(
-			'a' => array('href' => '/officespace/accounts/index/param/sort:distance/direction:asc'),
-			'Distance',
-			'/a'
+				'a' => array('href' => '/officespace/accounts/index/param/sort:distance/direction:asc'),
+				'Distance',
+				'/a'
 		);
 		$this->assertTags($result, $expected);
 
 		$this->Paginator->request->params['paging']['Article']['options']['sort'] = 'distance';
-		$result = $this->Paginator->sort('distance', null, array('lock' => true));
+		$result = $this->Paginator->sort('distance', NULL, array('lock' => TRUE));
 		$expected = array(
-			'a' => array('href' => '/officespace/accounts/index/param/sort:distance/direction:asc', 'class' => 'asc locked'),
-			'Distance',
-			'/a'
+				'a' => array('href' => '/officespace/accounts/index/param/sort:distance/direction:asc', 'class' => 'asc locked'),
+				'Distance',
+				'/a'
 		);
 		$this->assertTags($result, $expected);
 	}
 
-/**
- * test that sort() works with virtual field order options.
- *
- * @return void
- */
+	/**
+	 * test that sort() works with virtual field order options.
+	 *
+	 * @return void
+	 */
 	public function testSortLinkWithVirtualField() {
 		Router::setRequestInfo(array(
-			array('plugin' => null, 'controller' => 'accounts', 'action' => 'index', 'pass' => array(), 'form' => array(), 'url' => array('url' => 'accounts/')),
-			array('base' => '', 'here' => '/accounts/', 'webroot' => '/')
+				array('plugin' => NULL, 'controller' => 'accounts', 'action' => 'index', 'pass' => array(), 'form' => array(), 'url' => array('url' => 'accounts/')),
+				array('base' => '', 'here' => '/accounts/', 'webroot' => '/')
 		));
 		$this->Paginator->request->params['paging']['Article']['options']['order'] = array('full_name' => 'asc');
 
 		$result = $this->Paginator->sort('Article.full_name');
 		$expected = array(
-			'a' => array('href' => '/accounts/index/sort:Article.full_name/direction:desc', 'class' => 'asc'),
-			'Article Full Name',
-			'/a'
+				'a' => array('href' => '/accounts/index/sort:Article.full_name/direction:desc', 'class' => 'asc'),
+				'Article Full Name',
+				'/a'
 		);
 		$this->assertTags($result, $expected);
 
 		$result = $this->Paginator->sort('full_name');
 		$expected = array(
-			'a' => array('href' => '/accounts/index/sort:full_name/direction:desc', 'class' => 'asc'),
-			'Full Name',
-			'/a'
+				'a' => array('href' => '/accounts/index/sort:full_name/direction:desc', 'class' => 'asc'),
+				'Full Name',
+				'/a'
 		);
 		$this->assertTags($result, $expected);
 
 		$this->Paginator->request->params['paging']['Article']['options']['order'] = array('full_name' => 'desc');
 		$result = $this->Paginator->sort('Article.full_name');
 		$expected = array(
-			'a' => array('href' => '/accounts/index/sort:Article.full_name/direction:asc', 'class' => 'desc'),
-			'Article Full Name',
-			'/a'
+				'a' => array('href' => '/accounts/index/sort:Article.full_name/direction:asc', 'class' => 'desc'),
+				'Article Full Name',
+				'/a'
 		);
 		$this->assertTags($result, $expected);
 
 		$result = $this->Paginator->sort('full_name');
 		$expected = array(
-			'a' => array('href' => '/accounts/index/sort:full_name/direction:asc', 'class' => 'desc'),
-			'Full Name',
-			'/a'
+				'a' => array('href' => '/accounts/index/sort:full_name/direction:asc', 'class' => 'desc'),
+				'Full Name',
+				'/a'
 		);
 		$this->assertTags($result, $expected);
 	}
 
-/**
- * testSortLinksUsingDirectionOption method
- *
- * @return void
- */
+	/**
+	 * testSortLinksUsingDirectionOption method
+	 *
+	 * @return void
+	 */
 	public function testSortLinksUsingDirectionOption() {
 		Router::reload();
 		Router::parse('/');
 		Router::setRequestInfo(array(
-			array('plugin' => null, 'controller' => 'accounts', 'action' => 'index', 'pass' => array(),
-				'url' => array('url' => 'accounts/', 'mod_rewrite' => 'true')),
-			array('base' => '/', 'here' => '/accounts/', 'webroot' => '/')
+				array('plugin' => NULL, 'controller' => 'accounts', 'action' => 'index', 'pass' => array(),
+						'url' => array('url' => 'accounts/', 'mod_rewrite' => 'true')),
+				array('base' => '/', 'here' => '/accounts/', 'webroot' => '/')
 		));
 		$this->Paginator->options(array('url' => array('param')));
 
 		$result = $this->Paginator->sort('title', 'TestTitle', array('direction' => 'desc'));
 		$expected = array(
-			'a' => array('href' => '/accounts/index/param/sort:title/direction:desc'),
-			'TestTitle',
-			'/a'
+				'a' => array('href' => '/accounts/index/param/sort:title/direction:desc'),
+				'TestTitle',
+				'/a'
 		);
 		$this->assertTags($result, $expected);
 
 		$result = $this->Paginator->sort('title', array('asc' => 'ascending', 'desc' => 'descending'), array('direction' => 'desc'));
 		$expected = array(
-			'a' => array('href' => '/accounts/index/param/sort:title/direction:desc'),
-			'descending',
-			'/a'
+				'a' => array('href' => '/accounts/index/param/sort:title/direction:desc'),
+				'descending',
+				'/a'
 		);
 		$this->assertTags($result, $expected);
 	}
 
-/**
- * testSortLinksUsingDotNotation method
- *
- * @return void
- */
+	/**
+	 * testSortLinksUsingDotNotation method
+	 *
+	 * @return void
+	 */
 	public function testSortLinksUsingDotNotation() {
 		Router::reload();
 		Router::parse('/');
 		Router::setRequestInfo(array(
-			array('plugin' => null, 'controller' => 'accounts', 'action' => 'index', 'pass' => array(), 'form' => array(), 'url' => array('url' => 'accounts/', 'mod_rewrite' => 'true'), 'bare' => 0),
-			array('base' => '/officespace', 'here' => '/officespace/accounts/', 'webroot' => '/officespace/')
+				array('plugin' => NULL, 'controller' => 'accounts', 'action' => 'index', 'pass' => array(), 'form' => array(), 'url' => array('url' => 'accounts/', 'mod_rewrite' => 'true'), 'bare' => 0),
+				array('base' => '/officespace', 'here' => '/officespace/accounts/', 'webroot' => '/officespace/')
 		));
 
 		$this->Paginator->request->params['paging']['Article']['options']['order'] = array('Article.title' => 'desc');
 		$result = $this->Paginator->sort('Article.title');
 		$expected = array(
-			'a' => array('href' => '/officespace/accounts/index/sort:Article.title/direction:asc', 'class' => 'desc'),
-			'Article Title',
-			'/a'
+				'a' => array('href' => '/officespace/accounts/index/sort:Article.title/direction:asc', 'class' => 'desc'),
+				'Article Title',
+				'/a'
 		);
 		$this->assertTags($result, $expected);
 
 		$this->Paginator->request->params['paging']['Article']['options']['order'] = array('Article.title' => 'desc');
 		$result = $this->Paginator->sort('Article.title', 'Title');
 		$expected = array(
-			'a' => array('href' => '/officespace/accounts/index/sort:Article.title/direction:asc', 'class' => 'desc'),
-			'Title',
-			'/a'
+				'a' => array('href' => '/officespace/accounts/index/sort:Article.title/direction:asc', 'class' => 'desc'),
+				'Title',
+				'/a'
 		);
 		$this->assertTags($result, $expected);
 
 		$this->Paginator->request->params['paging']['Article']['options']['order'] = array('Article.title' => 'asc');
 		$result = $this->Paginator->sort('Article.title', 'Title');
 		$expected = array(
-			'a' => array('href' => '/officespace/accounts/index/sort:Article.title/direction:desc', 'class' => 'asc'),
-			'Title',
-			'/a'
+				'a' => array('href' => '/officespace/accounts/index/sort:Article.title/direction:desc', 'class' => 'asc'),
+				'Title',
+				'/a'
 		);
 		$this->assertTags($result, $expected);
 
 		$this->Paginator->request->params['paging']['Article']['options']['order'] = array('Account.title' => 'asc');
 		$result = $this->Paginator->sort('title');
 		$expected = array(
-			'a' => array('href' => '/officespace/accounts/index/sort:title/direction:asc'),
-			'Title',
-			'/a'
+				'a' => array('href' => '/officespace/accounts/index/sort:title/direction:asc'),
+				'Title',
+				'/a'
 		);
 		$this->assertTags($result, $expected);
 	}
 
-/**
- * testSortKey method
- *
- * @return void
- */
+	/**
+	 * testSortKey method
+	 *
+	 * @return void
+	 */
 	public function testSortKey() {
-		$result = $this->Paginator->sortKey(null, array(
-			'order' => array('Article.title' => 'desc'
-		)));
+		$result = $this->Paginator->sortKey(NULL, array(
+				'order' => array('Article.title' => 'desc'
+				)));
 		$this->assertEquals('Article.title', $result);
 
 		$result = $this->Paginator->sortKey('Article', array('order' => 'Article.title'));
@@ -427,12 +427,12 @@ class PaginatorHelperTest extends CakeTestCase {
 		$this->assertEquals('Article', $result);
 	}
 
-/**
- * Test that sortKey falls back to the default sorting options set
- * in the $params which are the default pagination options.
- *
- * @return void
- */
+	/**
+	 * Test that sortKey falls back to the default sorting options set
+	 * in the $params which are the default pagination options.
+	 *
+	 * @return void
+	 */
 	public function testSortKeyFallbackToParams() {
 		$this->Paginator->request->params['paging']['Article']['order'] = 'Article.body';
 		$result = $this->Paginator->sortKey();
@@ -442,7 +442,7 @@ class PaginatorHelperTest extends CakeTestCase {
 		$this->assertEquals('Article.body', $result);
 
 		$this->Paginator->request->params['paging']['Article']['order'] = array(
-			'Article.body' => 'DESC'
+				'Article.body' => 'DESC'
 		);
 		$result = $this->Paginator->sortKey();
 		$this->assertEquals('Article.body', $result);
@@ -451,11 +451,11 @@ class PaginatorHelperTest extends CakeTestCase {
 		$this->assertEquals('Article.body', $result);
 	}
 
-/**
- * testSortDir method
- *
- * @return void
- */
+	/**
+	 * testSortDir method
+	 *
+	 * @return void
+	 */
 	public function testSortDir() {
 		$result = $this->Paginator->sortDir();
 		$expected = 'asc';
@@ -520,15 +520,15 @@ class PaginatorHelperTest extends CakeTestCase {
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * Test that sortDir falls back to the default sorting options set
- * in the $params which are the default pagination options.
- *
- * @return void
- */
+	/**
+	 * Test that sortDir falls back to the default sorting options set
+	 * in the $params which are the default pagination options.
+	 *
+	 * @return void
+	 */
 	public function testSortDirFallbackToParams() {
 		$this->Paginator->request->params['paging']['Article']['order'] = array(
-			'Article.body' => 'ASC'
+				'Article.body' => 'ASC'
 		);
 		$result = $this->Paginator->sortDir();
 		$this->assertEquals('asc', $result);
@@ -537,7 +537,7 @@ class PaginatorHelperTest extends CakeTestCase {
 		$this->assertEquals('asc', $result);
 
 		$this->Paginator->request->params['paging']['Article']['order'] = array(
-			'Article.body' => 'DESC'
+				'Article.body' => 'DESC'
 		);
 		$result = $this->Paginator->sortDir();
 		$this->assertEquals('desc', $result);
@@ -546,67 +546,67 @@ class PaginatorHelperTest extends CakeTestCase {
 		$this->assertEquals('desc', $result);
 	}
 
-/**
- * testSortAdminLinks method
- *
- * @return void
- */
+	/**
+	 * testSortAdminLinks method
+	 *
+	 * @return void
+	 */
 	public function testSortAdminLinks() {
 		Configure::write('Routing.prefixes', array('admin'));
 
 		Router::reload();
 		Router::setRequestInfo(array(
-			array('pass' => array(), 'named' => array(), 'controller' => 'users', 'plugin' => null, 'action' => 'admin_index', 'prefix' => 'admin', 'admin' => true, 'url' => array('ext' => 'html', 'url' => 'admin/users')),
-			array('base' => '', 'here' => '/admin/users', 'webroot' => '/')
+				array('pass' => array(), 'named' => array(), 'controller' => 'users', 'plugin' => NULL, 'action' => 'admin_index', 'prefix' => 'admin', 'admin' => TRUE, 'url' => array('ext' => 'html', 'url' => 'admin/users')),
+				array('base' => '', 'here' => '/admin/users', 'webroot' => '/')
 		));
 		Router::parse('/admin/users');
 		$this->Paginator->request->params['paging']['Article']['page'] = 1;
 		$result = $this->Paginator->next('Next');
 		$expected = array(
-			'span' => array('class' => 'next'),
-			'a' => array('href' => '/admin/users/index/page:2', 'rel' => 'next'),
-			'Next',
-			'/a',
-			'/span'
+				'span' => array('class' => 'next'),
+				'a' => array('href' => '/admin/users/index/page:2', 'rel' => 'next'),
+				'Next',
+				'/a',
+				'/span'
 		);
 		$this->assertTags($result, $expected);
 
 		Router::reload();
 		Router::setRequestInfo(array(
-			array('plugin' => null, 'controller' => 'test', 'action' => 'admin_index', 'pass' => array(), 'prefix' => 'admin', 'admin' => true, 'url' => array('url' => 'admin/test')),
-			array('base' => '', 'here' => '/admin/test', 'webroot' => '/')
+				array('plugin' => NULL, 'controller' => 'test', 'action' => 'admin_index', 'pass' => array(), 'prefix' => 'admin', 'admin' => TRUE, 'url' => array('url' => 'admin/test')),
+				array('base' => '', 'here' => '/admin/test', 'webroot' => '/')
 		));
 		Router::parse('/');
 		$this->Paginator->options(array('url' => array('param')));
 		$result = $this->Paginator->sort('title');
 		$expected = array(
-			'a' => array('href' => '/admin/test/index/param/sort:title/direction:asc'),
-			'Title',
-			'/a'
+				'a' => array('href' => '/admin/test/index/param/sort:title/direction:asc'),
+				'Title',
+				'/a'
 		);
 		$this->assertTags($result, $expected);
 
 		$this->Paginator->options(array('url' => array('param')));
 		$result = $this->Paginator->sort('Article.title', 'Title');
 		$expected = array(
-			'a' => array('href' => '/admin/test/index/param/sort:Article.title/direction:asc'),
-			'Title',
-			'/a'
+				'a' => array('href' => '/admin/test/index/param/sort:Article.title/direction:asc'),
+				'Title',
+				'/a'
 		);
 		$this->assertTags($result, $expected);
 	}
 
-/**
- * testUrlGeneration method
- *
- * @return void
- */
+	/**
+	 * testUrlGeneration method
+	 *
+	 * @return void
+	 */
 	public function testUrlGeneration() {
 		$result = $this->Paginator->sort('controller');
 		$expected = array(
-			'a' => array('href' => '/index/sort:controller/direction:asc'),
-			'Controller',
-			'/a'
+				'a' => array('href' => '/index/sort:controller/direction:asc'),
+				'Controller',
+				'/a'
 		);
 		$this->assertTags($result, $expected);
 
@@ -627,11 +627,11 @@ class PaginatorHelperTest extends CakeTestCase {
 		$this->assertEquals('/index/page:3/sort:Article.name/direction:desc', $result);
 	}
 
-/**
- * test URL generation with prefix routes
- *
- * @return void
- */
+	/**
+	 * test URL generation with prefix routes
+	 *
+	 * @return void
+	 */
 	public function testUrlGenerationWithPrefixes() {
 		Configure::write('Routing.prefixes', array('members'));
 		Router::reload();
@@ -639,48 +639,48 @@ class PaginatorHelperTest extends CakeTestCase {
 		Router::parse('/');
 
 		Router::setRequestInfo(array(
-			array('controller' => 'posts', 'action' => 'index', 'form' => array(), 'url' => array(), 'plugin' => null),
-			array('base' => '', 'here' => 'posts/index', 'webroot' => '/')
+				array('controller' => 'posts', 'action' => 'index', 'form' => array(), 'url' => array(), 'plugin' => NULL),
+				array('base' => '', 'here' => 'posts/index', 'webroot' => '/')
 		));
 
 		$this->Paginator->request->params['paging']['Article']['options']['page'] = 2;
 		$this->Paginator->request->params['paging']['Article']['page'] = 2;
-		$this->Paginator->request->params['paging']['Article']['prevPage'] = true;
-		$options = array('members' => true);
+		$this->Paginator->request->params['paging']['Article']['prevPage'] = TRUE;
+		$options = array('members' => TRUE);
 
 		$result = $this->Paginator->url($options);
 		$expected = '/members/posts/index/page:2';
 		$this->assertEquals($expected, $result);
 
-		$result = $this->Paginator->sort('name', null, array('url' => $options));
+		$result = $this->Paginator->sort('name', NULL, array('url' => $options));
 		$expected = array(
-			'a' => array('href' => '/members/posts/index/page:2/sort:name/direction:asc'),
-			'Name',
-			'/a'
+				'a' => array('href' => '/members/posts/index/page:2/sort:name/direction:asc'),
+				'Name',
+				'/a'
 		);
 		$this->assertTags($result, $expected);
 
 		$result = $this->Paginator->next('next', array('url' => $options));
 		$expected = array(
-			'span' => array('class' => 'next'),
-			'a' => array('href' => '/members/posts/index/page:3', 'rel' => 'next'),
-			'next',
-			'/a',
-			'/span'
+				'span' => array('class' => 'next'),
+				'a' => array('href' => '/members/posts/index/page:3', 'rel' => 'next'),
+				'next',
+				'/a',
+				'/span'
 		);
 		$this->assertTags($result, $expected);
 
 		$result = $this->Paginator->prev('prev', array('url' => $options));
 		$expected = array(
-			'span' => array('class' => 'prev'),
-			'a' => array('href' => '/members/posts', 'rel' => 'prev'),
-			'prev',
-			'/a',
-			'/span'
+				'span' => array('class' => 'prev'),
+				'a' => array('href' => '/members/posts', 'rel' => 'prev'),
+				'prev',
+				'/a',
+				'/span'
 		);
 		$this->assertTags($result, $expected);
 
-		$options = array('members' => true, 'controller' => 'posts', 'order' => array('name' => 'desc'));
+		$options = array('members' => TRUE, 'controller' => 'posts', 'order' => array('name' => 'desc'));
 		$result = $this->Paginator->url($options);
 		$expected = '/members/posts/index/page:2/sort:name/direction:desc';
 		$this->assertEquals($expected, $result);
@@ -691,11 +691,11 @@ class PaginatorHelperTest extends CakeTestCase {
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * testOptions method
- *
- * @return void
- */
+	/**
+	 * testOptions method
+	 *
+	 * @return void
+	 */
 	public function testOptions() {
 		$this->Paginator->options('myDiv');
 		$this->assertEquals('myDiv', $this->Paginator->options['update']);
@@ -704,14 +704,14 @@ class PaginatorHelperTest extends CakeTestCase {
 		$this->Paginator->request->params = array();
 
 		$options = array('paging' => array('Article' => array(
-			'order' => 'desc',
-			'sort' => 'title'
+				'order' => 'desc',
+				'sort' => 'title'
 		)));
 		$this->Paginator->options($options);
 
 		$expected = array('Article' => array(
-			'order' => 'desc',
-			'sort' => 'title'
+				'order' => 'desc',
+				'sort' => 'title'
 		));
 		$this->assertEquals($expected, $this->Paginator->request->params['paging']);
 
@@ -719,48 +719,48 @@ class PaginatorHelperTest extends CakeTestCase {
 		$this->Paginator->request->params = array();
 
 		$options = array('Article' => array(
-			'order' => 'desc',
-			'sort' => 'title'
+				'order' => 'desc',
+				'sort' => 'title'
 		));
 		$this->Paginator->options($options);
 		$this->assertEquals($expected, $this->Paginator->request->params['paging']);
 
 		$options = array('paging' => array('Article' => array(
-			'order' => 'desc',
-			'sort' => 'Article.title'
+				'order' => 'desc',
+				'sort' => 'Article.title'
 		)));
 		$this->Paginator->options($options);
 
 		$expected = array('Article' => array(
-			'order' => 'desc',
-			'sort' => 'Article.title'
+				'order' => 'desc',
+				'sort' => 'Article.title'
 		));
 		$this->assertEquals($expected, $this->Paginator->request->params['paging']);
 	}
 
-/**
- * testPassedArgsMergingWithUrlOptions method
- *
- * @return void
- */
+	/**
+	 * testPassedArgsMergingWithUrlOptions method
+	 *
+	 * @return void
+	 */
 	public function testPassedArgsMergingWithUrlOptions() {
 		Router::reload();
 		Router::parse('/');
 		Router::setRequestInfo(array(
-			array('plugin' => null, 'controller' => 'articles', 'action' => 'index', 'pass' => array('2'), 'named' => array('foo' => 'bar'), 'url' => array('url' => 'articles/index/2/foo:bar')),
-			array('base' => '/', 'here' => '/articles/', 'webroot' => '/')
+				array('plugin' => NULL, 'controller' => 'articles', 'action' => 'index', 'pass' => array('2'), 'named' => array('foo' => 'bar'), 'url' => array('url' => 'articles/index/2/foo:bar')),
+				array('base' => '/', 'here' => '/articles/', 'webroot' => '/')
 		));
 		$this->Paginator->request->params['paging'] = array(
-			'Article' => array(
-				'page' => 1, 'current' => 3, 'count' => 13,
-				'prevPage' => false, 'nextPage' => true, 'pageCount' => 8,
-				'options' => array(
-					'page' => 1,
-					'order' => array(),
-					'conditions' => array()
-				),
-				'paramType' => 'named'
-			)
+				'Article' => array(
+						'page' => 1, 'current' => 3, 'count' => 13,
+						'prevPage' => FALSE, 'nextPage' => TRUE, 'pageCount' => 8,
+						'options' => array(
+								'page' => 1,
+								'order' => array(),
+								'conditions' => array()
+						),
+						'paramType' => 'named'
+				)
 		);
 
 		$this->Paginator->request->params['pass'] = array(2);
@@ -770,64 +770,64 @@ class PaginatorHelperTest extends CakeTestCase {
 
 		$result = $this->Paginator->sort('title');
 		$expected = array(
-			'a' => array('href' => '/articles/index/2/foo:bar/sort:title/direction:asc?x=y'),
-			'Title',
-			'/a'
+				'a' => array('href' => '/articles/index/2/foo:bar/sort:title/direction:asc?x=y'),
+				'Title',
+				'/a'
 		);
 		$this->assertTags($result, $expected);
 
 		$result = $this->Paginator->numbers();
 		$expected = array(
-			array('span' => array('class' => 'current')), '1', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/articles/index/2/page:2/foo:bar?x=y')), '2', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/articles/index/2/page:3/foo:bar?x=y')), '3', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/articles/index/2/page:4/foo:bar?x=y')), '4', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/articles/index/2/page:5/foo:bar?x=y')), '5', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/articles/index/2/page:6/foo:bar?x=y')), '6', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/articles/index/2/page:7/foo:bar?x=y')), '7', '/a', '/span',
+				array('span' => array('class' => 'current')), '1', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/articles/index/2/page:2/foo:bar?x=y')), '2', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/articles/index/2/page:3/foo:bar?x=y')), '3', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/articles/index/2/page:4/foo:bar?x=y')), '4', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/articles/index/2/page:5/foo:bar?x=y')), '5', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/articles/index/2/page:6/foo:bar?x=y')), '6', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/articles/index/2/page:7/foo:bar?x=y')), '7', '/a', '/span',
 		);
 		$this->assertTags($result, $expected);
 
 		$result = $this->Paginator->next('Next');
 		$expected = array(
-			'span' => array('class' => 'next'),
-			'a' => array('href' => '/articles/index/2/page:2/foo:bar?x=y', 'rel' => 'next'),
-			'Next',
-			'/a',
-			'/span'
+				'span' => array('class' => 'next'),
+				'a' => array('href' => '/articles/index/2/page:2/foo:bar?x=y', 'rel' => 'next'),
+				'Next',
+				'/a',
+				'/span'
 		);
 		$this->assertTags($result, $expected);
 	}
 
-/**
- * testPassedArgsMergingWithUrlOptionsParamTypeQuerystring method
- *
- * @return void
- */
+	/**
+	 * testPassedArgsMergingWithUrlOptionsParamTypeQuerystring method
+	 *
+	 * @return void
+	 */
 	public function testPassedArgsMergingWithUrlOptionsParamTypeQuerystring() {
 		Router::reload();
 		Router::parse('/');
 		Router::setRequestInfo(array(
-			array('plugin' => null, 'controller' => 'articles', 'action' => 'index', 'pass' => array('2'), 'named' => array('foo' => 'bar'), 'url' => array('url' => 'articles/index/2/foo:bar')),
-			array('base' => '/', 'here' => '/articles/', 'webroot' => '/')
+				array('plugin' => NULL, 'controller' => 'articles', 'action' => 'index', 'pass' => array('2'), 'named' => array('foo' => 'bar'), 'url' => array('url' => 'articles/index/2/foo:bar')),
+				array('base' => '/', 'here' => '/articles/', 'webroot' => '/')
 		));
 		$this->Paginator->request->params['paging'] = array(
-			'Article' => array(
-				'page' => 1, 'current' => 3, 'count' => 13,
-				'prevPage' => false, 'nextPage' => true, 'pageCount' => 8,
-				'options' => array(
-					'page' => 1,
-					'order' => array(),
-					'conditions' => array()
-				),
-				'paramType' => 'querystring'
-			)
+				'Article' => array(
+						'page' => 1, 'current' => 3, 'count' => 13,
+						'prevPage' => FALSE, 'nextPage' => TRUE, 'pageCount' => 8,
+						'options' => array(
+								'page' => 1,
+								'order' => array(),
+								'conditions' => array()
+						),
+						'paramType' => 'querystring'
+				)
 		);
 
 		$this->Paginator->request->params['pass'] = array(2);
@@ -837,525 +837,525 @@ class PaginatorHelperTest extends CakeTestCase {
 
 		$result = $this->Paginator->sort('title');
 		$expected = array(
-			'a' => array('href' => '/articles/index/2/foo:bar?x=y&amp;sort=title&amp;direction=asc'),
-			'Title',
-			'/a'
+				'a' => array('href' => '/articles/index/2/foo:bar?x=y&amp;sort=title&amp;direction=asc'),
+				'Title',
+				'/a'
 		);
 		$this->assertTags($result, $expected);
 
 		$result = $this->Paginator->numbers();
 		$expected = array(
-			array('span' => array('class' => 'current')), '1', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/articles/index/2/foo:bar?x=y&amp;page=2')), '2', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/articles/index/2/foo:bar?x=y&amp;page=3')), '3', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/articles/index/2/foo:bar?x=y&amp;page=4')), '4', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/articles/index/2/foo:bar?x=y&amp;page=5')), '5', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/articles/index/2/foo:bar?x=y&amp;page=6')), '6', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/articles/index/2/foo:bar?x=y&amp;page=7')), '7', '/a', '/span',
+				array('span' => array('class' => 'current')), '1', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/articles/index/2/foo:bar?x=y&amp;page=2')), '2', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/articles/index/2/foo:bar?x=y&amp;page=3')), '3', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/articles/index/2/foo:bar?x=y&amp;page=4')), '4', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/articles/index/2/foo:bar?x=y&amp;page=5')), '5', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/articles/index/2/foo:bar?x=y&amp;page=6')), '6', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/articles/index/2/foo:bar?x=y&amp;page=7')), '7', '/a', '/span',
 		);
 		$this->assertTags($result, $expected);
 
 		$result = $this->Paginator->next('Next');
 		$expected = array(
-			'span' => array('class' => 'next'),
-			'a' => array('href' => '/articles/index/2/foo:bar?x=y&amp;page=2', 'rel' => 'next'),
-			'Next',
-			'/a',
-			'/span'
+				'span' => array('class' => 'next'),
+				'a' => array('href' => '/articles/index/2/foo:bar?x=y&amp;page=2', 'rel' => 'next'),
+				'Next',
+				'/a',
+				'/span'
 		);
 		$this->assertTags($result, $expected);
 	}
 
-/**
- * testPagingLinks method
- *
- * @return void
- */
+	/**
+	 * testPagingLinks method
+	 *
+	 * @return void
+	 */
 	public function testPagingLinks() {
 		$this->Paginator->request->params['paging'] = array(
-			'Client' => array(
-				'page' => 1,
-				'current' => 3,
-				'count' => 13,
-				'prevPage' => false,
-				'nextPage' => true,
-				'pageCount' => 5,
-				'options' => array(
-					'page' => 1,
-				),
-				'paramType' => 'named'
-			)
+				'Client' => array(
+						'page' => 1,
+						'current' => 3,
+						'count' => 13,
+						'prevPage' => FALSE,
+						'nextPage' => TRUE,
+						'pageCount' => 5,
+						'options' => array(
+								'page' => 1,
+						),
+						'paramType' => 'named'
+				)
 		);
-		$result = $this->Paginator->prev('<< Previous', null, null, array('class' => 'disabled'));
+		$result = $this->Paginator->prev('<< Previous', NULL, NULL, array('class' => 'disabled'));
 		$expected = array(
-			'span' => array('class' => 'disabled'),
-			'&lt;&lt; Previous',
-			'/span'
+				'span' => array('class' => 'disabled'),
+				'&lt;&lt; Previous',
+				'/span'
 		);
 		$this->assertTags($result, $expected);
 
-		$result = $this->Paginator->prev('<< Previous', null, null, array('class' => 'disabled', 'tag' => 'div'));
+		$result = $this->Paginator->prev('<< Previous', NULL, NULL, array('class' => 'disabled', 'tag' => 'div'));
 		$expected = array(
-			'div' => array('class' => 'disabled'),
-			'&lt;&lt; Previous',
-			'/div'
+				'div' => array('class' => 'disabled'),
+				'&lt;&lt; Previous',
+				'/div'
 		);
 		$this->assertTags($result, $expected);
 
 		$this->Paginator->request->params['paging']['Client']['page'] = 2;
-		$this->Paginator->request->params['paging']['Client']['prevPage'] = true;
-		$result = $this->Paginator->prev('<< Previous', null, null, array('class' => 'disabled'));
+		$this->Paginator->request->params['paging']['Client']['prevPage'] = TRUE;
+		$result = $this->Paginator->prev('<< Previous', NULL, NULL, array('class' => 'disabled'));
 		$expected = array(
-			'span' => array('class' => 'prev'),
-			'a' => array('href' => '/', 'rel' => 'prev'),
-			'&lt;&lt; Previous',
-			'/a',
-			'/span'
+				'span' => array('class' => 'prev'),
+				'a' => array('href' => '/', 'rel' => 'prev'),
+				'&lt;&lt; Previous',
+				'/a',
+				'/span'
 		);
 		$this->assertTags($result, $expected);
 
-		$result = $this->Paginator->prev('<< Previous', array('tag' => false), null, array('class' => 'disabled'));
+		$result = $this->Paginator->prev('<< Previous', array('tag' => FALSE), NULL, array('class' => 'disabled'));
 		$expected = array(
-			'a' => array('href' => '/', 'rel' => 'prev', 'class' => 'prev'),
-			'&lt;&lt; Previous',
-			'/a'
+				'a' => array('href' => '/', 'rel' => 'prev', 'class' => 'prev'),
+				'&lt;&lt; Previous',
+				'/a'
 		);
 		$this->assertTags($result, $expected);
 
 		$result = $this->Paginator->prev(
-			'<< Previous',
-			array(),
-			null,
-			array('disabledTag' => 'span', 'class' => 'disabled')
+				'<< Previous',
+				array(),
+				NULL,
+				array('disabledTag' => 'span', 'class' => 'disabled')
 		);
 		$expected = array(
-			'span' => array('class' => 'prev'),
-			'a' => array('href' => '/', 'rel' => 'prev'),
-			'&lt;&lt; Previous',
-			'/a',
-			'/span'
+				'span' => array('class' => 'prev'),
+				'a' => array('href' => '/', 'rel' => 'prev'),
+				'&lt;&lt; Previous',
+				'/a',
+				'/span'
 		);
 		$this->assertTags($result, $expected);
 
 		$result = $this->Paginator->next('Next');
 		$expected = array(
-			'span' => array('class' => 'next'),
-			'a' => array('href' => '/index/page:3', 'rel' => 'next'),
-			'Next',
-			'/a',
-			'/span'
+				'span' => array('class' => 'next'),
+				'a' => array('href' => '/index/page:3', 'rel' => 'next'),
+				'Next',
+				'/a',
+				'/span'
 		);
 		$this->assertTags($result, $expected);
 
 		$result = $this->Paginator->next('Next', array('tag' => 'li'));
 		$expected = array(
-			'li' => array('class' => 'next'),
-			'a' => array('href' => '/index/page:3', 'rel' => 'next'),
-			'Next',
-			'/a',
-			'/li'
+				'li' => array('class' => 'next'),
+				'a' => array('href' => '/index/page:3', 'rel' => 'next'),
+				'Next',
+				'/a',
+				'/li'
 		);
 		$this->assertTags($result, $expected);
 
-		$result = $this->Paginator->next('Next', array('tag' => false));
+		$result = $this->Paginator->next('Next', array('tag' => FALSE));
 		$expected = array(
-			'a' => array('href' => '/index/page:3', 'rel' => 'next', 'class' => 'next'),
-			'Next',
-			'/a'
+				'a' => array('href' => '/index/page:3', 'rel' => 'next', 'class' => 'next'),
+				'Next',
+				'/a'
 		);
 		$this->assertTags($result, $expected);
 
-		$result = $this->Paginator->prev('<< Previous', array('escape' => true));
+		$result = $this->Paginator->prev('<< Previous', array('escape' => TRUE));
 		$expected = array(
-			'span' => array('class' => 'prev'),
-			'a' => array('href' => '/', 'rel' => 'prev'),
-			'&lt;&lt; Previous',
-			'/a',
-			'/span'
+				'span' => array('class' => 'prev'),
+				'a' => array('href' => '/', 'rel' => 'prev'),
+				'&lt;&lt; Previous',
+				'/a',
+				'/span'
 		);
 		$this->assertTags($result, $expected);
 
-		$result = $this->Paginator->prev('<< Previous', array('escape' => false));
+		$result = $this->Paginator->prev('<< Previous', array('escape' => FALSE));
 		$expected = array(
-			'span' => array('class' => 'prev'),
-			'a' => array('href' => '/', 'rel' => 'prev'),
-			'preg:/<< Previous/',
-			'/a',
-			'/span'
+				'span' => array('class' => 'prev'),
+				'a' => array('href' => '/', 'rel' => 'prev'),
+				'preg:/<< Previous/',
+				'/a',
+				'/span'
 		);
 		$this->assertTags($result, $expected);
 
 		$this->Paginator->request->params['paging'] = array(
-			'Client' => array(
-				'page' => 1,
-				'current' => 1,
-				'count' => 13,
-				'prevPage' => false,
-				'nextPage' => true,
-				'pageCount' => 5,
-				'options' => array(
-					'page' => 1,
-				),
-				'paramType' => 'named'
-			)
+				'Client' => array(
+						'page' => 1,
+						'current' => 1,
+						'count' => 13,
+						'prevPage' => FALSE,
+						'nextPage' => TRUE,
+						'pageCount' => 5,
+						'options' => array(
+								'page' => 1,
+						),
+						'paramType' => 'named'
+				)
 		);
 
-		$result = $this->Paginator->prev('<i class="fa fa-angle-left"></i>', array('escape' => false), null, array('class' => 'prev disabled'));
+		$result = $this->Paginator->prev('<i class="fa fa-angle-left"></i>', array('escape' => FALSE), NULL, array('class' => 'prev disabled'));
 		$expected = array(
-			'span' => array('class' => 'prev disabled'),
-			'i' => array('class' => 'fa fa-angle-left'),
-			'/i',
-			'/span'
-		);
-		$this->assertTags($result, $expected);
-
-		$result = $this->Paginator->prev('<i class="fa fa-angle-left"></i>', array('escape' => false), null, array('escape' => true));
-		$expected = array(
-			'span' => array('class' => 'prev'),
-			'&lt;i class=&quot;fa fa-angle-left&quot;&gt;&lt;/i&gt;',
-			'/span'
+				'span' => array('class' => 'prev disabled'),
+				'i' => array('class' => 'fa fa-angle-left'),
+				'/i',
+				'/span'
 		);
 		$this->assertTags($result, $expected);
 
-		$result = $this->Paginator->prev('<< Previous', null, '<strong>Disabled</strong>');
+		$result = $this->Paginator->prev('<i class="fa fa-angle-left"></i>', array('escape' => FALSE), NULL, array('escape' => TRUE));
 		$expected = array(
-			'span' => array('class' => 'prev'),
-			'&lt;strong&gt;Disabled&lt;/strong&gt;',
-			'/span'
+				'span' => array('class' => 'prev'),
+				'&lt;i class=&quot;fa fa-angle-left&quot;&gt;&lt;/i&gt;',
+				'/span'
 		);
 		$this->assertTags($result, $expected);
 
-		$result = $this->Paginator->prev('<< Previous', null, '<strong>Disabled</strong>', array('escape' => true));
+		$result = $this->Paginator->prev('<< Previous', NULL, '<strong>Disabled</strong>');
 		$expected = array(
-			'span' => array('class' => 'prev'),
-			'&lt;strong&gt;Disabled&lt;/strong&gt;',
-			'/span'
+				'span' => array('class' => 'prev'),
+				'&lt;strong&gt;Disabled&lt;/strong&gt;',
+				'/span'
 		);
 		$this->assertTags($result, $expected);
 
-		$result = $this->Paginator->prev('<< Previous', null, '<strong>Disabled</strong>', array('escape' => false));
+		$result = $this->Paginator->prev('<< Previous', NULL, '<strong>Disabled</strong>', array('escape' => TRUE));
 		$expected = array(
-			'span' => array('class' => 'prev'),
-			'<strong', 'Disabled', '/strong',
-			'/span'
+				'span' => array('class' => 'prev'),
+				'&lt;strong&gt;Disabled&lt;/strong&gt;',
+				'/span'
 		);
 		$this->assertTags($result, $expected);
 
-		$result = $this->Paginator->prev('<< Previous', array('tag' => false), '<strong>Disabled</strong>');
+		$result = $this->Paginator->prev('<< Previous', NULL, '<strong>Disabled</strong>', array('escape' => FALSE));
 		$expected = array(
-			'span' => array('class' => 'prev'),
-			'&lt;strong&gt;Disabled&lt;/strong&gt;',
-			'/span'
+				'span' => array('class' => 'prev'),
+				'<strong', 'Disabled', '/strong',
+				'/span'
+		);
+		$this->assertTags($result, $expected);
+
+		$result = $this->Paginator->prev('<< Previous', array('tag' => FALSE), '<strong>Disabled</strong>');
+		$expected = array(
+				'span' => array('class' => 'prev'),
+				'&lt;strong&gt;Disabled&lt;/strong&gt;',
+				'/span'
 		);
 		$this->assertTags($result, $expected);
 
 		$result = $this->Paginator->prev(
-			'<< Previous',
-			array('tag' => 'li'),
-			null,
-			array('tag' => 'li', 'disabledTag' => 'span', 'class' => 'disabled')
+				'<< Previous',
+				array('tag' => 'li'),
+				NULL,
+				array('tag' => 'li', 'disabledTag' => 'span', 'class' => 'disabled')
 		);
 		$expected = array(
-			'li' => array('class' => 'disabled'),
-			'span' => array(),
-			'&lt;&lt; Previous',
-			'/span',
-			'/li'
+				'li' => array('class' => 'disabled'),
+				'span' => array(),
+				'&lt;&lt; Previous',
+				'/span',
+				'/li'
 		);
 		$this->assertTags($result, $expected);
 		$result = $this->Paginator->prev(
-			'<< Previous',
-			array(),
-			null,
-			array('tag' => false, 'disabledTag' => 'span', 'class' => 'disabled')
+				'<< Previous',
+				array(),
+				NULL,
+				array('tag' => FALSE, 'disabledTag' => 'span', 'class' => 'disabled')
 		);
 		$expected = array(
-			'span' => array('class' => 'disabled'),
-			'&lt;&lt; Previous',
-			'/span',
+				'span' => array('class' => 'disabled'),
+				'&lt;&lt; Previous',
+				'/span',
 		);
 		$this->assertTags($result, $expected);
 
 		$this->Paginator->request->params['paging'] = array(
-			'Client' => array(
-				'page' => 1,
-				'current' => 3,
-				'count' => 13,
-				'prevPage' => false,
-				'nextPage' => true,
-				'pageCount' => 5,
-				'options' => array(
-					'page' => 1,
-					'limit' => 3,
-					'order' => array('Client.name' => 'DESC'),
-				),
-				'paramType' => 'named'
-			)
+				'Client' => array(
+						'page' => 1,
+						'current' => 3,
+						'count' => 13,
+						'prevPage' => FALSE,
+						'nextPage' => TRUE,
+						'pageCount' => 5,
+						'options' => array(
+								'page' => 1,
+								'limit' => 3,
+								'order' => array('Client.name' => 'DESC'),
+						),
+						'paramType' => 'named'
+				)
 		);
 
 		$this->Paginator->request->params['paging']['Client']['page'] = 2;
-		$this->Paginator->request->params['paging']['Client']['prevPage'] = true;
-		$result = $this->Paginator->prev('<< Previous', null, null, array('class' => 'disabled'));
+		$this->Paginator->request->params['paging']['Client']['prevPage'] = TRUE;
+		$result = $this->Paginator->prev('<< Previous', NULL, NULL, array('class' => 'disabled'));
 		$expected = array(
-			'span' => array('class' => 'prev'),
-			'a' => array(
-				'href' => '/index/limit:3/sort:Client.name/direction:DESC',
-				'rel' => 'prev'
-			),
-			'&lt;&lt; Previous',
-			'/a',
-			'/span'
+				'span' => array('class' => 'prev'),
+				'a' => array(
+						'href' => '/index/limit:3/sort:Client.name/direction:DESC',
+						'rel' => 'prev'
+				),
+				'&lt;&lt; Previous',
+				'/a',
+				'/span'
 		);
 		$this->assertTags($result, $expected);
 
 		$result = $this->Paginator->next('Next');
 		$expected = array(
-			'span' => array('class' => 'next'),
-			'a' => array(
-				'href' => '/index/page:3/limit:3/sort:Client.name/direction:DESC',
-				'rel' => 'next'
-			),
-			'Next',
-			'/a',
-			'/span'
+				'span' => array('class' => 'next'),
+				'a' => array(
+						'href' => '/index/page:3/limit:3/sort:Client.name/direction:DESC',
+						'rel' => 'next'
+				),
+				'Next',
+				'/a',
+				'/span'
 		);
 		$this->assertTags($result, $expected);
 
 		$this->Paginator->request->params['paging'] = array(
-			'Client' => array(
-				'page' => 2,
-				'current' => 1,
-				'count' => 13,
-				'prevPage' => true,
-				'nextPage' => false,
-				'pageCount' => 2,
-				'options' => array(
-					'page' => 2,
-					'limit' => 10,
-					'order' => array(),
-					'conditions' => array()
-				),
-				'paramType' => 'named'
-			)
+				'Client' => array(
+						'page' => 2,
+						'current' => 1,
+						'count' => 13,
+						'prevPage' => TRUE,
+						'nextPage' => FALSE,
+						'pageCount' => 2,
+						'options' => array(
+								'page' => 2,
+								'limit' => 10,
+								'order' => array(),
+								'conditions' => array()
+						),
+						'paramType' => 'named'
+				)
 		);
 		$result = $this->Paginator->prev('Prev');
 		$expected = array(
-			'span' => array('class' => 'prev'),
-			'a' => array('href' => '/index/limit:10', 'rel' => 'prev'),
-			'Prev',
-			'/a',
-			'/span'
+				'span' => array('class' => 'prev'),
+				'a' => array('href' => '/index/limit:10', 'rel' => 'prev'),
+				'Prev',
+				'/a',
+				'/span'
 		);
 		$this->assertTags($result, $expected);
 
-		$result = $this->Paginator->next('Next', array(), null, array('tag' => false));
+		$result = $this->Paginator->next('Next', array(), NULL, array('tag' => FALSE));
 		$expected = array(
-			'span' => array('class' => 'next'),
-			'Next',
-			'/span'
+				'span' => array('class' => 'next'),
+				'Next',
+				'/span'
 		);
 		$this->assertTags($result, $expected);
 
 		$this->Paginator->request->params['paging'] = array(
-			'Client' => array(
-				'page' => 2, 'current' => 1, 'count' => 13, 'prevPage' => true,
-				'nextPage' => false, 'pageCount' => 2,
-				'defaults' => array(),
-				'options' => array(
-					'page' => 2, 'limit' => 10, 'order' => array(), 'conditions' => array()
-				),
-				'paramType' => 'named'
-			)
+				'Client' => array(
+						'page' => 2, 'current' => 1, 'count' => 13, 'prevPage' => TRUE,
+						'nextPage' => FALSE, 'pageCount' => 2,
+						'defaults' => array(),
+						'options' => array(
+								'page' => 2, 'limit' => 10, 'order' => array(), 'conditions' => array()
+						),
+						'paramType' => 'named'
+				)
 		);
 		$this->Paginator->options(array('url' => array(12, 'page' => 3)));
 		$result = $this->Paginator->prev('Prev', array('url' => array('foo' => 'bar')));
 		$expected = array(
-			'span' => array('class' => 'prev'),
-			'a' => array('href' => '/index/12/limit:10/foo:bar', 'rel' => 'prev'),
-			'Prev',
-			'/a',
-			'/span'
+				'span' => array('class' => 'prev'),
+				'a' => array('href' => '/index/12/limit:10/foo:bar', 'rel' => 'prev'),
+				'Prev',
+				'/a',
+				'/span'
 		);
 		$this->assertTags($result, $expected);
 	}
 
-/**
- * test that __pagingLink methods use $options when $disabledOptions is an empty value.
- * allowing you to use shortcut syntax
- *
- * @return void
- */
+	/**
+	 * test that __pagingLink methods use $options when $disabledOptions is an empty value.
+	 * allowing you to use shortcut syntax
+	 *
+	 * @return void
+	 */
 	public function testPagingLinksOptionsReplaceEmptyDisabledOptions() {
 		$this->Paginator->request->params['paging'] = array(
-			'Client' => array(
-				'page' => 1,
-				'current' => 3,
-				'count' => 13,
-				'prevPage' => false,
-				'nextPage' => true,
-				'pageCount' => 5,
-				'options' => array(
-					'page' => 1,
-				),
-				'paramType' => 'named'
-			)
+				'Client' => array(
+						'page' => 1,
+						'current' => 3,
+						'count' => 13,
+						'prevPage' => FALSE,
+						'nextPage' => TRUE,
+						'pageCount' => 5,
+						'options' => array(
+								'page' => 1,
+						),
+						'paramType' => 'named'
+				)
 		);
-		$result = $this->Paginator->prev('<< Previous', array('escape' => false));
+		$result = $this->Paginator->prev('<< Previous', array('escape' => FALSE));
 		$expected = array(
-			'span' => array('class' => 'prev'),
-			'preg:/<< Previous/',
-			'/span'
+				'span' => array('class' => 'prev'),
+				'preg:/<< Previous/',
+				'/span'
 		);
 		$this->assertTags($result, $expected);
 
-		$result = $this->Paginator->next('Next >>', array('escape' => false));
+		$result = $this->Paginator->next('Next >>', array('escape' => FALSE));
 		$expected = array(
-			'span' => array('class' => 'next'),
-			'a' => array('href' => '/index/page:2', 'rel' => 'next'),
-			'preg:/Next >>/',
-			'/a',
-			'/span'
+				'span' => array('class' => 'next'),
+				'a' => array('href' => '/index/page:2', 'rel' => 'next'),
+				'preg:/Next >>/',
+				'/a',
+				'/span'
 		);
 		$this->assertTags($result, $expected);
 	}
 
-/**
- * testPagingLinksNotDefaultModel
- *
- * Test the creation of paging links when the non default model is used.
- *
- * @return void
- */
+	/**
+	 * testPagingLinksNotDefaultModel
+	 *
+	 * Test the creation of paging links when the non default model is used.
+	 *
+	 * @return void
+	 */
 	public function testPagingLinksNotDefaultModel() {
 		// Multiple Model Paginate
 		$this->Paginator->request->params['paging'] = array(
-			'Client' => array(
-				'page' => 1,
-				'current' => 3,
-				'count' => 13,
-				'prevPage' => false,
-				'nextPage' => true,
-				'pageCount' => 5,
-				'options' => array(
-					'page' => 1,
+				'Client' => array(
+						'page' => 1,
+						'current' => 3,
+						'count' => 13,
+						'prevPage' => FALSE,
+						'nextPage' => TRUE,
+						'pageCount' => 5,
+						'options' => array(
+								'page' => 1,
+						),
+						'paramType' => 'named'
 				),
-				'paramType' => 'named'
-			),
-			'Server' => array(
-				'page' => 1,
-				'current' => 1,
-				'count' => 5,
-				'prevPage' => false,
-				'nextPage' => false,
-				'pageCount' => 5,
-				'options' => array(
-					'page' => 1,
-				),
-				'paramType' => 'named'
-			)
+				'Server' => array(
+						'page' => 1,
+						'current' => 1,
+						'count' => 5,
+						'prevPage' => FALSE,
+						'nextPage' => FALSE,
+						'pageCount' => 5,
+						'options' => array(
+								'page' => 1,
+						),
+						'paramType' => 'named'
+				)
 		);
 		$result = $this->Paginator->sort('title', 'Title', array('model' => 'Client'));
 		$expected = array(
-			'a' => array('href' => '/index/sort:title/direction:asc'),
-			'Title',
-			'/a'
+				'a' => array('href' => '/index/sort:title/direction:asc'),
+				'Title',
+				'/a'
 		);
 		$this->assertTags($result, $expected);
 
 		$result = $this->Paginator->next('Next', array('model' => 'Client'));
 		$expected = array(
-			'span' => array('class' => 'next'),
-			'a' => array('href' => '/index/page:2', 'rel' => 'next'),
-			'Next',
-			'/a',
-			'/span'
+				'span' => array('class' => 'next'),
+				'a' => array('href' => '/index/page:2', 'rel' => 'next'),
+				'Next',
+				'/a',
+				'/span'
 		);
 		$this->assertTags($result, $expected);
 
 		$result = $this->Paginator->next('Next', array('model' => 'Server'), 'No Next', array('model' => 'Server'));
 		$expected = array(
-			'span' => array('class' => 'next'), 'No Next', '/span'
+				'span' => array('class' => 'next'), 'No Next', '/span'
 		);
 		$this->assertTags($result, $expected);
 	}
 
-/**
- * Test creating paging links for missing models.
- *
- * @return void
- */
+	/**
+	 * Test creating paging links for missing models.
+	 *
+	 * @return void
+	 */
 	public function testPagingLinksMissingModel() {
 		$result = $this->Paginator->sort('title', 'Title', array('model' => 'Missing'));
 		$expected = array(
-			'a' => array('href' => '/index/sort:title/direction:asc'),
-			'Title',
-			'/a'
+				'a' => array('href' => '/index/sort:title/direction:asc'),
+				'Title',
+				'/a'
 		);
 		$this->assertTags($result, $expected);
 
 		$result = $this->Paginator->next('Next', array('model' => 'Missing'));
 		$expected = array(
-			'span' => array('class' => 'next'),
-			'a' => array('href' => '/index/page:2', 'rel' => 'next'),
-			'Next',
-			'/a',
-			'/span'
+				'span' => array('class' => 'next'),
+				'a' => array('href' => '/index/page:2', 'rel' => 'next'),
+				'Next',
+				'/a',
+				'/span'
 		);
 		$this->assertTags($result, $expected);
 
 		$result = $this->Paginator->prev('Prev', array('model' => 'Missing'));
 		$expected = array(
-			'span' => array('class' => 'prev'),
-			'Prev',
-			'/span'
+				'span' => array('class' => 'prev'),
+				'Prev',
+				'/span'
 		);
 		$this->assertTags($result, $expected);
 	}
 
-/**
- * testGenericLinks method
- *
- * @return void
- */
+	/**
+	 * testGenericLinks method
+	 *
+	 * @return void
+	 */
 	public function testGenericLinks() {
 		$result = $this->Paginator->link('Sort by title on page 5', array('sort' => 'title', 'page' => 5, 'direction' => 'desc'));
 		$expected = array(
-			'a' => array('href' => '/index/page:5/sort:title/direction:desc'),
-			'Sort by title on page 5',
-			'/a'
+				'a' => array('href' => '/index/page:5/sort:title/direction:desc'),
+				'Sort by title on page 5',
+				'/a'
 		);
 		$this->assertTags($result, $expected);
 
 		$this->Paginator->request->params['paging']['Article']['options']['page'] = 2;
 		$result = $this->Paginator->link('Sort by title', array('sort' => 'title', 'direction' => 'desc'));
 		$expected = array(
-			'a' => array('href' => '/index/page:2/sort:title/direction:desc'),
-			'Sort by title',
-			'/a'
+				'a' => array('href' => '/index/page:2/sort:title/direction:desc'),
+				'Sort by title',
+				'/a'
 		);
 		$this->assertTags($result, $expected);
 
 		$this->Paginator->request->params['paging']['Article']['options']['page'] = 4;
 		$result = $this->Paginator->link('Sort by title on page 4', array('sort' => 'Article.title', 'direction' => 'desc'));
 		$expected = array(
-			'a' => array('href' => '/index/page:4/sort:Article.title/direction:desc'),
-			'Sort by title on page 4',
-			'/a'
+				'a' => array('href' => '/index/page:4/sort:Article.title/direction:desc'),
+				'Sort by title on page 4',
+				'/a'
 		);
 		$this->assertTags($result, $expected);
 	}
 
-/**
- * Tests generation of generic links with preset options
- *
- * @return void
- */
+	/**
+	 * Tests generation of generic links with preset options
+	 *
+	 * @return void
+	 */
 	public function testGenericLinksWithPresetOptions() {
 		$result = $this->Paginator->link('Foo!', array('page' => 1));
 		$this->assertTags($result, array('a' => array('href' => '/'), 'Foo!', '/a'));
@@ -1363,585 +1363,585 @@ class PaginatorHelperTest extends CakeTestCase {
 		$this->Paginator->options(array('sort' => 'title', 'direction' => 'desc'));
 		$result = $this->Paginator->link('Foo!', array('page' => 1));
 		$this->assertTags($result, array(
-			'a' => array(
-				'href' => '/',
-				'sort' => 'title',
-				'direction' => 'desc'
-			),
-			'Foo!',
-			'/a'
+				'a' => array(
+						'href' => '/',
+						'sort' => 'title',
+						'direction' => 'desc'
+				),
+				'Foo!',
+				'/a'
 		));
 
-		$this->Paginator->options(array('sort' => null, 'direction' => null));
+		$this->Paginator->options(array('sort' => NULL, 'direction' => NULL));
 		$result = $this->Paginator->link('Foo!', array('page' => 1));
 		$this->assertTags($result, array('a' => array('href' => '/'), 'Foo!', '/a'));
 
 		$this->Paginator->options(array('url' => array(
-			'sort' => 'title',
-			'direction' => 'desc'
+				'sort' => 'title',
+				'direction' => 'desc'
 		)));
 		$result = $this->Paginator->link('Foo!', array('page' => 1));
 		$this->assertTags($result, array(
-			'a' => array('href' => '/index/sort:title/direction:desc'),
-			'Foo!',
-			'/a'
+				'a' => array('href' => '/index/sort:title/direction:desc'),
+				'Foo!',
+				'/a'
 		));
 	}
 
-/**
- * testNumbers method
- *
- * @return void
- */
+	/**
+	 * testNumbers method
+	 *
+	 * @return void
+	 */
 	public function testNumbers() {
 		$this->Paginator->request->params['paging'] = array(
-			'Client' => array(
-				'page' => 8,
-				'current' => 3,
-				'count' => 30,
-				'prevPage' => false,
-				'nextPage' => 2,
-				'pageCount' => 15,
-				'options' => array(
-					'page' => 1,
-				),
-				'paramType' => 'named'
-			)
+				'Client' => array(
+						'page' => 8,
+						'current' => 3,
+						'count' => 30,
+						'prevPage' => FALSE,
+						'nextPage' => 2,
+						'pageCount' => 15,
+						'options' => array(
+								'page' => 1,
+						),
+						'paramType' => 'named'
+				)
 		);
 		$result = $this->Paginator->numbers();
 		$expected = array(
-			array('span' => array()), array('a' => array('href' => '/index/page:4')), '4', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:5')), '5', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:6')), '6', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:7')), '7', '/a', '/span',
-			' | ',
-			array('span' => array('class' => 'current')), '8', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:9')), '9', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:10')), '10', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:11')), '11', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:12')), '12', '/a', '/span',
+				array('span' => array()), array('a' => array('href' => '/index/page:4')), '4', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:5')), '5', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:6')), '6', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:7')), '7', '/a', '/span',
+				' | ',
+				array('span' => array('class' => 'current')), '8', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:9')), '9', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:10')), '10', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:11')), '11', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:12')), '12', '/a', '/span',
 		);
 		$this->assertTags($result, $expected);
 
 		$result = $this->Paginator->numbers(array('tag' => 'li'));
 		$expected = array(
-			array('li' => array()), array('a' => array('href' => '/index/page:4')), '4', '/a', '/li',
-			' | ',
-			array('li' => array()), array('a' => array('href' => '/index/page:5')), '5', '/a', '/li',
-			' | ',
-			array('li' => array()), array('a' => array('href' => '/index/page:6')), '6', '/a', '/li',
-			' | ',
-			array('li' => array()), array('a' => array('href' => '/index/page:7')), '7', '/a', '/li',
-			' | ',
-			array('li' => array('class' => 'current')), '8', '/li',
-			' | ',
-			array('li' => array()), array('a' => array('href' => '/index/page:9')), '9', '/a', '/li',
-			' | ',
-			array('li' => array()), array('a' => array('href' => '/index/page:10')), '10', '/a', '/li',
-			' | ',
-			array('li' => array()), array('a' => array('href' => '/index/page:11')), '11', '/a', '/li',
-			' | ',
-			array('li' => array()), array('a' => array('href' => '/index/page:12')), '12', '/a', '/li',
+				array('li' => array()), array('a' => array('href' => '/index/page:4')), '4', '/a', '/li',
+				' | ',
+				array('li' => array()), array('a' => array('href' => '/index/page:5')), '5', '/a', '/li',
+				' | ',
+				array('li' => array()), array('a' => array('href' => '/index/page:6')), '6', '/a', '/li',
+				' | ',
+				array('li' => array()), array('a' => array('href' => '/index/page:7')), '7', '/a', '/li',
+				' | ',
+				array('li' => array('class' => 'current')), '8', '/li',
+				' | ',
+				array('li' => array()), array('a' => array('href' => '/index/page:9')), '9', '/a', '/li',
+				' | ',
+				array('li' => array()), array('a' => array('href' => '/index/page:10')), '10', '/a', '/li',
+				' | ',
+				array('li' => array()), array('a' => array('href' => '/index/page:11')), '11', '/a', '/li',
+				' | ',
+				array('li' => array()), array('a' => array('href' => '/index/page:12')), '12', '/a', '/li',
 		);
 		$this->assertTags($result, $expected);
 
-		$result = $this->Paginator->numbers(array('tag' => 'li', 'separator' => false));
+		$result = $this->Paginator->numbers(array('tag' => 'li', 'separator' => FALSE));
 		$expected = array(
-			array('li' => array()), array('a' => array('href' => '/index/page:4')), '4', '/a', '/li',
-			array('li' => array()), array('a' => array('href' => '/index/page:5')), '5', '/a', '/li',
-			array('li' => array()), array('a' => array('href' => '/index/page:6')), '6', '/a', '/li',
-			array('li' => array()), array('a' => array('href' => '/index/page:7')), '7', '/a', '/li',
-			array('li' => array('class' => 'current')), '8', '/li',
-			array('li' => array()), array('a' => array('href' => '/index/page:9')), '9', '/a', '/li',
-			array('li' => array()), array('a' => array('href' => '/index/page:10')), '10', '/a', '/li',
-			array('li' => array()), array('a' => array('href' => '/index/page:11')), '11', '/a', '/li',
-			array('li' => array()), array('a' => array('href' => '/index/page:12')), '12', '/a', '/li',
+				array('li' => array()), array('a' => array('href' => '/index/page:4')), '4', '/a', '/li',
+				array('li' => array()), array('a' => array('href' => '/index/page:5')), '5', '/a', '/li',
+				array('li' => array()), array('a' => array('href' => '/index/page:6')), '6', '/a', '/li',
+				array('li' => array()), array('a' => array('href' => '/index/page:7')), '7', '/a', '/li',
+				array('li' => array('class' => 'current')), '8', '/li',
+				array('li' => array()), array('a' => array('href' => '/index/page:9')), '9', '/a', '/li',
+				array('li' => array()), array('a' => array('href' => '/index/page:10')), '10', '/a', '/li',
+				array('li' => array()), array('a' => array('href' => '/index/page:11')), '11', '/a', '/li',
+				array('li' => array()), array('a' => array('href' => '/index/page:12')), '12', '/a', '/li',
 		);
 		$this->assertTags($result, $expected);
 
-		$result = $this->Paginator->numbers(true);
+		$result = $this->Paginator->numbers(TRUE);
 		$expected = array(
-			array('span' => array()), array('a' => array('href' => '/', 'rel' => 'first')), 'first', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:4')), '4', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:5')), '5', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:6')), '6', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:7')), '7', '/a', '/span',
-			' | ',
-			array('span' => array('class' => 'current')), '8', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:9')), '9', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:10')), '10', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:11')), '11', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:12')), '12', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:15', 'rel' => 'last')), 'last', '/a', '/span',
+				array('span' => array()), array('a' => array('href' => '/', 'rel' => 'first')), 'first', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:4')), '4', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:5')), '5', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:6')), '6', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:7')), '7', '/a', '/span',
+				' | ',
+				array('span' => array('class' => 'current')), '8', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:9')), '9', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:10')), '10', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:11')), '11', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:12')), '12', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:15', 'rel' => 'last')), 'last', '/a', '/span',
 		);
 		$this->assertTags($result, $expected);
 
 		$this->Paginator->request->params['paging'] = array(
-			'Client' => array(
-				'page' => 1,
-				'current' => 3,
-				'count' => 30,
-				'prevPage' => false,
-				'nextPage' => 2,
-				'pageCount' => 15,
-				'options' => array(
-					'page' => 1,
-				),
-				'paramType' => 'named'
-			)
+				'Client' => array(
+						'page' => 1,
+						'current' => 3,
+						'count' => 30,
+						'prevPage' => FALSE,
+						'nextPage' => 2,
+						'pageCount' => 15,
+						'options' => array(
+								'page' => 1,
+						),
+						'paramType' => 'named'
+				)
 		);
 		$result = $this->Paginator->numbers();
 		$expected = array(
-			array('span' => array('class' => 'current')), '1', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:2')), '2', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:3')), '3', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:4')), '4', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:5')), '5', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:6')), '6', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:7')), '7', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:8')), '8', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:9')), '9', '/a', '/span',
+				array('span' => array('class' => 'current')), '1', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:2')), '2', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:3')), '3', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:4')), '4', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:5')), '5', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:6')), '6', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:7')), '7', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:8')), '8', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:9')), '9', '/a', '/span',
 		);
 		$this->assertTags($result, $expected);
 
 		$this->Paginator->request->params['paging'] = array(
-			'Client' => array(
-				'page' => 14,
-				'current' => 3,
-				'count' => 30,
-				'prevPage' => false,
-				'nextPage' => 2,
-				'pageCount' => 15,
-				'options' => array(
-					'page' => 1,
-				),
-				'paramType' => 'named'
-			)
+				'Client' => array(
+						'page' => 14,
+						'current' => 3,
+						'count' => 30,
+						'prevPage' => FALSE,
+						'nextPage' => 2,
+						'pageCount' => 15,
+						'options' => array(
+								'page' => 1,
+						),
+						'paramType' => 'named'
+				)
 		);
 		$result = $this->Paginator->numbers();
 		$expected = array(
-			array('span' => array()), array('a' => array('href' => '/index/page:7')), '7', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:8')), '8', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:9')), '9', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:10')), '10', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:11')), '11', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:12')), '12', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:13')), '13', '/a', '/span',
-			' | ',
-			array('span' => array('class' => 'current')), '14', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:15')), '15', '/a', '/span',
+				array('span' => array()), array('a' => array('href' => '/index/page:7')), '7', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:8')), '8', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:9')), '9', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:10')), '10', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:11')), '11', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:12')), '12', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:13')), '13', '/a', '/span',
+				' | ',
+				array('span' => array('class' => 'current')), '14', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:15')), '15', '/a', '/span',
 		);
 		$this->assertTags($result, $expected);
 
 		$this->Paginator->request->params['paging'] = array(
-			'Client' => array(
-				'page' => 2,
-				'current' => 3,
-				'count' => 27,
-				'prevPage' => false,
-				'nextPage' => 2,
-				'pageCount' => 9,
-				'options' => array(
-					'page' => 1,
-				),
-				'paramType' => 'named'
-			)
+				'Client' => array(
+						'page' => 2,
+						'current' => 3,
+						'count' => 27,
+						'prevPage' => FALSE,
+						'nextPage' => 2,
+						'pageCount' => 9,
+						'options' => array(
+								'page' => 1,
+						),
+						'paramType' => 'named'
+				)
 		);
 
 		$result = $this->Paginator->numbers(array('first' => 1, 'class' => 'page-link'));
 		$expected = array(
-			array('span' => array('class' => 'page-link')), array('a' => array('href' => '/')), '1', '/a', '/span',
-			' | ',
-			array('span' => array('class' => 'current page-link')), '2', '/span',
-			' | ',
-			array('span' => array('class' => 'page-link')), array('a' => array('href' => '/index/page:3')), '3', '/a', '/span',
-			' | ',
-			array('span' => array('class' => 'page-link')), array('a' => array('href' => '/index/page:4')), '4', '/a', '/span',
-			' | ',
-			array('span' => array('class' => 'page-link')), array('a' => array('href' => '/index/page:5')), '5', '/a', '/span',
-			' | ',
-			array('span' => array('class' => 'page-link')), array('a' => array('href' => '/index/page:6')), '6', '/a', '/span',
-			' | ',
-			array('span' => array('class' => 'page-link')), array('a' => array('href' => '/index/page:7')), '7', '/a', '/span',
-			' | ',
-			array('span' => array('class' => 'page-link')), array('a' => array('href' => '/index/page:8')), '8', '/a', '/span',
-			' | ',
-			array('span' => array('class' => 'page-link')), array('a' => array('href' => '/index/page:9')), '9', '/a', '/span',
+				array('span' => array('class' => 'page-link')), array('a' => array('href' => '/')), '1', '/a', '/span',
+				' | ',
+				array('span' => array('class' => 'current page-link')), '2', '/span',
+				' | ',
+				array('span' => array('class' => 'page-link')), array('a' => array('href' => '/index/page:3')), '3', '/a', '/span',
+				' | ',
+				array('span' => array('class' => 'page-link')), array('a' => array('href' => '/index/page:4')), '4', '/a', '/span',
+				' | ',
+				array('span' => array('class' => 'page-link')), array('a' => array('href' => '/index/page:5')), '5', '/a', '/span',
+				' | ',
+				array('span' => array('class' => 'page-link')), array('a' => array('href' => '/index/page:6')), '6', '/a', '/span',
+				' | ',
+				array('span' => array('class' => 'page-link')), array('a' => array('href' => '/index/page:7')), '7', '/a', '/span',
+				' | ',
+				array('span' => array('class' => 'page-link')), array('a' => array('href' => '/index/page:8')), '8', '/a', '/span',
+				' | ',
+				array('span' => array('class' => 'page-link')), array('a' => array('href' => '/index/page:9')), '9', '/a', '/span',
 		);
 		$this->assertTags($result, $expected);
 
 		$result = $this->Paginator->numbers(array('first' => 1, 'currentClass' => 'active'));
 		$expected = array(
-			array('span' => array()), array('a' => array('href' => '/')), '1', '/a', '/span',
-			' | ',
-			array('span' => array('class' => 'active')), '2', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:3')), '3', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:4')), '4', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:5')), '5', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:6')), '6', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:7')), '7', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:8')), '8', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:9')), '9', '/a', '/span',
+				array('span' => array()), array('a' => array('href' => '/')), '1', '/a', '/span',
+				' | ',
+				array('span' => array('class' => 'active')), '2', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:3')), '3', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:4')), '4', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:5')), '5', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:6')), '6', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:7')), '7', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:8')), '8', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:9')), '9', '/a', '/span',
 		);
 		$this->assertTags($result, $expected);
 
 		$result = $this->Paginator->numbers(array('first' => 1, 'tag' => 'li', 'currentClass' => 'active', 'currentTag' => 'a'));
 		$expected = array(
-			array('li' => array()), array('a' => array('href' => '/')), '1', '/a', '/li',
-			' | ',
-			array('li' => array('class' => 'active')), array('a' => array()), '2', '/a', '/li',
-			' | ',
-			array('li' => array()), array('a' => array('href' => '/index/page:3')), '3', '/a', '/li',
-			' | ',
-			array('li' => array()), array('a' => array('href' => '/index/page:4')), '4', '/a', '/li',
-			' | ',
-			array('li' => array()), array('a' => array('href' => '/index/page:5')), '5', '/a', '/li',
-			' | ',
-			array('li' => array()), array('a' => array('href' => '/index/page:6')), '6', '/a', '/li',
-			' | ',
-			array('li' => array()), array('a' => array('href' => '/index/page:7')), '7', '/a', '/li',
-			' | ',
-			array('li' => array()), array('a' => array('href' => '/index/page:8')), '8', '/a', '/li',
-			' | ',
-			array('li' => array()), array('a' => array('href' => '/index/page:9')), '9', '/a', '/li',
+				array('li' => array()), array('a' => array('href' => '/')), '1', '/a', '/li',
+				' | ',
+				array('li' => array('class' => 'active')), array('a' => array()), '2', '/a', '/li',
+				' | ',
+				array('li' => array()), array('a' => array('href' => '/index/page:3')), '3', '/a', '/li',
+				' | ',
+				array('li' => array()), array('a' => array('href' => '/index/page:4')), '4', '/a', '/li',
+				' | ',
+				array('li' => array()), array('a' => array('href' => '/index/page:5')), '5', '/a', '/li',
+				' | ',
+				array('li' => array()), array('a' => array('href' => '/index/page:6')), '6', '/a', '/li',
+				' | ',
+				array('li' => array()), array('a' => array('href' => '/index/page:7')), '7', '/a', '/li',
+				' | ',
+				array('li' => array()), array('a' => array('href' => '/index/page:8')), '8', '/a', '/li',
+				' | ',
+				array('li' => array()), array('a' => array('href' => '/index/page:9')), '9', '/a', '/li',
 		);
 		$this->assertTags($result, $expected);
 
 		$result = $this->Paginator->numbers(array('first' => 1, 'class' => 'page-link', 'currentClass' => 'active'));
 		$expected = array(
-			array('span' => array('class' => 'page-link')), array('a' => array('href' => '/')), '1', '/a', '/span',
-			' | ',
-			array('span' => array('class' => 'active page-link')), '2', '/span',
-			' | ',
-			array('span' => array('class' => 'page-link')), array('a' => array('href' => '/index/page:3')), '3', '/a', '/span',
-			' | ',
-			array('span' => array('class' => 'page-link')), array('a' => array('href' => '/index/page:4')), '4', '/a', '/span',
-			' | ',
-			array('span' => array('class' => 'page-link')), array('a' => array('href' => '/index/page:5')), '5', '/a', '/span',
-			' | ',
-			array('span' => array('class' => 'page-link')), array('a' => array('href' => '/index/page:6')), '6', '/a', '/span',
-			' | ',
-			array('span' => array('class' => 'page-link')), array('a' => array('href' => '/index/page:7')), '7', '/a', '/span',
-			' | ',
-			array('span' => array('class' => 'page-link')), array('a' => array('href' => '/index/page:8')), '8', '/a', '/span',
-			' | ',
-			array('span' => array('class' => 'page-link')), array('a' => array('href' => '/index/page:9')), '9', '/a', '/span',
+				array('span' => array('class' => 'page-link')), array('a' => array('href' => '/')), '1', '/a', '/span',
+				' | ',
+				array('span' => array('class' => 'active page-link')), '2', '/span',
+				' | ',
+				array('span' => array('class' => 'page-link')), array('a' => array('href' => '/index/page:3')), '3', '/a', '/span',
+				' | ',
+				array('span' => array('class' => 'page-link')), array('a' => array('href' => '/index/page:4')), '4', '/a', '/span',
+				' | ',
+				array('span' => array('class' => 'page-link')), array('a' => array('href' => '/index/page:5')), '5', '/a', '/span',
+				' | ',
+				array('span' => array('class' => 'page-link')), array('a' => array('href' => '/index/page:6')), '6', '/a', '/span',
+				' | ',
+				array('span' => array('class' => 'page-link')), array('a' => array('href' => '/index/page:7')), '7', '/a', '/span',
+				' | ',
+				array('span' => array('class' => 'page-link')), array('a' => array('href' => '/index/page:8')), '8', '/a', '/span',
+				' | ',
+				array('span' => array('class' => 'page-link')), array('a' => array('href' => '/index/page:9')), '9', '/a', '/span',
 		);
 		$this->assertTags($result, $expected);
 
 		$result = $this->Paginator->numbers(array('last' => 1));
 		$expected = array(
-			array('span' => array()), array('a' => array('href' => '/')), '1', '/a', '/span',
-			' | ',
-			array('span' => array('class' => 'current')), '2', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:3')), '3', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:4')), '4', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:5')), '5', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:6')), '6', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:7')), '7', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:8')), '8', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:9')), '9', '/a', '/span',
+				array('span' => array()), array('a' => array('href' => '/')), '1', '/a', '/span',
+				' | ',
+				array('span' => array('class' => 'current')), '2', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:3')), '3', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:4')), '4', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:5')), '5', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:6')), '6', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:7')), '7', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:8')), '8', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:9')), '9', '/a', '/span',
 		);
 		$this->assertTags($result, $expected);
 
 		$this->Paginator->request->params['paging'] = array(
-			'Client' => array(
-				'page' => 15,
-				'current' => 3,
-				'count' => 30,
-				'prevPage' => false,
-				'nextPage' => 2,
-				'pageCount' => 15,
-				'options' => array(
-					'page' => 1,
-				),
-				'paramType' => 'named'
-			)
+				'Client' => array(
+						'page' => 15,
+						'current' => 3,
+						'count' => 30,
+						'prevPage' => FALSE,
+						'nextPage' => 2,
+						'pageCount' => 15,
+						'options' => array(
+								'page' => 1,
+						),
+						'paramType' => 'named'
+				)
 		);
 
 		$result = $this->Paginator->numbers(array('first' => 1));
 		$expected = array(
-			array('span' => array()), array('a' => array('href' => '/')), '1', '/a', '/span',
-			'...',
-			array('span' => array()), array('a' => array('href' => '/index/page:7')), '7', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:8')), '8', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:9')), '9', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:10')), '10', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:11')), '11', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:12')), '12', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:13')), '13', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:14')), '14', '/a', '/span',
-			' | ',
-			array('span' => array('class' => 'current')), '15', '/span',
+				array('span' => array()), array('a' => array('href' => '/')), '1', '/a', '/span',
+				'...',
+				array('span' => array()), array('a' => array('href' => '/index/page:7')), '7', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:8')), '8', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:9')), '9', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:10')), '10', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:11')), '11', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:12')), '12', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:13')), '13', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:14')), '14', '/a', '/span',
+				' | ',
+				array('span' => array('class' => 'current')), '15', '/span',
 
 		);
 		$this->assertTags($result, $expected);
 
 		$this->Paginator->request->params['paging'] = array(
-			'Client' => array(
-				'page' => 10,
-				'current' => 3,
-				'count' => 30,
-				'prevPage' => false,
-				'nextPage' => 2,
-				'pageCount' => 15,
-				'options' => array(
-					'page' => 1,
-				),
-				'paramType' => 'named'
-			)
+				'Client' => array(
+						'page' => 10,
+						'current' => 3,
+						'count' => 30,
+						'prevPage' => FALSE,
+						'nextPage' => 2,
+						'pageCount' => 15,
+						'options' => array(
+								'page' => 1,
+						),
+						'paramType' => 'named'
+				)
 		);
 
 		$result = $this->Paginator->numbers(array('first' => 1, 'last' => 1));
 		$expected = array(
-			array('span' => array()), array('a' => array('href' => '/')), '1', '/a', '/span',
-			'...',
-			array('span' => array()), array('a' => array('href' => '/index/page:6')), '6', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:7')), '7', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:8')), '8', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:9')), '9', '/a', '/span',
-			' | ',
-			array('span' => array('class' => 'current')), '10', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:11')), '11', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:12')), '12', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:13')), '13', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:14')), '14', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:15')), '15', '/a', '/span',
+				array('span' => array()), array('a' => array('href' => '/')), '1', '/a', '/span',
+				'...',
+				array('span' => array()), array('a' => array('href' => '/index/page:6')), '6', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:7')), '7', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:8')), '8', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:9')), '9', '/a', '/span',
+				' | ',
+				array('span' => array('class' => 'current')), '10', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:11')), '11', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:12')), '12', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:13')), '13', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:14')), '14', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:15')), '15', '/a', '/span',
 		);
 		$this->assertTags($result, $expected);
 
 		$this->Paginator->request->params['paging'] = array(
-			'Client' => array(
-				'page' => 6,
-				'current' => 15,
-				'count' => 623,
-				'prevPage' => 1,
-				'nextPage' => 1,
-				'pageCount' => 42,
-				'options' => array(
-					'page' => 6,
-				),
-				'paramType' => 'named'
-			)
+				'Client' => array(
+						'page' => 6,
+						'current' => 15,
+						'count' => 623,
+						'prevPage' => 1,
+						'nextPage' => 1,
+						'pageCount' => 42,
+						'options' => array(
+								'page' => 6,
+						),
+						'paramType' => 'named'
+				)
 		);
 
 		$result = $this->Paginator->numbers(array('first' => 1, 'last' => 1));
 		$expected = array(
-			array('span' => array()), array('a' => array('href' => '/')), '1', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:2')), '2', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:3')), '3', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:4')), '4', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:5')), '5', '/a', '/span',
-			' | ',
-			array('span' => array('class' => 'current')), '6', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:7')), '7', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:8')), '8', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:9')), '9', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:10')), '10', '/a', '/span',
-			'...',
-			array('span' => array()), array('a' => array('href' => '/index/page:42')), '42', '/a', '/span',
+				array('span' => array()), array('a' => array('href' => '/')), '1', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:2')), '2', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:3')), '3', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:4')), '4', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:5')), '5', '/a', '/span',
+				' | ',
+				array('span' => array('class' => 'current')), '6', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:7')), '7', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:8')), '8', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:9')), '9', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:10')), '10', '/a', '/span',
+				'...',
+				array('span' => array()), array('a' => array('href' => '/index/page:42')), '42', '/a', '/span',
 		);
 		$this->assertTags($result, $expected);
 
 		$this->Paginator->request->params['paging'] = array(
-			'Client' => array(
-				'page' => 37,
-				'current' => 15,
-				'count' => 623,
-				'prevPage' => 1,
-				'nextPage' => 1,
-				'pageCount' => 42,
-				'options' => array(
-					'page' => 37,
-				),
-				'paramType' => 'named'
-			)
+				'Client' => array(
+						'page' => 37,
+						'current' => 15,
+						'count' => 623,
+						'prevPage' => 1,
+						'nextPage' => 1,
+						'pageCount' => 42,
+						'options' => array(
+								'page' => 37,
+						),
+						'paramType' => 'named'
+				)
 		);
 
 		$result = $this->Paginator->numbers(array('first' => 1, 'last' => 1));
 		$expected = array(
-			array('span' => array()), array('a' => array('href' => '/')), '1', '/a', '/span',
-			'...',
-			array('span' => array()), array('a' => array('href' => '/index/page:33')), '33', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:34')), '34', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:35')), '35', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:36')), '36', '/a', '/span',
-			' | ',
-			array('span' => array('class' => 'current')), '37', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:38')), '38', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:39')), '39', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:40')), '40', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:41')), '41', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:42')), '42', '/a', '/span',
+				array('span' => array()), array('a' => array('href' => '/')), '1', '/a', '/span',
+				'...',
+				array('span' => array()), array('a' => array('href' => '/index/page:33')), '33', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:34')), '34', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:35')), '35', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:36')), '36', '/a', '/span',
+				' | ',
+				array('span' => array('class' => 'current')), '37', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:38')), '38', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:39')), '39', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:40')), '40', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:41')), '41', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:42')), '42', '/a', '/span',
 		);
 		$this->assertTags($result, $expected);
 
 		$this->Paginator->request->params['paging'] = array(
-			'Client' => array(
-				'page' => 1,
-				'current' => 10,
-				'count' => 30,
-				'prevPage' => false,
-				'nextPage' => 2,
-				'pageCount' => 3,
-				'options' => array(
-					'page' => 1,
-				),
-				'paramType' => 'named'
-			)
+				'Client' => array(
+						'page' => 1,
+						'current' => 10,
+						'count' => 30,
+						'prevPage' => FALSE,
+						'nextPage' => 2,
+						'pageCount' => 3,
+						'options' => array(
+								'page' => 1,
+						),
+						'paramType' => 'named'
+				)
 		);
 		$options = array('modulus' => 10);
 		$result = $this->Paginator->numbers($options);
 		$expected = array(
-			array('span' => array('class' => 'current')), '1', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:2')), '2', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:3')), '3', '/a', '/span',
+				array('span' => array('class' => 'current')), '1', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:2')), '2', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:3')), '3', '/a', '/span',
 		);
 		$this->assertTags($result, $expected);
 
 		$result = $this->Paginator->numbers(array('modulus' => 3, 'currentTag' => 'span', 'tag' => 'li'));
 		$expected = array(
-			array('li' => array('class' => 'current')), array('span' => array()), '1', '/span', '/li',
-			' | ',
-			array('li' => array()), array('a' => array('href' => '/index/page:2')), '2', '/a', '/li',
-			' | ',
-			array('li' => array()), array('a' => array('href' => '/index/page:3')), '3', '/a', '/li',
+				array('li' => array('class' => 'current')), array('span' => array()), '1', '/span', '/li',
+				' | ',
+				array('li' => array()), array('a' => array('href' => '/index/page:2')), '2', '/a', '/li',
+				' | ',
+				array('li' => array()), array('a' => array('href' => '/index/page:3')), '3', '/a', '/li',
 		);
 		$this->assertTags($result, $expected);
 
 		$this->Paginator->request->params['paging'] = array(
-			'Client' => array(
-				'page' => 2,
-				'current' => 10,
-				'count' => 31,
-				'prevPage' => true,
-				'nextPage' => true,
-				'pageCount' => 4,
-				'options' => array(
-					'page' => 1,
-					'order' => array('Client.name' => 'DESC'),
-				),
-				'paramType' => 'named'
-			)
+				'Client' => array(
+						'page' => 2,
+						'current' => 10,
+						'count' => 31,
+						'prevPage' => TRUE,
+						'nextPage' => TRUE,
+						'pageCount' => 4,
+						'options' => array(
+								'page' => 1,
+								'order' => array('Client.name' => 'DESC'),
+						),
+						'paramType' => 'named'
+				)
 		);
 		$result = $this->Paginator->numbers(array('class' => 'page-link'));
 		$expected = array(
-			array('span' => array('class' => 'page-link')), array('a' => array('href' => '/index/sort:Client.name/direction:DESC')), '1', '/a', '/span',
-			' | ',
-			array('span' => array('class' => 'current page-link')), '2', '/span',
-			' | ',
-			array('span' => array('class' => 'page-link')), array('a' => array('href' => '/index/page:3/sort:Client.name/direction:DESC')), '3', '/a', '/span',
-			' | ',
-			array('span' => array('class' => 'page-link')), array('a' => array('href' => '/index/page:4/sort:Client.name/direction:DESC')), '4', '/a', '/span',
+				array('span' => array('class' => 'page-link')), array('a' => array('href' => '/index/sort:Client.name/direction:DESC')), '1', '/a', '/span',
+				' | ',
+				array('span' => array('class' => 'current page-link')), '2', '/span',
+				' | ',
+				array('span' => array('class' => 'page-link')), array('a' => array('href' => '/index/page:3/sort:Client.name/direction:DESC')), '3', '/a', '/span',
+				' | ',
+				array('span' => array('class' => 'page-link')), array('a' => array('href' => '/index/page:4/sort:Client.name/direction:DESC')), '4', '/a', '/span',
 		);
 		$this->assertTags($result, $expected);
 
 		$this->Paginator->request->params['paging'] = array(
-			'Client' => array(
-				'page' => 4895,
-				'current' => 10,
-				'count' => 48962,
-				'prevPage' => 1,
-				'nextPage' => 1,
-				'pageCount' => 4897,
-				'options' => array(
-					'page' => 4894,
-				),
-				'paramType' => 'named'
-			)
+				'Client' => array(
+						'page' => 4895,
+						'current' => 10,
+						'count' => 48962,
+						'prevPage' => 1,
+						'nextPage' => 1,
+						'pageCount' => 4897,
+						'options' => array(
+								'page' => 4894,
+						),
+						'paramType' => 'named'
+				)
 		);
 
 		$result = $this->Paginator->numbers(array('first' => 2, 'modulus' => 2, 'last' => 2));
 		$expected = array(
-			array('span' => array()), array('a' => array('href' => '/')), '1', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:2')), '2', '/a', '/span',
-			'...',
-			array('span' => array()), array('a' => array('href' => '/index/page:4894')), '4894', '/a', '/span',
-			' | ',
-			array('span' => array('class' => 'current')), '4895', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:4896')), '4896', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:4897')), '4897', '/a', '/span',
+				array('span' => array()), array('a' => array('href' => '/')), '1', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:2')), '2', '/a', '/span',
+				'...',
+				array('span' => array()), array('a' => array('href' => '/index/page:4894')), '4894', '/a', '/span',
+				' | ',
+				array('span' => array('class' => 'current')), '4895', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:4896')), '4896', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:4897')), '4897', '/a', '/span',
 		);
 		$this->assertTags($result, $expected);
 
@@ -1949,207 +1949,207 @@ class PaginatorHelperTest extends CakeTestCase {
 
 		$result = $this->Paginator->numbers(array('first' => 2, 'modulus' => 2, 'last' => 2));
 		$expected = array(
-			array('span' => array()), array('a' => array('href' => '/')), '1', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:2')), '2', '/a', '/span',
-			' | ',
-			array('span' => array('class' => 'current')), '3', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:4')), '4', '/a', '/span',
-			'...',
-			array('span' => array()), array('a' => array('href' => '/index/page:4896')), '4896', '/a', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/index/page:4897')), '4897', '/a', '/span',
+				array('span' => array()), array('a' => array('href' => '/')), '1', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:2')), '2', '/a', '/span',
+				' | ',
+				array('span' => array('class' => 'current')), '3', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:4')), '4', '/a', '/span',
+				'...',
+				array('span' => array()), array('a' => array('href' => '/index/page:4896')), '4896', '/a', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/index/page:4897')), '4897', '/a', '/span',
 		);
 		$this->assertTags($result, $expected);
 
 		$result = $this->Paginator->numbers(array('first' => 2, 'modulus' => 2, 'last' => 2, 'separator' => ' - '));
 		$expected = array(
-			array('span' => array()), array('a' => array('href' => '/')), '1', '/a', '/span',
-			' - ',
-			array('span' => array()), array('a' => array('href' => '/index/page:2')), '2', '/a', '/span',
-			' - ',
-			array('span' => array('class' => 'current')), '3', '/span',
-			' - ',
-			array('span' => array()), array('a' => array('href' => '/index/page:4')), '4', '/a', '/span',
-			'...',
-			array('span' => array()), array('a' => array('href' => '/index/page:4896')), '4896', '/a', '/span',
-			' - ',
-			array('span' => array()), array('a' => array('href' => '/index/page:4897')), '4897', '/a', '/span',
+				array('span' => array()), array('a' => array('href' => '/')), '1', '/a', '/span',
+				' - ',
+				array('span' => array()), array('a' => array('href' => '/index/page:2')), '2', '/a', '/span',
+				' - ',
+				array('span' => array('class' => 'current')), '3', '/span',
+				' - ',
+				array('span' => array()), array('a' => array('href' => '/index/page:4')), '4', '/a', '/span',
+				'...',
+				array('span' => array()), array('a' => array('href' => '/index/page:4896')), '4896', '/a', '/span',
+				' - ',
+				array('span' => array()), array('a' => array('href' => '/index/page:4897')), '4897', '/a', '/span',
 		);
 		$this->assertTags($result, $expected);
 
 		$result = $this->Paginator->numbers(array('first' => 5, 'modulus' => 5, 'last' => 5, 'separator' => ' - '));
 		$expected = array(
-			array('span' => array()), array('a' => array('href' => '/')), '1', '/a', '/span',
-			' - ',
-			array('span' => array()), array('a' => array('href' => '/index/page:2')), '2', '/a', '/span',
-			' - ',
-			array('span' => array('class' => 'current')), '3', '/span',
-			' - ',
-			array('span' => array()), array('a' => array('href' => '/index/page:4')), '4', '/a', '/span',
-			' - ',
-			array('span' => array()), array('a' => array('href' => '/index/page:5')), '5', '/a', '/span',
-			' - ',
-			array('span' => array()), array('a' => array('href' => '/index/page:6')), '6', '/a', '/span',
-			'...',
-			array('span' => array()), array('a' => array('href' => '/index/page:4893')), '4893', '/a', '/span',
-			' - ',
-			array('span' => array()), array('a' => array('href' => '/index/page:4894')), '4894', '/a', '/span',
-			' - ',
-			array('span' => array()), array('a' => array('href' => '/index/page:4895')), '4895', '/a', '/span',
-			' - ',
-			array('span' => array()), array('a' => array('href' => '/index/page:4896')), '4896', '/a', '/span',
-			' - ',
-			array('span' => array()), array('a' => array('href' => '/index/page:4897')), '4897', '/a', '/span',
+				array('span' => array()), array('a' => array('href' => '/')), '1', '/a', '/span',
+				' - ',
+				array('span' => array()), array('a' => array('href' => '/index/page:2')), '2', '/a', '/span',
+				' - ',
+				array('span' => array('class' => 'current')), '3', '/span',
+				' - ',
+				array('span' => array()), array('a' => array('href' => '/index/page:4')), '4', '/a', '/span',
+				' - ',
+				array('span' => array()), array('a' => array('href' => '/index/page:5')), '5', '/a', '/span',
+				' - ',
+				array('span' => array()), array('a' => array('href' => '/index/page:6')), '6', '/a', '/span',
+				'...',
+				array('span' => array()), array('a' => array('href' => '/index/page:4893')), '4893', '/a', '/span',
+				' - ',
+				array('span' => array()), array('a' => array('href' => '/index/page:4894')), '4894', '/a', '/span',
+				' - ',
+				array('span' => array()), array('a' => array('href' => '/index/page:4895')), '4895', '/a', '/span',
+				' - ',
+				array('span' => array()), array('a' => array('href' => '/index/page:4896')), '4896', '/a', '/span',
+				' - ',
+				array('span' => array()), array('a' => array('href' => '/index/page:4897')), '4897', '/a', '/span',
 		);
 		$this->assertTags($result, $expected);
 
 		$this->Paginator->request->params['paging']['Client']['page'] = 4893;
 		$result = $this->Paginator->numbers(array('first' => 5, 'modulus' => 4, 'last' => 5, 'separator' => ' - '));
 		$expected = array(
-			array('span' => array()), array('a' => array('href' => '/')), '1', '/a', '/span',
-			' - ',
-			array('span' => array()), array('a' => array('href' => '/index/page:2')), '2', '/a', '/span',
-			' - ',
-			array('span' => array()), array('a' => array('href' => '/index/page:3')), '3', '/a', '/span',
-			' - ',
-			array('span' => array()), array('a' => array('href' => '/index/page:4')), '4', '/a', '/span',
-			' - ',
-			array('span' => array()), array('a' => array('href' => '/index/page:5')), '5', '/a', '/span',
-			'...',
-			array('span' => array()), array('a' => array('href' => '/index/page:4891')), '4891', '/a', '/span',
-			' - ',
-			array('span' => array()), array('a' => array('href' => '/index/page:4892')), '4892', '/a', '/span',
-			' - ',
-			array('span' => array('class' => 'current')), '4893', '/span',
-			' - ',
-			array('span' => array()), array('a' => array('href' => '/index/page:4894')), '4894', '/a', '/span',
-			' - ',
-			array('span' => array()), array('a' => array('href' => '/index/page:4895')), '4895', '/a', '/span',
-			' - ',
-			array('span' => array()), array('a' => array('href' => '/index/page:4896')), '4896', '/a', '/span',
-			' - ',
-			array('span' => array()), array('a' => array('href' => '/index/page:4897')), '4897', '/a', '/span',
+				array('span' => array()), array('a' => array('href' => '/')), '1', '/a', '/span',
+				' - ',
+				array('span' => array()), array('a' => array('href' => '/index/page:2')), '2', '/a', '/span',
+				' - ',
+				array('span' => array()), array('a' => array('href' => '/index/page:3')), '3', '/a', '/span',
+				' - ',
+				array('span' => array()), array('a' => array('href' => '/index/page:4')), '4', '/a', '/span',
+				' - ',
+				array('span' => array()), array('a' => array('href' => '/index/page:5')), '5', '/a', '/span',
+				'...',
+				array('span' => array()), array('a' => array('href' => '/index/page:4891')), '4891', '/a', '/span',
+				' - ',
+				array('span' => array()), array('a' => array('href' => '/index/page:4892')), '4892', '/a', '/span',
+				' - ',
+				array('span' => array('class' => 'current')), '4893', '/span',
+				' - ',
+				array('span' => array()), array('a' => array('href' => '/index/page:4894')), '4894', '/a', '/span',
+				' - ',
+				array('span' => array()), array('a' => array('href' => '/index/page:4895')), '4895', '/a', '/span',
+				' - ',
+				array('span' => array()), array('a' => array('href' => '/index/page:4896')), '4896', '/a', '/span',
+				' - ',
+				array('span' => array()), array('a' => array('href' => '/index/page:4897')), '4897', '/a', '/span',
 		);
 		$this->assertTags($result, $expected);
 
 		$this->Paginator->request->params['paging']['Client']['page'] = 58;
 		$result = $this->Paginator->numbers(array('first' => 5, 'modulus' => 4, 'last' => 5, 'separator' => ' - '));
 		$expected = array(
-			array('span' => array()), array('a' => array('href' => '/')), '1', '/a', '/span',
-			' - ',
-			array('span' => array()), array('a' => array('href' => '/index/page:2')), '2', '/a', '/span',
-			' - ',
-			array('span' => array()), array('a' => array('href' => '/index/page:3')), '3', '/a', '/span',
-			' - ',
-			array('span' => array()), array('a' => array('href' => '/index/page:4')), '4', '/a', '/span',
-			' - ',
-			array('span' => array()), array('a' => array('href' => '/index/page:5')), '5', '/a', '/span',
-			'...',
-			array('span' => array()), array('a' => array('href' => '/index/page:56')), '56', '/a', '/span',
-			' - ',
-			array('span' => array()), array('a' => array('href' => '/index/page:57')), '57', '/a', '/span',
-			' - ',
-			array('span' => array('class' => 'current')), '58', '/span',
-			' - ',
-			array('span' => array()), array('a' => array('href' => '/index/page:59')), '59', '/a', '/span',
-			' - ',
-			array('span' => array()), array('a' => array('href' => '/index/page:60')), '60', '/a', '/span',
-			'...',
-			array('span' => array()), array('a' => array('href' => '/index/page:4893')), '4893', '/a', '/span',
-			' - ',
-			array('span' => array()), array('a' => array('href' => '/index/page:4894')), '4894', '/a', '/span',
-			' - ',
-			array('span' => array()), array('a' => array('href' => '/index/page:4895')), '4895', '/a', '/span',
-			' - ',
-			array('span' => array()), array('a' => array('href' => '/index/page:4896')), '4896', '/a', '/span',
-			' - ',
-			array('span' => array()), array('a' => array('href' => '/index/page:4897')), '4897', '/a', '/span',
+				array('span' => array()), array('a' => array('href' => '/')), '1', '/a', '/span',
+				' - ',
+				array('span' => array()), array('a' => array('href' => '/index/page:2')), '2', '/a', '/span',
+				' - ',
+				array('span' => array()), array('a' => array('href' => '/index/page:3')), '3', '/a', '/span',
+				' - ',
+				array('span' => array()), array('a' => array('href' => '/index/page:4')), '4', '/a', '/span',
+				' - ',
+				array('span' => array()), array('a' => array('href' => '/index/page:5')), '5', '/a', '/span',
+				'...',
+				array('span' => array()), array('a' => array('href' => '/index/page:56')), '56', '/a', '/span',
+				' - ',
+				array('span' => array()), array('a' => array('href' => '/index/page:57')), '57', '/a', '/span',
+				' - ',
+				array('span' => array('class' => 'current')), '58', '/span',
+				' - ',
+				array('span' => array()), array('a' => array('href' => '/index/page:59')), '59', '/a', '/span',
+				' - ',
+				array('span' => array()), array('a' => array('href' => '/index/page:60')), '60', '/a', '/span',
+				'...',
+				array('span' => array()), array('a' => array('href' => '/index/page:4893')), '4893', '/a', '/span',
+				' - ',
+				array('span' => array()), array('a' => array('href' => '/index/page:4894')), '4894', '/a', '/span',
+				' - ',
+				array('span' => array()), array('a' => array('href' => '/index/page:4895')), '4895', '/a', '/span',
+				' - ',
+				array('span' => array()), array('a' => array('href' => '/index/page:4896')), '4896', '/a', '/span',
+				' - ',
+				array('span' => array()), array('a' => array('href' => '/index/page:4897')), '4897', '/a', '/span',
 		);
 		$this->assertTags($result, $expected);
 
 		$this->Paginator->request->params['paging']['Client']['page'] = 5;
 		$result = $this->Paginator->numbers(array('first' => 5, 'modulus' => 4, 'last' => 5, 'separator' => ' - '));
 		$expected = array(
-			array('span' => array()), array('a' => array('href' => '/')), '1', '/a', '/span',
-			' - ',
-			array('span' => array()), array('a' => array('href' => '/index/page:2')), '2', '/a', '/span',
-			' - ',
-			array('span' => array()), array('a' => array('href' => '/index/page:3')), '3', '/a', '/span',
-			' - ',
-			array('span' => array()), array('a' => array('href' => '/index/page:4')), '4', '/a', '/span',
-			' - ',
-			array('span' => array('class' => 'current')), '5', '/span',
-			' - ',
-			array('span' => array()), array('a' => array('href' => '/index/page:6')), '6', '/a', '/span',
-			' - ',
-			array('span' => array()), array('a' => array('href' => '/index/page:7')), '7', '/a', '/span',
-			'...',
-			array('span' => array()), array('a' => array('href' => '/index/page:4893')), '4893', '/a', '/span',
-			' - ',
-			array('span' => array()), array('a' => array('href' => '/index/page:4894')), '4894', '/a', '/span',
-			' - ',
-			array('span' => array()), array('a' => array('href' => '/index/page:4895')), '4895', '/a', '/span',
-			' - ',
-			array('span' => array()), array('a' => array('href' => '/index/page:4896')), '4896', '/a', '/span',
-			' - ',
-			array('span' => array()), array('a' => array('href' => '/index/page:4897')), '4897', '/a', '/span',
+				array('span' => array()), array('a' => array('href' => '/')), '1', '/a', '/span',
+				' - ',
+				array('span' => array()), array('a' => array('href' => '/index/page:2')), '2', '/a', '/span',
+				' - ',
+				array('span' => array()), array('a' => array('href' => '/index/page:3')), '3', '/a', '/span',
+				' - ',
+				array('span' => array()), array('a' => array('href' => '/index/page:4')), '4', '/a', '/span',
+				' - ',
+				array('span' => array('class' => 'current')), '5', '/span',
+				' - ',
+				array('span' => array()), array('a' => array('href' => '/index/page:6')), '6', '/a', '/span',
+				' - ',
+				array('span' => array()), array('a' => array('href' => '/index/page:7')), '7', '/a', '/span',
+				'...',
+				array('span' => array()), array('a' => array('href' => '/index/page:4893')), '4893', '/a', '/span',
+				' - ',
+				array('span' => array()), array('a' => array('href' => '/index/page:4894')), '4894', '/a', '/span',
+				' - ',
+				array('span' => array()), array('a' => array('href' => '/index/page:4895')), '4895', '/a', '/span',
+				' - ',
+				array('span' => array()), array('a' => array('href' => '/index/page:4896')), '4896', '/a', '/span',
+				' - ',
+				array('span' => array()), array('a' => array('href' => '/index/page:4897')), '4897', '/a', '/span',
 		);
 		$this->assertTags($result, $expected);
 
 		$this->Paginator->request->params['paging']['Client']['page'] = 3;
 		$result = $this->Paginator->numbers(array('first' => 2, 'modulus' => 2, 'last' => 2, 'separator' => ' - ', 'ellipsis' => ' ~~~ '));
 		$expected = array(
-			array('span' => array()), array('a' => array('href' => '/')), '1', '/a', '/span',
-			' - ',
-			array('span' => array()), array('a' => array('href' => '/index/page:2')), '2', '/a', '/span',
-			' - ',
-			array('span' => array('class' => 'current')), '3', '/span',
-			' - ',
-			array('span' => array()), array('a' => array('href' => '/index/page:4')), '4', '/a', '/span',
-			' ~~~ ',
-			array('span' => array()), array('a' => array('href' => '/index/page:4896')), '4896', '/a', '/span',
-			' - ',
-			array('span' => array()), array('a' => array('href' => '/index/page:4897')), '4897', '/a', '/span',
+				array('span' => array()), array('a' => array('href' => '/')), '1', '/a', '/span',
+				' - ',
+				array('span' => array()), array('a' => array('href' => '/index/page:2')), '2', '/a', '/span',
+				' - ',
+				array('span' => array('class' => 'current')), '3', '/span',
+				' - ',
+				array('span' => array()), array('a' => array('href' => '/index/page:4')), '4', '/a', '/span',
+				' ~~~ ',
+				array('span' => array()), array('a' => array('href' => '/index/page:4896')), '4896', '/a', '/span',
+				' - ',
+				array('span' => array()), array('a' => array('href' => '/index/page:4897')), '4897', '/a', '/span',
 		);
 		$this->assertTags($result, $expected);
 
 		$this->Paginator->request->params['paging']['Client']['page'] = 3;
 		$result = $this->Paginator->numbers(array('first' => 2, 'modulus' => 2, 'last' => 2, 'separator' => ' - ', 'ellipsis' => '<span class="ellipsis">...</span>'));
 		$expected = array(
-			array('span' => array()), array('a' => array('href' => '/')), '1', '/a', '/span',
-			' - ',
-			array('span' => array()), array('a' => array('href' => '/index/page:2')), '2', '/a', '/span',
-			' - ',
-			array('span' => array('class' => 'current')), '3', '/span',
-			' - ',
-			array('span' => array()), array('a' => array('href' => '/index/page:4')), '4', '/a', '/span',
-			array('span' => array('class' => 'ellipsis')), '...', '/span',
-			array('span' => array()), array('a' => array('href' => '/index/page:4896')), '4896', '/a', '/span',
-			' - ',
-			array('span' => array()), array('a' => array('href' => '/index/page:4897')), '4897', '/a', '/span',
+				array('span' => array()), array('a' => array('href' => '/')), '1', '/a', '/span',
+				' - ',
+				array('span' => array()), array('a' => array('href' => '/index/page:2')), '2', '/a', '/span',
+				' - ',
+				array('span' => array('class' => 'current')), '3', '/span',
+				' - ',
+				array('span' => array()), array('a' => array('href' => '/index/page:4')), '4', '/a', '/span',
+				array('span' => array('class' => 'ellipsis')), '...', '/span',
+				array('span' => array()), array('a' => array('href' => '/index/page:4896')), '4896', '/a', '/span',
+				' - ',
+				array('span' => array()), array('a' => array('href' => '/index/page:4897')), '4897', '/a', '/span',
 		);
 		$this->assertTags($result, $expected);
 
 		$this->Paginator->request->params['paging'] = array(
-			'Client' => array(
-				'page' => 2,
-				'current' => 2,
-				'count' => 30,
-				'prevPage' => false,
-				'nextPage' => 3,
-				'pageCount' => 3,
-				'options' => array(
-					'page' => 1,
-				),
-				'paramType' => 'named'
-			)
+				'Client' => array(
+						'page' => 2,
+						'current' => 2,
+						'count' => 30,
+						'prevPage' => FALSE,
+						'nextPage' => 3,
+						'pageCount' => 3,
+						'options' => array(
+								'page' => 1,
+						),
+						'paramType' => 'named'
+				)
 		);
 
 		$request = new CakeRequest();
 		$request->addParams(array(
-			'controller' => 'clients', 'action' => 'index', 'plugin' => null, 'page' => 2
+				'controller' => 'clients', 'action' => 'index', 'plugin' => NULL, 'page' => 2
 		));
 		$request->base = '';
 		$request->here = '/clients/index/page:2';
@@ -2159,33 +2159,33 @@ class PaginatorHelperTest extends CakeTestCase {
 
 		$result = $this->Paginator->numbers();
 		$expected = array(
-			array('span' => array()), array('a' => array('href' => '/clients')), '1', '/a', '/span',
-			' | ',
-			array('span' => array('class' => 'current')), '2', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/clients/index/page:3')), '3', '/a', '/span',
+				array('span' => array()), array('a' => array('href' => '/clients')), '1', '/a', '/span',
+				' | ',
+				array('span' => array('class' => 'current')), '2', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/clients/index/page:3')), '3', '/a', '/span',
 
 		);
 		$this->assertTags($result, $expected);
 
 		$this->Paginator->request->params['paging'] = array(
-			'Client' => array(
-				'page' => 2,
-				'current' => 2,
-				'count' => 30,
-				'prevPage' => false,
-				'nextPage' => 3,
-				'pageCount' => 3,
-				'options' => array(
-					'page' => 1,
-				),
-				'paramType' => 'querystring'
-			)
+				'Client' => array(
+						'page' => 2,
+						'current' => 2,
+						'count' => 30,
+						'prevPage' => FALSE,
+						'nextPage' => 3,
+						'pageCount' => 3,
+						'options' => array(
+								'page' => 1,
+						),
+						'paramType' => 'querystring'
+				)
 		);
 
 		$request = new CakeRequest();
 		$request->addParams(array(
-			'controller' => 'clients', 'action' => 'index', 'plugin' => null
+				'controller' => 'clients', 'action' => 'index', 'plugin' => NULL
 		));
 		$request->base = '';
 		$request->here = '/clients?page=2';
@@ -2195,51 +2195,51 @@ class PaginatorHelperTest extends CakeTestCase {
 
 		$result = $this->Paginator->numbers();
 		$expected = array(
-			array('span' => array()), array('a' => array('href' => '/clients')), '1', '/a', '/span',
-			' | ',
-			array('span' => array('class' => 'current')), '2', '/span',
-			' | ',
-			array('span' => array()), array('a' => array('href' => '/clients?page=3')), '3', '/a', '/span',
+				array('span' => array()), array('a' => array('href' => '/clients')), '1', '/a', '/span',
+				' | ',
+				array('span' => array('class' => 'current')), '2', '/span',
+				' | ',
+				array('span' => array()), array('a' => array('href' => '/clients?page=3')), '3', '/a', '/span',
 
 		);
 		$this->assertTags($result, $expected);
 	}
 
-/**
- * test first() and last() with tag options
- *
- * @return void
- */
+	/**
+	 * test first() and last() with tag options
+	 *
+	 * @return void
+	 */
 	public function testFirstAndLastTag() {
 		$result = $this->Paginator->first('<<', array('tag' => 'li', 'class' => 'first'));
 		$expected = array(
-			'li' => array('class' => 'first'),
-			'a' => array('href' => '/', 'rel' => 'first'),
-			'&lt;&lt;',
-			'/a',
-			'/li'
+				'li' => array('class' => 'first'),
+				'a' => array('href' => '/', 'rel' => 'first'),
+				'&lt;&lt;',
+				'/a',
+				'/li'
 		);
 		$this->assertTags($result, $expected);
 
 		$result = $this->Paginator->last(2, array('tag' => 'li', 'class' => 'last'));
 		$expected = array(
-			'...',
-			'li' => array('class' => 'last'),
-			array('a' => array('href' => '/index/page:6')), '6', '/a',
-			'/li',
-			' | ',
-			array('li' => array('class' => 'last')),
-			array('a' => array('href' => '/index/page:7')), '7', '/a',
-			'/li',
+				'...',
+				'li' => array('class' => 'last'),
+				array('a' => array('href' => '/index/page:6')), '6', '/a',
+				'/li',
+				' | ',
+				array('li' => array('class' => 'last')),
+				array('a' => array('href' => '/index/page:7')), '7', '/a',
+				'/li',
 		);
 		$this->assertTags($result, $expected);
 	}
 
-/**
- * test that on the last page you don't get a link ot the last page.
- *
- * @return void
- */
+	/**
+	 * test that on the last page you don't get a link ot the last page.
+	 *
+	 * @return void
+	 */
 	public function testLastNoOutput() {
 		$this->Paginator->request->params['paging']['Article']['page'] = 15;
 		$this->Paginator->request->params['paging']['Article']['pageCount'] = 15;
@@ -2249,11 +2249,11 @@ class PaginatorHelperTest extends CakeTestCase {
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * test first() on the first page.
- *
- * @return void
- */
+	/**
+	 * test first() on the first page.
+	 *
+	 * @return void
+	 */
 	public function testFirstEmpty() {
 		$this->Paginator->request->params['paging']['Article']['page'] = 1;
 
@@ -2262,54 +2262,54 @@ class PaginatorHelperTest extends CakeTestCase {
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * test first() and options()
- *
- * @return void
- */
+	/**
+	 * test first() and options()
+	 *
+	 * @return void
+	 */
 	public function testFirstFullBaseUrl() {
 		$this->Paginator->request->params['paging']['Article']['options']['order'] = array('Article.title' => 'DESC');
 
-		$this->Paginator->options(array('url' => array('full_base' => true)));
+		$this->Paginator->options(array('url' => array('full_base' => TRUE)));
 
 		$result = $this->Paginator->first();
 		$expected = array(
-			'<span',
-			array('a' => array(
-				'href' => FULL_BASE_URL . '/index/sort:Article.title/direction:DESC', 'rel' => 'first'
-			)),
-			'&lt;&lt; first',
-			'/a',
-			'/span',
+				'<span',
+				array('a' => array(
+						'href' => FULL_BASE_URL . '/index/sort:Article.title/direction:DESC', 'rel' => 'first'
+				)),
+				'&lt;&lt; first',
+				'/a',
+				'/span',
 		);
 		$this->assertTags($result, $expected);
 	}
 
-/**
- * test first() on the fence-post
- *
- * @return void
- */
+	/**
+	 * test first() on the fence-post
+	 *
+	 * @return void
+	 */
 	public function testFirstBoundaries() {
 		$result = $this->Paginator->first();
 		$expected = array(
-			'<span',
-			'a' => array('href' => '/', 'rel' => 'first'),
-			'&lt;&lt; first',
-			'/a',
-			'/span'
+				'<span',
+				'a' => array('href' => '/', 'rel' => 'first'),
+				'&lt;&lt; first',
+				'/a',
+				'/span'
 		);
 		$this->assertTags($result, $expected);
 
 		$result = $this->Paginator->first(2);
 		$expected = array(
-			'<span',
-			array('a' => array('href' => '/')), '1', '/a',
-			'/span',
-			' | ',
-			'<span',
-			array('a' => array('href' => '/index/page:2')), '2', '/a',
-			'/span'
+				'<span',
+				array('a' => array('href' => '/')), '1', '/a',
+				'/span',
+				' | ',
+				'<span',
+				array('a' => array('href' => '/index/page:2')), '2', '/a',
+				'/span'
 		);
 		$this->assertTags($result, $expected);
 
@@ -2318,22 +2318,22 @@ class PaginatorHelperTest extends CakeTestCase {
 		$this->assertEquals('', $result, 'When inside the first links range, no links should be made');
 	}
 
-/**
- * test params() method
- *
- * @return void
- */
+	/**
+	 * test params() method
+	 *
+	 * @return void
+	 */
 	public function testParams() {
 		$result = $this->Paginator->params();
 		$this->assertArrayHasKey('page', $result);
 		$this->assertArrayHasKey('pageCount', $result);
 	}
 
-/**
- * test param() method
- *
- * @return void
- */
+	/**
+	 * test param() method
+	 *
+	 * @return void
+	 */
 	public function testParam() {
 		$result = $this->Paginator->param('count');
 		$this->assertSame(62, $result);
@@ -2342,30 +2342,30 @@ class PaginatorHelperTest extends CakeTestCase {
 		$this->assertNull($result);
 	}
 
-/**
- * test last() method
- *
- * @return void
- */
+	/**
+	 * test last() method
+	 *
+	 * @return void
+	 */
 	public function testLast() {
 		$result = $this->Paginator->last();
 		$expected = array(
-			'<span',
-			'a' => array('href' => '/index/page:7', 'rel' => 'last'),
-			'last &gt;&gt;',
-			'/a',
-			'/span'
+				'<span',
+				'a' => array('href' => '/index/page:7', 'rel' => 'last'),
+				'last &gt;&gt;',
+				'/a',
+				'/span'
 		);
 		$this->assertTags($result, $expected);
 
 		$result = $this->Paginator->last(1);
 		$expected = array(
-			'...',
-			'<span',
-			'a' => array('href' => '/index/page:7'),
-			'7',
-			'/a',
-			'/span'
+				'...',
+				'<span',
+				'a' => array('href' => '/index/page:7'),
+				'7',
+				'/a',
+				'/span'
 		);
 		$this->assertTags($result, $expected);
 
@@ -2373,14 +2373,14 @@ class PaginatorHelperTest extends CakeTestCase {
 
 		$result = $this->Paginator->last(2);
 		$expected = array(
-			'...',
-			'<span',
-			array('a' => array('href' => '/index/page:6')), '6', '/a',
-			'/span',
-			' | ',
-			'<span',
-			array('a' => array('href' => '/index/page:7')), '7', '/a',
-			'/span',
+				'...',
+				'<span',
+				array('a' => array('href' => '/index/page:6')), '6', '/a',
+				'/span',
+				' | ',
+				'<span',
+				array('a' => array('href' => '/index/page:7')), '7', '/a',
+				'/span',
 		);
 		$this->assertTags($result, $expected);
 
@@ -2388,97 +2388,97 @@ class PaginatorHelperTest extends CakeTestCase {
 		$this->assertEquals('', $result, 'When inside the last links range, no links should be made');
 	}
 
-/**
- * undocumented function
- *
- * @return void
- */
+	/**
+	 * undocumented function
+	 *
+	 * @return void
+	 */
 	public function testLastOptions() {
 		$this->Paginator->request->params['paging'] = array(
-			'Client' => array(
-				'page' => 4,
-				'current' => 3,
-				'count' => 30,
-				'prevPage' => false,
-				'nextPage' => 2,
-				'pageCount' => 15,
-				'options' => array(
-					'page' => 1,
-					'order' => array('Client.name' => 'DESC'),
-				),
-				'paramType' => 'named'
-			)
+				'Client' => array(
+						'page' => 4,
+						'current' => 3,
+						'count' => 30,
+						'prevPage' => FALSE,
+						'nextPage' => 2,
+						'pageCount' => 15,
+						'options' => array(
+								'page' => 1,
+								'order' => array('Client.name' => 'DESC'),
+						),
+						'paramType' => 'named'
+				)
 		);
 
 		$result = $this->Paginator->last();
 		$expected = array(
-			'<span',
-			array('a' => array(
-				'href' => '/index/page:15/sort:Client.name/direction:DESC',
-				'rel' => 'last'
-			)),
+				'<span',
+				array('a' => array(
+						'href' => '/index/page:15/sort:Client.name/direction:DESC',
+						'rel' => 'last'
+				)),
 				'last &gt;&gt;', '/a',
-			'/span',
+				'/span',
 		);
 		$this->assertTags($result, $expected);
 
 		$result = $this->Paginator->last(1);
 		$expected = array(
-			'...',
-			'<span',
-			array('a' => array('href' => '/index/page:15/sort:Client.name/direction:DESC')), '15', '/a',
-			'/span',
+				'...',
+				'<span',
+				array('a' => array('href' => '/index/page:15/sort:Client.name/direction:DESC')), '15', '/a',
+				'/span',
 		);
 		$this->assertTags($result, $expected);
 
 		$result = $this->Paginator->last(2);
 		$expected = array(
-			'...',
-			'<span',
-			array('a' => array('href' => '/index/page:14/sort:Client.name/direction:DESC')), '14', '/a',
-			'/span',
-			' | ',
-			'<span',
-			array('a' => array('href' => '/index/page:15/sort:Client.name/direction:DESC')), '15', '/a',
-			'/span',
+				'...',
+				'<span',
+				array('a' => array('href' => '/index/page:14/sort:Client.name/direction:DESC')), '14', '/a',
+				'/span',
+				' | ',
+				'<span',
+				array('a' => array('href' => '/index/page:15/sort:Client.name/direction:DESC')), '15', '/a',
+				'/span',
 		);
 		$this->assertTags($result, $expected);
 
 		$result = $this->Paginator->last(2, array('ellipsis' => '<span class="ellipsis">...</span>'));
 		$expected = array(
-			array('span' => array('class' => 'ellipsis')), '...', '/span',
-			'<span',
-			array('a' => array('href' => '/index/page:14/sort:Client.name/direction:DESC')), '14', '/a',
-			'/span',
-			' | ',
-			'<span',
-			array('a' => array('href' => '/index/page:15/sort:Client.name/direction:DESC')), '15', '/a',
-			'/span',
+				array('span' => array('class' => 'ellipsis')), '...', '/span',
+				'<span',
+				array('a' => array('href' => '/index/page:14/sort:Client.name/direction:DESC')), '14', '/a',
+				'/span',
+				' | ',
+				'<span',
+				array('a' => array('href' => '/index/page:15/sort:Client.name/direction:DESC')), '15', '/a',
+				'/span',
 		);
 		$this->assertTags($result, $expected);
 	}
 
-/**
- * testCounter method
- *
- * @return void
- */
+	/**
+	 * testCounter method
+	 *
+	 * @return void
+	 */
 	public function testCounter() {
 		$this->Paginator->request->params['paging'] = array(
-			'Client' => array(
-				'page' => 1,
-				'current' => 3,
-				'count' => 13,
-				'prevPage' => false,
-				'nextPage' => true,
-				'pageCount' => 5,
-				'limit' => 3,
-				'options' => array(
-					'page' => 1,
-					'order' => array('Client.name' => 'DESC'),
-				),
-				'paramType' => 'named'
-			)
+				'Client' => array(
+						'page' => 1,
+						'current' => 3,
+						'count' => 13,
+						'prevPage' => FALSE,
+						'nextPage' => TRUE,
+						'pageCount' => 5,
+						'limit' => 3,
+						'options' => array(
+								'page' => 1,
+								'order' => array('Client.name' => 'DESC'),
+						),
+						'paramType' => 'named'
+				)
 		);
 		$input = 'Page %page% of %pages%, showing %current% records out of %count% total, ';
 		$input .= 'starting on record %start%, ending on %end%';
@@ -2513,11 +2513,11 @@ class PaginatorHelperTest extends CakeTestCase {
 		$this->assertEquals('Showing 1 of 5 clients', $result);
 	}
 
-/**
- * testHasPage method
- *
- * @return void
- */
+	/**
+	 * testHasPage method
+	 *
+	 * @return void
+	 */
 	public function testHasPage() {
 		$result = $this->Paginator->hasPage('Article', 15);
 		$this->assertFalse($result);
@@ -2532,141 +2532,141 @@ class PaginatorHelperTest extends CakeTestCase {
 		$this->assertTrue($result);
 	}
 
-/**
- * testWithPlugin method
- *
- * @return void
- */
+	/**
+	 * testWithPlugin method
+	 *
+	 * @return void
+	 */
 	public function testWithPlugin() {
 		Router::reload();
 		Router::setRequestInfo(array(
-			array(
-				'pass' => array(), 'named' => array(), 'prefix' => null, 'form' => array(),
-				'controller' => 'magazines', 'plugin' => 'my_plugin', 'action' => 'index',
-				'url' => array('ext' => 'html', 'url' => 'my_plugin/magazines')),
-			array('base' => '', 'here' => '/my_plugin/magazines', 'webroot' => '/')
+				array(
+						'pass' => array(), 'named' => array(), 'prefix' => NULL, 'form' => array(),
+						'controller' => 'magazines', 'plugin' => 'my_plugin', 'action' => 'index',
+						'url' => array('ext' => 'html', 'url' => 'my_plugin/magazines')),
+				array('base' => '', 'here' => '/my_plugin/magazines', 'webroot' => '/')
 		));
 
 		$result = $this->Paginator->link('Page 3', array('page' => 3));
 		$expected = array(
-			'a' => array('href' => '/my_plugin/magazines/index/page:3'), 'Page 3', '/a'
+				'a' => array('href' => '/my_plugin/magazines/index/page:3'), 'Page 3', '/a'
 		);
 		$this->assertTags($result, $expected);
 
 		$this->Paginator->options(array('url' => array('action' => 'another_index')));
 		$result = $this->Paginator->link('Page 3', array('page' => 3));
 		$expected = array(
-			'a' => array('href' => '/my_plugin/magazines/another_index/page:3'), 'Page 3', '/a'
+				'a' => array('href' => '/my_plugin/magazines/another_index/page:3'), 'Page 3', '/a'
 		);
 		$this->assertTags($result, $expected);
 
 		$this->Paginator->options(array('url' => array('controller' => 'issues')));
 		$result = $this->Paginator->link('Page 3', array('page' => 3));
 		$expected = array(
-			'a' => array('href' => '/my_plugin/issues/index/page:3'), 'Page 3', '/a'
+				'a' => array('href' => '/my_plugin/issues/index/page:3'), 'Page 3', '/a'
 		);
 		$this->assertTags($result, $expected);
 
-		$this->Paginator->options(array('url' => array('plugin' => null)));
+		$this->Paginator->options(array('url' => array('plugin' => NULL)));
 		$result = $this->Paginator->link('Page 3', array('page' => 3));
 		$expected = array(
-			'a' => array('href' => '/magazines/index/page:3'), 'Page 3', '/a'
+				'a' => array('href' => '/magazines/index/page:3'), 'Page 3', '/a'
 		);
 		$this->assertTags($result, $expected);
 
-		$this->Paginator->options(array('url' => array('plugin' => null, 'controller' => 'issues')));
+		$this->Paginator->options(array('url' => array('plugin' => NULL, 'controller' => 'issues')));
 		$result = $this->Paginator->link('Page 3', array('page' => 3));
 		$expected = array(
-			'a' => array('href' => '/issues/index/page:3'), 'Page 3', '/a'
+				'a' => array('href' => '/issues/index/page:3'), 'Page 3', '/a'
 		);
 		$this->assertTags($result, $expected);
 	}
 
-/**
- * testNextLinkUsingDotNotation method
- *
- * @return void
- */
+	/**
+	 * testNextLinkUsingDotNotation method
+	 *
+	 * @return void
+	 */
 	public function testNextLinkUsingDotNotation() {
 		Router::reload();
 		Router::parse('/');
 		Router::setRequestInfo(array(
-			array('plugin' => null, 'controller' => 'accounts', 'action' => 'index', 'pass' => array(), 'url' => array('url' => 'accounts/')),
-			array('base' => '/officespace', 'here' => '/officespace/accounts/', 'webroot' => '/officespace/', 'passedArgs' => array())
+				array('plugin' => NULL, 'controller' => 'accounts', 'action' => 'index', 'pass' => array(), 'url' => array('url' => 'accounts/')),
+				array('base' => '/officespace', 'here' => '/officespace/accounts/', 'webroot' => '/officespace/', 'passedArgs' => array())
 		));
 
 		$this->Paginator->request->params['paging']['Article']['options']['order'] = array('Article.title' => 'asc');
 		$this->Paginator->request->params['paging']['Article']['page'] = 1;
 
 		$test = array('url' => array(
-			'page' => '1',
-			'sort' => 'Article.title',
-			'direction' => 'asc',
+				'page' => '1',
+				'sort' => 'Article.title',
+				'direction' => 'asc',
 		));
 		$this->Paginator->options($test);
 
 		$result = $this->Paginator->next('Next');
 		$expected = array(
-			'span' => array('class' => 'next'),
-			'a' => array(
-				'href' => '/officespace/accounts/index/page:2/sort:Article.title/direction:asc',
-				'rel' => 'next'
-			),
-			'Next',
-			'/a',
-			'/span',
+				'span' => array('class' => 'next'),
+				'a' => array(
+						'href' => '/officespace/accounts/index/page:2/sort:Article.title/direction:asc',
+						'rel' => 'next'
+				),
+				'Next',
+				'/a',
+				'/span',
 		);
 		$this->assertTags($result, $expected);
 	}
 
-/**
- * Ensure that the internal link class object is called when the update key is present
- *
- * @return void
- */
+	/**
+	 * Ensure that the internal link class object is called when the update key is present
+	 *
+	 * @return void
+	 */
 	public function testAjaxLinkGenerationNumbers() {
 		$this->Paginator->Js->expectCallCount('link', 2);
 		$this->Paginator->numbers(array(
-			'modulus' => '2',
-			'url' => array('controller' => 'projects', 'action' => 'sort'),
-			'update' => 'list'
+				'modulus' => '2',
+				'url' => array('controller' => 'projects', 'action' => 'sort'),
+				'update' => 'list'
 		));
 	}
 
-/**
- * test that paginatorHelper::link() uses JsHelper to make links when 'update' key is present
- *
- * @return void
- */
+	/**
+	 * test that paginatorHelper::link() uses JsHelper to make links when 'update' key is present
+	 *
+	 * @return void
+	 */
 	public function testAjaxLinkGenerationLink() {
 		$this->Paginator->Js->expects($this->once())
-			->method('link')
-			->will($this->returnValue('I am a link'));
+				->method('link')
+				->will($this->returnValue('I am a link'));
 
 		$result = $this->Paginator->link('test', array('controller' => 'posts'), array('update' => '#content'));
 		$this->assertEquals('I am a link', $result);
 	}
 
-/**
- * test that mock classes injected into paginatorHelper are called when using link()
- *
- * @expectedException CakeException
- * @return void
- */
+	/**
+	 * test that mock classes injected into paginatorHelper are called when using link()
+	 *
+	 * @expectedException CakeException
+	 * @return void
+	 */
 	public function testMockAjaxProviderClassInjection() {
 		$mock = $this->getMock('PaginatorHelper', array(), array($this->View), 'PaginatorMockJsHelper');
 		$Paginator = new PaginatorHelper($this->View, array('ajax' => 'PaginatorMockJs'));
 		$Paginator->request->params['paging'] = array(
-			'Article' => array(
-				'current' => 9,
-				'count' => 62,
-				'prevPage' => false,
-				'nextPage' => true,
-				'pageCount' => 7,
-				'defaults' => array(),
-				'options' => array(),
-				'paramType' => 'named'
-			)
+				'Article' => array(
+						'current' => 9,
+						'count' => 62,
+						'prevPage' => FALSE,
+						'nextPage' => TRUE,
+						'pageCount' => 7,
+						'defaults' => array(),
+						'options' => array(),
+						'paramType' => 'named'
+				)
 		);
 		$Paginator->PaginatorMockJs = $mock;
 		$Paginator->PaginatorMockJs->expects($this->once())->method('link');
@@ -2675,11 +2675,11 @@ class PaginatorHelperTest extends CakeTestCase {
 		new PaginatorHelper($this->View, array('ajax' => 'Form'));
 	}
 
-/**
- * test that query string URLs can be generated.
- *
- * @return void
- */
+	/**
+	 * test that query string URLs can be generated.
+	 *
+	 * @return void
+	 */
 	public function testQuerystringUrlGeneration() {
 		$this->Paginator->request->params['paging']['Article']['paramType'] = 'querystring';
 		$result = $this->Paginator->url(array('page' => '1'));
@@ -2699,58 +2699,58 @@ class PaginatorHelperTest extends CakeTestCase {
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * test query string paging link.
- *
- * @return void
- */
+	/**
+	 * test query string paging link.
+	 *
+	 * @return void
+	 */
 	public function testQuerystringNextAndPrev() {
 		$this->Paginator->request->params['paging']['Article']['paramType'] = 'querystring';
 		$this->Paginator->request->params['paging']['Article']['page'] = 2;
-		$this->Paginator->request->params['paging']['Article']['nextPage'] = true;
-		$this->Paginator->request->params['paging']['Article']['prevPage'] = true;
+		$this->Paginator->request->params['paging']['Article']['nextPage'] = TRUE;
+		$this->Paginator->request->params['paging']['Article']['prevPage'] = TRUE;
 
 		$result = $this->Paginator->next('Next');
 		$expected = array(
-			'span' => array('class' => 'next'),
-			'a' => array('href' => '/?page=3', 'rel' => 'next'),
-			'Next',
-			'/a',
-			'/span'
+				'span' => array('class' => 'next'),
+				'a' => array('href' => '/?page=3', 'rel' => 'next'),
+				'Next',
+				'/a',
+				'/span'
 		);
 		$this->assertTags($result, $expected);
 
 		$result = $this->Paginator->prev('Prev');
 		$expected = array(
-			'span' => array('class' => 'prev'),
-			'a' => array('href' => '/', 'rel' => 'prev'),
-			'Prev',
-			'/a',
-			'/span'
+				'span' => array('class' => 'prev'),
+				'a' => array('href' => '/', 'rel' => 'prev'),
+				'Prev',
+				'/a',
+				'/span'
 		);
 		$this->assertTags($result, $expected);
 	}
 
-/**
- * test that additional keys can be flagged as query string args.
- *
- * @return void
- */
+	/**
+	 * test that additional keys can be flagged as query string args.
+	 *
+	 * @return void
+	 */
 	public function testOptionsConvertKeys() {
 		$this->Paginator->options(array(
-			'convertKeys' => array('something'),
-			'Article' => array('paramType' => 'querystring')
+				'convertKeys' => array('something'),
+				'Article' => array('paramType' => 'querystring')
 		));
 		$result = $this->Paginator->url(array('page' => '4', 'something' => 'bar'));
 		$expected = '/?page=4&amp;something=bar';
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * test the current() method
- *
- * @return void
- */
+	/**
+	 * test the current() method
+	 *
+	 * @return void
+	 */
 	public function testCurrent() {
 		$result = $this->Paginator->current();
 		$this->assertEquals($this->Paginator->request->params['paging']['Article']['page'], $result);
@@ -2759,62 +2759,62 @@ class PaginatorHelperTest extends CakeTestCase {
 		$this->assertEquals(1, $result);
 	}
 
-/**
- * test the defaultModel() method
- *
- * @return void
- */
+	/**
+	 * test the defaultModel() method
+	 *
+	 * @return void
+	 */
 	public function testNoDefaultModel() {
-		$this->Paginator->request = new CakeRequest(null, false);
+		$this->Paginator->request = new CakeRequest(NULL, FALSE);
 		$this->assertNull($this->Paginator->defaultModel());
 	}
 
-/**
- * test the numbers() method when there is only one page
- *
- * @return void
- */
+	/**
+	 * test the numbers() method when there is only one page
+	 *
+	 * @return void
+	 */
 	public function testWithOnePage() {
 		$this->Paginator->request['paging'] = array(
-			'Article' => array(
-				'page' => 1,
-				'current' => 2,
-				'count' => 2,
-				'prevPage' => false,
-				'nextPage' => true,
-				'pageCount' => 1,
-				'options' => array(
-					'page' => 1,
-				),
-				'paramType' => 'named',
-			)
+				'Article' => array(
+						'page' => 1,
+						'current' => 2,
+						'count' => 2,
+						'prevPage' => FALSE,
+						'nextPage' => TRUE,
+						'pageCount' => 1,
+						'options' => array(
+								'page' => 1,
+						),
+						'paramType' => 'named',
+				)
 		);
 		$this->assertSame('', $this->Paginator->numbers());
 		$this->assertSame('', $this->Paginator->first());
 		$this->assertSame('', $this->Paginator->last());
 	}
 
-/**
- * test the numbers() method when there is only one page
- *
- * @return void
- */
+	/**
+	 * test the numbers() method when there is only one page
+	 *
+	 * @return void
+	 */
 	public function testWithZeroPages() {
 		$this->Paginator->request['paging'] = array(
-			'Article' => array(
-				'page' => 0,
-				'current' => 0,
-				'count' => 0,
-				'prevPage' => false,
-				'nextPage' => false,
-				'pageCount' => 0,
-				'limit' => 10,
-				'options' => array(
-					'page' => 0,
-					'conditions' => array()
-				),
-				'paramType' => 'named',
-			)
+				'Article' => array(
+						'page' => 0,
+						'current' => 0,
+						'count' => 0,
+						'prevPage' => FALSE,
+						'nextPage' => FALSE,
+						'pageCount' => 0,
+						'limit' => 10,
+						'options' => array(
+								'page' => 0,
+								'conditions' => array()
+						),
+						'paramType' => 'named',
+				)
 		);
 
 		$result = $this->Paginator->counter(array('format' => 'pages'));
@@ -2822,104 +2822,104 @@ class PaginatorHelperTest extends CakeTestCase {
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * Verify that no next and prev links are created for single page results
- *
- * @return void
- */
+	/**
+	 * Verify that no next and prev links are created for single page results
+	 *
+	 * @return void
+	 */
 	public function testMetaPage0() {
 		$this->Paginator->request['paging'] = array(
-			'Article' => array(
-				'page' => 1,
-				'prevPage' => false,
-				'nextPage' => false,
-				'pageCount' => 1,
-			)
+				'Article' => array(
+						'page' => 1,
+						'prevPage' => FALSE,
+						'nextPage' => FALSE,
+						'pageCount' => 1,
+				)
 		);
 		$expected = '';
 		$result = $this->Paginator->meta();
 		$this->assertSame($expected, $result);
 	}
 
-/**
- * Verify that page 1 only has a next link
- *
- * @return void
- */
+	/**
+	 * Verify that page 1 only has a next link
+	 *
+	 * @return void
+	 */
 	public function testMetaPage1() {
 		$this->Paginator->request['paging'] = array(
-			'Article' => array(
-				'page' => 1,
-				'prevPage' => false,
-				'nextPage' => true,
-				'pageCount' => 2,
-				'options' => array(),
-				'paramType' => 'querystring'
-			)
+				'Article' => array(
+						'page' => 1,
+						'prevPage' => FALSE,
+						'nextPage' => TRUE,
+						'pageCount' => 2,
+						'options' => array(),
+						'paramType' => 'querystring'
+				)
 		);
 		$expected = '<link href="/?page=2" rel="next"/>';
 		$result = $this->Paginator->meta();
 		$this->assertSame($expected, $result);
 	}
 
-/**
- * Verify that the method will append to a block
- *
- * @return void
- */
+	/**
+	 * Verify that the method will append to a block
+	 *
+	 * @return void
+	 */
 	public function testMetaPage1InlineFalse() {
 		$this->Paginator->request['paging'] = array(
-			'Article' => array(
-				'page' => 1,
-				'prevPage' => false,
-				'nextPage' => true,
-				'pageCount' => 2,
-				'options' => array(),
-				'paramType' => 'querystring'
-			)
+				'Article' => array(
+						'page' => 1,
+						'prevPage' => FALSE,
+						'nextPage' => TRUE,
+						'pageCount' => 2,
+						'options' => array(),
+						'paramType' => 'querystring'
+				)
 		);
 		$expected = '<link href="/?page=2" rel="next"/>';
-		$this->Paginator->meta(array('block' => true));
+		$this->Paginator->meta(array('block' => TRUE));
 		$result = $this->View->fetch('meta');
 		$this->assertSame($expected, $result);
 	}
 
-/**
- * Verify that the last page only has a prev link
- *
- * @return void
- */
+	/**
+	 * Verify that the last page only has a prev link
+	 *
+	 * @return void
+	 */
 	public function testMetaPage1Last() {
 		$this->Paginator->request['paging'] = array(
-			'Article' => array(
-				'page' => 2,
-				'prevPage' => true,
-				'nextPage' => false,
-				'pageCount' => 2,
-				'options' => array(),
-				'paramType' => 'querystring'
-			)
+				'Article' => array(
+						'page' => 2,
+						'prevPage' => TRUE,
+						'nextPage' => FALSE,
+						'pageCount' => 2,
+						'options' => array(),
+						'paramType' => 'querystring'
+				)
 		);
 		$expected = '<link href="/" rel="prev"/>';
 		$result = $this->Paginator->meta();
 		$this->assertSame($expected, $result);
 	}
 
-/**
- * Verify that a page in the middle has both links
- *
- * @return void
- */
+	/**
+	 * Verify that a page in the middle has both links
+	 *
+	 * @return void
+	 */
 	public function testMetaPage10Last() {
 		$this->Paginator->request['paging'] = array(
-			'Article' => array(
-				'page' => 5,
-				'prevPage' => true,
-				'nextPage' => true,
-				'pageCount' => 10,
-				'options' => array(),
-				'paramType' => 'querystring'
-			)
+				'Article' => array(
+						'page' => 5,
+						'prevPage' => TRUE,
+						'nextPage' => TRUE,
+						'pageCount' => 10,
+						'options' => array(),
+						'paramType' => 'querystring'
+				)
 		);
 		$expected = '<link href="/?page=4" rel="prev"/>';
 		$expected .= '<link href="/?page=6" rel="next"/>';
@@ -2927,24 +2927,24 @@ class PaginatorHelperTest extends CakeTestCase {
 		$this->assertSame($expected, $result);
 	}
 
-/**
- * Verify that meta() uses URL options
- *
- * @return void
- */
+	/**
+	 * Verify that meta() uses URL options
+	 *
+	 * @return void
+	 */
 	public function testMetaPageUrlOptions() {
 		$this->Paginator->options(array(
-			'url' => array('?' => array('a' => 'b'))
+				'url' => array('?' => array('a' => 'b'))
 		));
 		$this->Paginator->request['paging'] = array(
-			'Article' => array(
-				'page' => 5,
-				'prevPage' => true,
-				'nextPage' => true,
-				'pageCount' => 10,
-				'options' => array(),
-				'paramType' => 'querystring'
-			)
+				'Article' => array(
+						'page' => 5,
+						'prevPage' => TRUE,
+						'nextPage' => TRUE,
+						'pageCount' => 10,
+						'options' => array(),
+						'paramType' => 'querystring'
+				)
 		);
 		$expected = '<link href="/?a=b&amp;page=4" rel="prev"/>';
 		$expected .= '<link href="/?a=b&amp;page=6" rel="next"/>';

@@ -1,37 +1,37 @@
 <?php
 
-	/**
-	 * @author  : hieunc
-	 * @project api-official.
-	 * @Date    : 21/12/2015
-	 * @Time    : 16:39
-	 */
-	App::uses('ExceptionRenderer', 'Error');
+/**
+ * @author  : hieunc
+ * @project api-official.
+ * @Date    : 21/12/2015
+ * @Time    : 16:39
+ */
+App::uses('ExceptionRenderer', 'Error');
 
-	class AppExceptionRenderer extends ExceptionRenderer {
-		public function apiAuthenticate($error) {
-			$this->appApi($error);
+class AppExceptionRenderer extends ExceptionRenderer {
+	public function apiAuthenticate($error) {
+		$this->appApi($error);
 
-		}
+	}
 
-		public function appApi($error) {
-			$this->controller->response->type(ApiBaseController::default_response_content_type);
-			echo json_encode(array(
-					"status" => $error->getCode(),
-					"data" => array(),
-					"errors" => array($error->getMessage()),
-			), TRUE);
-			$this->controller->response->send();
-		}
+	public function appApi($error) {
+		$this->controller->response->type(ApiBaseController::default_response_content_type);
+		echo json_encode(array(
+				"status" => $error->getCode(),
+				"data" => array(),
+				"errors" => array($error->getMessage()),
+		), TRUE);
+		$this->controller->response->send();
+	}
 
-		public function apiTokenInvalid($error) {
-			$this->appApi($error);
-		}
+	public function apiTokenInvalid($error) {
+		$this->appApi($error);
+	}
 
-		public function notFound($error) {
-			print_r($error->getCode());
-			print_r($error->getMessage());
-		}
+	public function notFound($error) {
+		print_r($error->getCode());
+		print_r($error->getMessage());
+	}
 
 //	public function badRequest($error)
 //	{
@@ -147,5 +147,5 @@
 //	{
 //		$this->internalError($error);
 //	}
-	}
+}
 

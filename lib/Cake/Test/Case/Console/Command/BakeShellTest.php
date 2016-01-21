@@ -33,45 +33,45 @@ if (!class_exists('UsersController')) {
 
 class BakeShellTest extends CakeTestCase {
 
-/**
- * fixtures
- *
- * @var array
- */
+	/**
+	 * fixtures
+	 *
+	 * @var array
+	 */
 	public $fixtures = array('core.user');
 
-/**
- * setup test
- *
- * @return void
- */
+	/**
+	 * setup test
+	 *
+	 * @return void
+	 */
 	public function setUp() {
 		parent::setUp();
-		$out = $this->getMock('ConsoleOutput', array(), array(), '', false);
-		$in = $this->getMock('ConsoleInput', array(), array(), '', false);
+		$out = $this->getMock('ConsoleOutput', array(), array(), '', FALSE);
+		$in = $this->getMock('ConsoleInput', array(), array(), '', FALSE);
 
 		$this->Shell = $this->getMock(
-			'BakeShell',
-			array('in', 'out', 'hr', 'err', 'createFile', '_stop', '_checkUnitTest'),
-			array($out, $out, $in)
+				'BakeShell',
+				array('in', 'out', 'hr', 'err', 'createFile', '_stop', '_checkUnitTest'),
+				array($out, $out, $in)
 		);
 	}
 
-/**
- * tearDown method
- *
- * @return void
- */
+	/**
+	 * tearDown method
+	 *
+	 * @return void
+	 */
 	public function tearDown() {
 		parent::tearDown();
 		unset($this->Dispatch, $this->Shell);
 	}
 
-/**
- * test bake all
- *
- * @return void
- */
+	/**
+	 * test bake all
+	 *
+	 * @return void
+	 */
 	public function testAllWithModelName() {
 		App::uses('User', 'Model');
 		$userExists = class_exists('User');
@@ -83,31 +83,31 @@ class BakeShellTest extends CakeTestCase {
 		$this->Shell->DbConfig = $this->getMock('DbConfigTask', array(), array(&$this->Dispatcher));
 
 		$this->Shell->DbConfig->expects($this->once())
-			->method('getConfig')
-			->will($this->returnValue('test'));
+				->method('getConfig')
+				->will($this->returnValue('test'));
 
 		$this->Shell->Model->expects($this->never())
-			->method('getName');
+				->method('getName');
 
 		$this->Shell->Model->expects($this->once())
-			->method('bake')
-			->will($this->returnValue(true));
+				->method('bake')
+				->will($this->returnValue(TRUE));
 
 		$this->Shell->Controller->expects($this->once())
-			->method('bake')
-			->will($this->returnValue(true));
+				->method('bake')
+				->will($this->returnValue(TRUE));
 
 		$this->Shell->View->expects($this->once())
-			->method('execute');
+				->method('execute');
 
 		$this->Shell->expects($this->once())->method('_stop');
 		$this->Shell->expects($this->at(0))
-			->method('out')
-			->with('Bake All');
+				->method('out')
+				->with('Bake All');
 
 		$this->Shell->expects($this->at(5))
-			->method('out')
-			->with('<success>Bake All complete</success>');
+				->method('out')
+				->with('<success>Bake All complete</success>');
 
 		$this->Shell->connection = '';
 		$this->Shell->params = array();

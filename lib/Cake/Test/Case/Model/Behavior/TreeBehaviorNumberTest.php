@@ -30,38 +30,38 @@ require_once dirname(dirname(__FILE__)) . DS . 'models.php';
  */
 class TreeBehaviorNumberTest extends CakeTestCase {
 
-/**
- * Whether backup global state for each test method or not
- *
- * @var bool
- */
-	public $backupGlobals = false;
+	/**
+	 * Whether backup global state for each test method or not
+	 *
+	 * @var bool
+	 */
+	public $backupGlobals = FALSE;
 
-/**
- * settings property
- *
- * @var array
- */
+	/**
+	 * settings property
+	 *
+	 * @var array
+	 */
 	public $settings = array(
-		'modelClass' => 'NumberTree',
-		'leftField' => 'lft',
-		'rightField' => 'rght',
-		'parentField' => 'parent_id',
-		'level' => 'level'
+			'modelClass' => 'NumberTree',
+			'leftField' => 'lft',
+			'rightField' => 'rght',
+			'parentField' => 'parent_id',
+			'level' => 'level'
 	);
 
-/**
- * fixtures property
- *
- * @var array
- */
+	/**
+	 * fixtures property
+	 *
+	 * @var array
+	 */
 	public $fixtures = array('core.number_tree', 'core.person');
 
-/**
- * testInitialize method
- *
- * @return void
- */
+	/**
+	 * testInitialize method
+	 *
+	 * @return void
+	 */
 	public function testInitialize() {
 		extract($this->settings);
 		$this->Tree = new $modelClass();
@@ -74,11 +74,11 @@ class TreeBehaviorNumberTest extends CakeTestCase {
 		$this->assertTrue($validTree);
 	}
 
-/**
- * testDetectInvalidLeft method
- *
- * @return void
- */
+	/**
+	 * testDetectInvalidLeft method
+	 *
+	 * @return void
+	 */
 	public function testDetectInvalidLeft() {
 		extract($this->settings);
 		$this->Tree = new $modelClass();
@@ -92,7 +92,7 @@ class TreeBehaviorNumberTest extends CakeTestCase {
 		$this->Tree->create();
 		$this->Tree->save($save);
 		$result = $this->Tree->verify();
-		$this->assertNotSame(true, $result);
+		$this->assertNotSame(TRUE, $result);
 
 		$result = $this->Tree->recover();
 		$this->assertTrue($result);
@@ -101,11 +101,11 @@ class TreeBehaviorNumberTest extends CakeTestCase {
 		$this->assertTrue($result);
 	}
 
-/**
- * testDetectInvalidRight method
- *
- * @return void
- */
+	/**
+	 * testDetectInvalidRight method
+	 *
+	 * @return void
+	 */
 	public function testDetectInvalidRight() {
 		extract($this->settings);
 		$this->Tree = new $modelClass();
@@ -119,7 +119,7 @@ class TreeBehaviorNumberTest extends CakeTestCase {
 		$this->Tree->create();
 		$this->Tree->save($save);
 		$result = $this->Tree->verify();
-		$this->assertNotSame(true, $result);
+		$this->assertNotSame(TRUE, $result);
 
 		$result = $this->Tree->recover();
 		$this->assertTrue($result);
@@ -128,11 +128,11 @@ class TreeBehaviorNumberTest extends CakeTestCase {
 		$this->assertTrue($result);
 	}
 
-/**
- * testDetectInvalidParent method
- *
- * @return void
- */
+	/**
+	 * testDetectInvalidParent method
+	 *
+	 * @return void
+	 */
 	public function testDetectInvalidParent() {
 		extract($this->settings);
 		$this->Tree = new $modelClass();
@@ -141,10 +141,10 @@ class TreeBehaviorNumberTest extends CakeTestCase {
 		$result = $this->Tree->findByName('1.1');
 
 		// Bypass behavior and any other logic
-		$this->Tree->updateAll(array($parentField => null), array('id' => $result[$modelClass]['id']));
+		$this->Tree->updateAll(array($parentField => NULL), array('id' => $result[$modelClass]['id']));
 
 		$result = $this->Tree->verify();
-		$this->assertNotSame(true, $result);
+		$this->assertNotSame(TRUE, $result);
 
 		$result = $this->Tree->recover();
 		$this->assertTrue($result);
@@ -153,11 +153,11 @@ class TreeBehaviorNumberTest extends CakeTestCase {
 		$this->assertTrue($result);
 	}
 
-/**
- * testDetectNoneExistentParent method
- *
- * @return void
- */
+	/**
+	 * testDetectNoneExistentParent method
+	 *
+	 * @return void
+	 */
 	public function testDetectNoneExistentParent() {
 		extract($this->settings);
 		$this->Tree = new $modelClass();
@@ -167,7 +167,7 @@ class TreeBehaviorNumberTest extends CakeTestCase {
 		$this->Tree->updateAll(array($parentField => 999999), array('id' => $result[$modelClass]['id']));
 
 		$result = $this->Tree->verify();
-		$this->assertNotSame(true, $result);
+		$this->assertNotSame(TRUE, $result);
 
 		$result = $this->Tree->recover('MPTT');
 		$this->assertTrue($result);
@@ -176,18 +176,18 @@ class TreeBehaviorNumberTest extends CakeTestCase {
 		$this->assertTrue($result);
 	}
 
-/**
- * testRecoverUsingParentMode method
- *
- * @return void
- */
+	/**
+	 * testRecoverUsingParentMode method
+	 *
+	 * @return void
+	 */
 	public function testRecoverUsingParentMode() {
 		extract($this->settings);
 		$this->Tree = new $modelClass();
 		$this->Tree->Behaviors->disable('Tree');
 
 		$this->Tree->create();
-		$this->Tree->save(array('name' => 'Main', $parentField => null, $leftField => 0, $rightField => 0));
+		$this->Tree->save(array('name' => 'Main', $parentField => NULL, $leftField => 0, $rightField => 0));
 		$node1 = $this->Tree->id;
 
 		$this->Tree->create();
@@ -207,7 +207,7 @@ class TreeBehaviorNumberTest extends CakeTestCase {
 		$this->Tree->Behaviors->enable('Tree');
 
 		$result = $this->Tree->verify();
-		$this->assertNotSame(true, $result);
+		$this->assertNotSame(TRUE, $result);
 
 		$result = $this->Tree->recover();
 		$this->assertTrue($result);
@@ -216,33 +216,33 @@ class TreeBehaviorNumberTest extends CakeTestCase {
 		$this->assertTrue($result);
 
 		$result = $this->Tree->find('first', array(
-			'fields' => array('name', $parentField, $leftField, $rightField),
-			'conditions' => array('name' => 'Main'),
-			'recursive' => -1
+				'fields' => array('name', $parentField, $leftField, $rightField),
+				'conditions' => array('name' => 'Main'),
+				'recursive' => -1
 		));
 		$expected = array(
-			$modelClass => array(
-				'name' => 'Main',
-				$parentField => null,
-				$leftField => 1,
-				$rightField => 10
-			)
+				$modelClass => array(
+						'name' => 'Main',
+						$parentField => NULL,
+						$leftField => 1,
+						$rightField => 10
+				)
 		);
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * testRecoverUsingParentModeAndDelete method
- *
- * @return void
- */
+	/**
+	 * testRecoverUsingParentModeAndDelete method
+	 *
+	 * @return void
+	 */
 	public function testRecoverUsingParentModeAndDelete() {
 		extract($this->settings);
 		$this->Tree = new $modelClass();
 		$this->Tree->Behaviors->disable('Tree');
 
 		$this->Tree->create();
-		$this->Tree->save(array('name' => 'Main', $parentField => null, $leftField => 0, $rightField => 0));
+		$this->Tree->save(array('name' => 'Main', $parentField => NULL, $leftField => 0, $rightField => 0));
 		$node1 = $this->Tree->id;
 
 		$this->Tree->create();
@@ -265,16 +265,16 @@ class TreeBehaviorNumberTest extends CakeTestCase {
 		$this->Tree->Behaviors->enable('Tree');
 
 		$this->Tree->bindModel(array('belongsTo' => array('Parent' => array(
-			'className' => $this->Tree->name,
-			'foreignKey' => $parentField
+				'className' => $this->Tree->name,
+				'foreignKey' => $parentField
 		))));
 		$this->Tree->bindModel(array('hasMany' => array('Child' => array(
-			'className' => $this->Tree->name,
-			'foreignKey' => $parentField
+				'className' => $this->Tree->name,
+				'foreignKey' => $parentField
 		))));
 
 		$result = $this->Tree->verify();
-		$this->assertNotSame(true, $result);
+		$this->assertNotSame(TRUE, $result);
 
 		$count = $this->Tree->find('count');
 		$this->assertEquals(6, $count);
@@ -289,26 +289,26 @@ class TreeBehaviorNumberTest extends CakeTestCase {
 		$this->assertEquals(5, $count);
 
 		$result = $this->Tree->find('first', array(
-			'fields' => array('name', $parentField, $leftField, $rightField),
-			'conditions' => array('name' => 'Main'),
-			'recursive' => -1
+				'fields' => array('name', $parentField, $leftField, $rightField),
+				'conditions' => array('name' => 'Main'),
+				'recursive' => -1
 		));
 		$expected = array(
-			$modelClass => array(
-				'name' => 'Main',
-				$parentField => null,
-				$leftField => 1,
-				$rightField => 10
-			)
+				$modelClass => array(
+						'name' => 'Main',
+						$parentField => NULL,
+						$leftField => 1,
+						$rightField => 10
+				)
 		);
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * testRecoverFromMissingParent method
- *
- * @return void
- */
+	/**
+	 * testRecoverFromMissingParent method
+	 *
+	 * @return void
+	 */
 	public function testRecoverFromMissingParent() {
 		extract($this->settings);
 		$this->Tree = new $modelClass();
@@ -318,7 +318,7 @@ class TreeBehaviorNumberTest extends CakeTestCase {
 		$this->Tree->updateAll(array($parentField => 999999), array('id' => $result[$modelClass]['id']));
 
 		$result = $this->Tree->verify();
-		$this->assertNotSame(true, $result);
+		$this->assertNotSame(TRUE, $result);
 
 		$result = $this->Tree->recover();
 		$this->assertTrue($result);
@@ -327,20 +327,20 @@ class TreeBehaviorNumberTest extends CakeTestCase {
 		$this->assertTrue($result);
 	}
 
-/**
- * testDetectInvalidParents method
- *
- * @return void
- */
+	/**
+	 * testDetectInvalidParents method
+	 *
+	 * @return void
+	 */
 	public function testDetectInvalidParents() {
 		extract($this->settings);
 		$this->Tree = new $modelClass();
 		$this->Tree->initialize(2, 2);
 
-		$this->Tree->updateAll(array($parentField => null));
+		$this->Tree->updateAll(array($parentField => NULL));
 
 		$result = $this->Tree->verify();
-		$this->assertNotSame(true, $result);
+		$this->assertNotSame(TRUE, $result);
 
 		$result = $this->Tree->recover();
 		$this->assertTrue($result);
@@ -349,11 +349,11 @@ class TreeBehaviorNumberTest extends CakeTestCase {
 		$this->assertTrue($result);
 	}
 
-/**
- * testDetectInvalidLftsRghts method
- *
- * @return void
- */
+	/**
+	 * testDetectInvalidLftsRghts method
+	 *
+	 * @return void
+	 */
 	public function testDetectInvalidLftsRghts() {
 		extract($this->settings);
 		$this->Tree = new $modelClass();
@@ -362,7 +362,7 @@ class TreeBehaviorNumberTest extends CakeTestCase {
 		$this->Tree->updateAll(array($leftField => 0, $rightField => 0));
 
 		$result = $this->Tree->verify();
-		$this->assertNotSame(true, $result);
+		$this->assertNotSame(TRUE, $result);
 
 		$this->Tree->recover();
 
@@ -370,11 +370,11 @@ class TreeBehaviorNumberTest extends CakeTestCase {
 		$this->assertTrue($result);
 	}
 
-/**
- * Reproduces a situation where a single node has lft= rght, and all other lft and rght fields follow sequentially
- *
- * @return void
- */
+	/**
+	 * Reproduces a situation where a single node has lft= rght, and all other lft and rght fields follow sequentially
+	 *
+	 * @return void
+	 */
 	public function testDetectEqualLftsRghts() {
 		extract($this->settings);
 		$this->Tree = new $modelClass();
@@ -383,12 +383,12 @@ class TreeBehaviorNumberTest extends CakeTestCase {
 		$result = $this->Tree->findByName('1.1');
 		$this->Tree->updateAll(array($rightField => $result[$modelClass][$leftField]), array('id' => $result[$modelClass]['id']));
 		$this->Tree->updateAll(array($leftField => $this->Tree->escapeField($leftField) . ' -1'),
-			array($leftField . ' >' => $result[$modelClass][$leftField]));
+				array($leftField . ' >' => $result[$modelClass][$leftField]));
 		$this->Tree->updateAll(array($rightField => $this->Tree->escapeField($rightField) . ' -1'),
-			array($rightField . ' >' => $result[$modelClass][$leftField]));
+				array($rightField . ' >' => $result[$modelClass][$leftField]));
 
 		$result = $this->Tree->verify();
-		$this->assertNotSame(true, $result);
+		$this->assertNotSame(TRUE, $result);
 
 		$result = $this->Tree->recover();
 		$this->assertTrue($result);
@@ -397,31 +397,31 @@ class TreeBehaviorNumberTest extends CakeTestCase {
 		$this->assertTrue($result);
 	}
 
-/**
- * testAddOrphan method
- *
- * @return void
- */
+	/**
+	 * testAddOrphan method
+	 *
+	 * @return void
+	 */
 	public function testAddOrphan() {
 		extract($this->settings);
 		$this->Tree = new $modelClass();
 		$this->Tree->initialize(2, 2);
 
 		$this->Tree->create();
-		$this->Tree->save(array($modelClass => array('name' => 'testAddOrphan', $parentField => null)));
+		$this->Tree->save(array($modelClass => array('name' => 'testAddOrphan', $parentField => NULL)));
 		$result = $this->Tree->find('first', array('fields' => array('name', $parentField), 'order' => $modelClass . '.' . $leftField . ' desc'));
-		$expected = array($modelClass => array('name' => 'testAddOrphan', $parentField => null));
+		$expected = array($modelClass => array('name' => 'testAddOrphan', $parentField => NULL));
 		$this->assertEquals($expected, $result);
 
 		$validTree = $this->Tree->verify();
 		$this->assertTrue($validTree);
 	}
 
-/**
- * testAddMiddle method
- *
- * @return void
- */
+	/**
+	 * testAddMiddle method
+	 *
+	 * @return void
+	 */
 	public function testAddMiddle() {
 		extract($this->settings);
 		$this->Tree = new $modelClass();
@@ -438,56 +438,56 @@ class TreeBehaviorNumberTest extends CakeTestCase {
 		$laterCount = $this->Tree->find('count');
 		$this->assertEquals($initialCount + 1, $laterCount);
 
-		$children = $this->Tree->children($data[$modelClass]['id'], true, array('name'));
+		$children = $this->Tree->children($data[$modelClass]['id'], TRUE, array('name'));
 		$expected = array(array($modelClass => array('name' => '1.1.1')),
-			array($modelClass => array('name' => '1.1.2')),
-			array($modelClass => array('name' => 'testAddMiddle')));
+				array($modelClass => array('name' => '1.1.2')),
+				array($modelClass => array('name' => 'testAddMiddle')));
 		$this->assertSame($expected, $children);
 
 		$validTree = $this->Tree->verify();
 		$this->assertTrue($validTree);
 	}
 
-/**
- * testAddWithPreSpecifiedId method
- *
- * @return void
- */
+	/**
+	 * testAddWithPreSpecifiedId method
+	 *
+	 * @return void
+	 */
 	public function testAddWithPreSpecifiedId() {
 		extract($this->settings);
 		$this->Tree = new $modelClass();
 		$this->Tree->initialize(2, 2);
 
 		$data = $this->Tree->find('first', array(
-			'fields' => array('id'),
-			'conditions' => array($modelClass . '.name' => '1.1')
+				'fields' => array('id'),
+				'conditions' => array($modelClass . '.name' => '1.1')
 		));
 
 		$this->Tree->create();
 		$result = $this->Tree->save(array($modelClass => array(
-			'id' => 100,
-			'name' => 'testAddMiddle',
-			$parentField => $data[$modelClass]['id'])
+				'id' => 100,
+				'name' => 'testAddMiddle',
+				$parentField => $data[$modelClass]['id'])
 		));
 		$expected = array_merge(
-			array($modelClass => array('id' => 100, 'name' => 'testAddMiddle', $parentField => '2')),
-			$result
+				array($modelClass => array('id' => 100, 'name' => 'testAddMiddle', $parentField => '2')),
+				$result
 		);
 		$this->assertSame($expected, $result);
 
 		$this->assertTrue($this->Tree->verify());
 	}
 
-/**
- * testAddInvalid method
- *
- * @return void
- */
+	/**
+	 * testAddInvalid method
+	 *
+	 * @return void
+	 */
 	public function testAddInvalid() {
 		extract($this->settings);
 		$this->Tree = new $modelClass();
 		$this->Tree->initialize(2, 2);
-		$this->Tree->id = null;
+		$this->Tree->id = NULL;
 
 		$initialCount = $this->Tree->find('count');
 		//$this->expectError('Trying to save a node under a none-existant node in TreeBehavior::beforeSave');
@@ -503,36 +503,36 @@ class TreeBehaviorNumberTest extends CakeTestCase {
 		$this->assertTrue($validTree);
 	}
 
-/**
- * testAddNotIndexedByModel method
- *
- * @return void
- */
+	/**
+	 * testAddNotIndexedByModel method
+	 *
+	 * @return void
+	 */
 	public function testAddNotIndexedByModel() {
 		extract($this->settings);
 		$this->Tree = new $modelClass();
 		$this->Tree->initialize(2, 2);
 
 		$this->Tree->create();
-		$this->Tree->save(array('name' => 'testAddNotIndexed', $parentField => null));
+		$this->Tree->save(array('name' => 'testAddNotIndexed', $parentField => NULL));
 		$result = $this->Tree->find('first', array('fields' => array('name', $parentField), 'order' => $modelClass . '.' . $leftField . ' desc'));
-		$expected = array($modelClass => array('name' => 'testAddNotIndexed', $parentField => null));
+		$expected = array($modelClass => array('name' => 'testAddNotIndexed', $parentField => NULL));
 		$this->assertEquals($expected, $result);
 
 		$validTree = $this->Tree->verify();
 		$this->assertTrue($validTree);
 	}
 
-/**
- * testMovePromote method
- *
- * @return void
- */
+	/**
+	 * testMovePromote method
+	 *
+	 * @return void
+	 */
 	public function testMovePromote() {
 		extract($this->settings);
 		$this->Tree = new $modelClass();
 		$this->Tree->initialize(2, 2);
-		$this->Tree->id = null;
+		$this->Tree->id = NULL;
 
 		$parent = $this->Tree->find('first', array('conditions' => array($modelClass . '.name' => '1. Root')));
 		$parentId = $parent[$modelClass]['id'];
@@ -540,25 +540,25 @@ class TreeBehaviorNumberTest extends CakeTestCase {
 		$data = $this->Tree->find('first', array('fields' => array('id'), 'conditions' => array($modelClass . '.name' => '1.1.1')));
 		$this->Tree->id = $data[$modelClass]['id'];
 		$this->Tree->saveField($parentField, $parentId);
-		$direct = $this->Tree->children($parentId, true, array('id', 'name', $parentField, $leftField, $rightField));
+		$direct = $this->Tree->children($parentId, TRUE, array('id', 'name', $parentField, $leftField, $rightField));
 		$expected = array(array($modelClass => array('id' => 2, 'name' => '1.1', $parentField => 1, $leftField => 2, $rightField => 5)),
-			array($modelClass => array('id' => 5, 'name' => '1.2', $parentField => 1, $leftField => 6, $rightField => 11)),
-			array($modelClass => array('id' => 3, 'name' => '1.1.1', $parentField => 1, $leftField => 12, $rightField => 13)));
+				array($modelClass => array('id' => 5, 'name' => '1.2', $parentField => 1, $leftField => 6, $rightField => 11)),
+				array($modelClass => array('id' => 3, 'name' => '1.1.1', $parentField => 1, $leftField => 12, $rightField => 13)));
 		$this->assertEquals($expected, $direct);
 		$validTree = $this->Tree->verify();
 		$this->assertTrue($validTree);
 	}
 
-/**
- * testGetLevel method
- *
- * @return void
- */
+	/**
+	 * testGetLevel method
+	 *
+	 * @return void
+	 */
 	public function testGetLevel() {
 		extract($this->settings);
 		$this->Tree = new $modelClass();
 		$this->Tree->initialize(2, 2);
-		$this->Tree->id = null;
+		$this->Tree->id = NULL;
 
 		$result = $this->Tree->getLevel(5);
 		$this->assertEquals(1, $result);
@@ -569,16 +569,16 @@ class TreeBehaviorNumberTest extends CakeTestCase {
 		$this->assertFalse($this->Tree->getLevel(999));
 	}
 
-/**
- * testMoveWithWhitelist method
- *
- * @return void
- */
+	/**
+	 * testMoveWithWhitelist method
+	 *
+	 * @return void
+	 */
 	public function testMoveWithWhitelist() {
 		extract($this->settings);
 		$this->Tree = new $modelClass();
 		$this->Tree->initialize(2, 2);
-		$this->Tree->id = null;
+		$this->Tree->id = NULL;
 
 		$parent = $this->Tree->find('first', array('conditions' => array($modelClass . '.name' => '1. Root')));
 		$parentId = $parent[$modelClass]['id'];
@@ -588,19 +588,19 @@ class TreeBehaviorNumberTest extends CakeTestCase {
 		$this->Tree->whitelist = array($parentField, 'name', 'description');
 		$this->Tree->saveField($parentField, $parentId);
 
-		$result = $this->Tree->children($parentId, true, array('id', 'name', $parentField, $leftField, $rightField));
+		$result = $this->Tree->children($parentId, TRUE, array('id', 'name', $parentField, $leftField, $rightField));
 		$expected = array(array($modelClass => array('id' => 2, 'name' => '1.1', $parentField => 1, $leftField => 2, $rightField => 5)),
-			array($modelClass => array('id' => 5, 'name' => '1.2', $parentField => 1, $leftField => 6, $rightField => 11)),
-			array($modelClass => array('id' => 3, 'name' => '1.1.1', $parentField => 1, $leftField => 12, $rightField => 13)));
+				array($modelClass => array('id' => 5, 'name' => '1.2', $parentField => 1, $leftField => 6, $rightField => 11)),
+				array($modelClass => array('id' => 3, 'name' => '1.1.1', $parentField => 1, $leftField => 12, $rightField => 13)));
 		$this->assertEquals($expected, $result);
 		$this->assertTrue($this->Tree->verify());
 	}
 
-/**
- * testInsertWithWhitelist method
- *
- * @return void
- */
+	/**
+	 * testInsertWithWhitelist method
+	 *
+	 * @return void
+	 */
 	public function testInsertWithWhitelist() {
 		extract($this->settings);
 		$this->Tree = new $modelClass();
@@ -608,23 +608,23 @@ class TreeBehaviorNumberTest extends CakeTestCase {
 
 		$this->Tree->whitelist = array('name', $parentField);
 		$this->Tree->create();
-		$this->Tree->save(array($modelClass => array('name' => 'testAddOrphan', $parentField => null)));
+		$this->Tree->save(array($modelClass => array('name' => 'testAddOrphan', $parentField => NULL)));
 		$result = $this->Tree->findByName('testAddOrphan', array('name', $parentField, $leftField, $rightField));
-		$expected = array('name' => 'testAddOrphan', $parentField => null, $leftField => '15', $rightField => 16);
+		$expected = array('name' => 'testAddOrphan', $parentField => NULL, $leftField => '15', $rightField => 16);
 		$this->assertEquals($expected, $result[$modelClass]);
 		$this->assertTrue($this->Tree->verify());
 	}
 
-/**
- * testMoveBefore method
- *
- * @return void
- */
+	/**
+	 * testMoveBefore method
+	 *
+	 * @return void
+	 */
 	public function testMoveBefore() {
 		extract($this->settings);
 		$this->Tree = new $modelClass();
 		$this->Tree->initialize(2, 2);
-		$this->Tree->id = null;
+		$this->Tree->id = NULL;
 
 		$parent = $this->Tree->find('first', array('conditions' => array($modelClass . '.name' => '1.1')));
 		$parentId = $parent[$modelClass]['id'];
@@ -633,26 +633,26 @@ class TreeBehaviorNumberTest extends CakeTestCase {
 		$this->Tree->id = $data[$modelClass]['id'];
 		$this->Tree->saveField($parentField, $parentId);
 
-		$result = $this->Tree->children($parentId, true, array('name'));
+		$result = $this->Tree->children($parentId, TRUE, array('name'));
 		$expected = array(array($modelClass => array('name' => '1.1.1')),
-			array($modelClass => array('name' => '1.1.2')),
-			array($modelClass => array('name' => '1.2')));
+				array($modelClass => array('name' => '1.1.2')),
+				array($modelClass => array('name' => '1.2')));
 		$this->assertEquals($expected, $result);
 
 		$validTree = $this->Tree->verify();
 		$this->assertTrue($validTree);
 	}
 
-/**
- * testMoveAfter method
- *
- * @return void
- */
+	/**
+	 * testMoveAfter method
+	 *
+	 * @return void
+	 */
 	public function testMoveAfter() {
 		extract($this->settings);
 		$this->Tree = new $modelClass();
 		$this->Tree->initialize(2, 2);
-		$this->Tree->id = null;
+		$this->Tree->id = NULL;
 
 		$parent = $this->Tree->find('first', array('conditions' => array($modelClass . '.name' => '1.2')));
 		$parentId = $parent[$modelClass]['id'];
@@ -661,26 +661,26 @@ class TreeBehaviorNumberTest extends CakeTestCase {
 		$this->Tree->id = $data[$modelClass]['id'];
 		$this->Tree->saveField($parentField, $parentId);
 
-		$result = $this->Tree->children($parentId, true, array('name'));
+		$result = $this->Tree->children($parentId, TRUE, array('name'));
 		$expected = array(array($modelClass => array('name' => '1.2.1')),
-			array($modelClass => array('name' => '1.2.2')),
-			array($modelClass => array('name' => '1.1')));
+				array($modelClass => array('name' => '1.2.2')),
+				array($modelClass => array('name' => '1.1')));
 		$this->assertEquals($expected, $result);
 
 		$validTree = $this->Tree->verify();
 		$this->assertTrue($validTree);
 	}
 
-/**
- * testMoveDemoteInvalid method
- *
- * @return void
- */
+	/**
+	 * testMoveDemoteInvalid method
+	 *
+	 * @return void
+	 */
 	public function testMoveDemoteInvalid() {
 		extract($this->settings);
 		$this->Tree = new $modelClass();
 		$this->Tree->initialize(2, 2);
-		$this->Tree->id = null;
+		$this->Tree->id = NULL;
 
 		$parent = $this->Tree->find('first', array('conditions' => array($modelClass . '.name' => '1. Root')));
 		$parentId = $parent[$modelClass]['id'];
@@ -688,13 +688,13 @@ class TreeBehaviorNumberTest extends CakeTestCase {
 		$data = $this->Tree->find('first', array('fields' => array('id'), 'conditions' => array($modelClass . '.name' => '1.1.1')));
 
 		$expected = $this->Tree->find('all');
-		$before = $this->Tree->read(null, $data[$modelClass]['id']);
+		$before = $this->Tree->read(NULL, $data[$modelClass]['id']);
 
 		$this->Tree->id = $parentId;
 		$this->Tree->saveField($parentField, $data[$modelClass]['id']);
 
 		$results = $this->Tree->find('all');
-		$after = $this->Tree->read(null, $data[$modelClass]['id']);
+		$after = $this->Tree->read(NULL, $data[$modelClass]['id']);
 
 		$this->assertEquals($expected, $results);
 		$this->assertEquals($before, $after);
@@ -703,16 +703,16 @@ class TreeBehaviorNumberTest extends CakeTestCase {
 		$this->assertTrue($validTree);
 	}
 
-/**
- * testMoveInvalid method
- *
- * @return void
- */
+	/**
+	 * testMoveInvalid method
+	 *
+	 * @return void
+	 */
 	public function testMoveInvalid() {
 		extract($this->settings);
 		$this->Tree = new $modelClass();
 		$this->Tree->initialize(2, 2);
-		$this->Tree->id = null;
+		$this->Tree->id = NULL;
 
 		$initialCount = $this->Tree->find('count');
 		$data = $this->Tree->findByName('1.1');
@@ -727,16 +727,16 @@ class TreeBehaviorNumberTest extends CakeTestCase {
 		$this->assertTrue($validTree);
 	}
 
-/**
- * testMoveSelfInvalid method
- *
- * @return void
- */
+	/**
+	 * testMoveSelfInvalid method
+	 *
+	 * @return void
+	 */
 	public function testMoveSelfInvalid() {
 		extract($this->settings);
 		$this->Tree = new $modelClass();
 		$this->Tree->initialize(2, 2);
-		$this->Tree->id = null;
+		$this->Tree->id = NULL;
 
 		$initialCount = $this->Tree->find('count');
 		$data = $this->Tree->findByName('1.1');
@@ -752,11 +752,11 @@ class TreeBehaviorNumberTest extends CakeTestCase {
 		$this->assertTrue($validTree);
 	}
 
-/**
- * testMoveUpSuccess method
- *
- * @return void
- */
+	/**
+	 * testMoveUpSuccess method
+	 *
+	 * @return void
+	 */
 	public function testMoveUpSuccess() {
 		extract($this->settings);
 		$this->Tree = new $modelClass();
@@ -767,17 +767,17 @@ class TreeBehaviorNumberTest extends CakeTestCase {
 
 		$parent = $this->Tree->findByName('1. Root', array('id'));
 		$this->Tree->id = $parent[$modelClass]['id'];
-		$result = $this->Tree->children(null, true, array('name'));
+		$result = $this->Tree->children(NULL, TRUE, array('name'));
 		$expected = array(array($modelClass => array('name' => '1.2')),
-			array($modelClass => array('name' => '1.1')));
+				array($modelClass => array('name' => '1.1')));
 		$this->assertSame($expected, $result);
 	}
 
-/**
- * testMoveUpFail method
- *
- * @return void
- */
+	/**
+	 * testMoveUpFail method
+	 *
+	 * @return void
+	 */
 	public function testMoveUpFail() {
 		extract($this->settings);
 		$this->Tree = new $modelClass();
@@ -789,17 +789,17 @@ class TreeBehaviorNumberTest extends CakeTestCase {
 
 		$parent = $this->Tree->findByName('1. Root', array('id'));
 		$this->Tree->id = $parent[$modelClass]['id'];
-		$result = $this->Tree->children(null, true, array('name'));
+		$result = $this->Tree->children(NULL, TRUE, array('name'));
 		$expected = array(array($modelClass => array('name' => '1.1')),
-			array($modelClass => array('name' => '1.2')));
+				array($modelClass => array('name' => '1.2')));
 		$this->assertSame($expected, $result);
 	}
 
-/**
- * testMoveUp2 method
- *
- * @return void
- */
+	/**
+	 * testMoveUp2 method
+	 *
+	 * @return void
+	 */
 	public function testMoveUp2() {
 		extract($this->settings);
 		$this->Tree = new $modelClass();
@@ -810,56 +810,56 @@ class TreeBehaviorNumberTest extends CakeTestCase {
 
 		$parent = $this->Tree->findByName('1. Root', array('id'));
 		$this->Tree->id = $parent[$modelClass]['id'];
-		$result = $this->Tree->children(null, true, array('name'));
+		$result = $this->Tree->children(NULL, TRUE, array('name'));
 		$expected = array(
-			array($modelClass => array('name' => '1.1')),
-			array($modelClass => array('name' => '1.2')),
-			array($modelClass => array('name' => '1.5')),
-			array($modelClass => array('name' => '1.3')),
-			array($modelClass => array('name' => '1.4')),
-			array($modelClass => array('name' => '1.6')),
-			array($modelClass => array('name' => '1.7')),
-			array($modelClass => array('name' => '1.8')),
-			array($modelClass => array('name' => '1.9')),
-			array($modelClass => array('name' => '1.10')));
+				array($modelClass => array('name' => '1.1')),
+				array($modelClass => array('name' => '1.2')),
+				array($modelClass => array('name' => '1.5')),
+				array($modelClass => array('name' => '1.3')),
+				array($modelClass => array('name' => '1.4')),
+				array($modelClass => array('name' => '1.6')),
+				array($modelClass => array('name' => '1.7')),
+				array($modelClass => array('name' => '1.8')),
+				array($modelClass => array('name' => '1.9')),
+				array($modelClass => array('name' => '1.10')));
 		$this->assertSame($expected, $result);
 	}
 
-/**
- * testMoveUpFirst method
- *
- * @return void
- */
+	/**
+	 * testMoveUpFirst method
+	 *
+	 * @return void
+	 */
 	public function testMoveUpFirst() {
 		extract($this->settings);
 		$this->Tree = new $modelClass();
 		$this->Tree->initialize(1, 10);
 
 		$data = $this->Tree->find('first', array('fields' => array('id'), 'conditions' => array($modelClass . '.name' => '1.5')));
-		$this->Tree->moveUp($data[$modelClass]['id'], true);
+		$this->Tree->moveUp($data[$modelClass]['id'], TRUE);
 
 		$parent = $this->Tree->findByName('1. Root', array('id'));
 		$this->Tree->id = $parent[$modelClass]['id'];
-		$result = $this->Tree->children(null, true, array('name'));
+		$result = $this->Tree->children(NULL, TRUE, array('name'));
 		$expected = array(
-			array($modelClass => array('name' => '1.5')),
-			array($modelClass => array('name' => '1.1')),
-			array($modelClass => array('name' => '1.2')),
-			array($modelClass => array('name' => '1.3')),
-			array($modelClass => array('name' => '1.4')),
-			array($modelClass => array('name' => '1.6')),
-			array($modelClass => array('name' => '1.7')),
-			array($modelClass => array('name' => '1.8')),
-			array($modelClass => array('name' => '1.9')),
-			array($modelClass => array('name' => '1.10')));
+				array($modelClass => array('name' => '1.5')),
+				array($modelClass => array('name' => '1.1')),
+				array($modelClass => array('name' => '1.2')),
+				array($modelClass => array('name' => '1.3')),
+				array($modelClass => array('name' => '1.4')),
+				array($modelClass => array('name' => '1.6')),
+				array($modelClass => array('name' => '1.7')),
+				array($modelClass => array('name' => '1.8')),
+				array($modelClass => array('name' => '1.9')),
+				array($modelClass => array('name' => '1.10')));
 		$this->assertSame($expected, $result);
 	}
 
-/**
- * testMoveDownSuccess method
- *
- * @return void
- */
+	/**
+	 * testMoveDownSuccess method
+	 *
+	 * @return void
+	 */
 	public function testMoveDownSuccess() {
 		extract($this->settings);
 		$this->Tree = new $modelClass();
@@ -870,17 +870,17 @@ class TreeBehaviorNumberTest extends CakeTestCase {
 
 		$parent = $this->Tree->findByName('1. Root', array('id'));
 		$this->Tree->id = $parent[$modelClass]['id'];
-		$result = $this->Tree->children(null, true, array('name'));
+		$result = $this->Tree->children(NULL, TRUE, array('name'));
 		$expected = array(array($modelClass => array('name' => '1.2')),
-			array($modelClass => array('name' => '1.1')));
+				array($modelClass => array('name' => '1.1')));
 		$this->assertSame($expected, $result);
 	}
 
-/**
- * testMoveDownFail method
- *
- * @return void
- */
+	/**
+	 * testMoveDownFail method
+	 *
+	 * @return void
+	 */
 	public function testMoveDownFail() {
 		extract($this->settings);
 		$this->Tree = new $modelClass();
@@ -891,47 +891,47 @@ class TreeBehaviorNumberTest extends CakeTestCase {
 
 		$parent = $this->Tree->findByName('1. Root', array('id'));
 		$this->Tree->id = $parent[$modelClass]['id'];
-		$result = $this->Tree->children(null, true, array('name'));
+		$result = $this->Tree->children(NULL, TRUE, array('name'));
 		$expected = array(array($modelClass => array('name' => '1.1')),
-			array($modelClass => array('name' => '1.2')));
+				array($modelClass => array('name' => '1.2')));
 		$this->assertSame($expected, $result);
 	}
 
-/**
- * testMoveDownLast method
- *
- * @return void
- */
+	/**
+	 * testMoveDownLast method
+	 *
+	 * @return void
+	 */
 	public function testMoveDownLast() {
 		extract($this->settings);
 		$this->Tree = new $modelClass();
 		$this->Tree->initialize(1, 10);
 
 		$data = $this->Tree->find('first', array('fields' => array('id'), 'conditions' => array($modelClass . '.name' => '1.5')));
-		$this->Tree->moveDown($data[$modelClass]['id'], true);
+		$this->Tree->moveDown($data[$modelClass]['id'], TRUE);
 
 		$parent = $this->Tree->findByName('1. Root', array('id'));
 		$this->Tree->id = $parent[$modelClass]['id'];
-		$result = $this->Tree->children(null, true, array('name'));
+		$result = $this->Tree->children(NULL, TRUE, array('name'));
 		$expected = array(
-			array($modelClass => array('name' => '1.1')),
-			array($modelClass => array('name' => '1.2')),
-			array($modelClass => array('name' => '1.3')),
-			array($modelClass => array('name' => '1.4')),
-			array($modelClass => array('name' => '1.6')),
-			array($modelClass => array('name' => '1.7')),
-			array($modelClass => array('name' => '1.8')),
-			array($modelClass => array('name' => '1.9')),
-			array($modelClass => array('name' => '1.10')),
-			array($modelClass => array('name' => '1.5')));
+				array($modelClass => array('name' => '1.1')),
+				array($modelClass => array('name' => '1.2')),
+				array($modelClass => array('name' => '1.3')),
+				array($modelClass => array('name' => '1.4')),
+				array($modelClass => array('name' => '1.6')),
+				array($modelClass => array('name' => '1.7')),
+				array($modelClass => array('name' => '1.8')),
+				array($modelClass => array('name' => '1.9')),
+				array($modelClass => array('name' => '1.10')),
+				array($modelClass => array('name' => '1.5')));
 		$this->assertSame($expected, $result);
 	}
 
-/**
- * testMoveDown2 method
- *
- * @return void
- */
+	/**
+	 * testMoveDown2 method
+	 *
+	 * @return void
+	 */
 	public function testMoveDown2() {
 		extract($this->settings);
 		$this->Tree = new $modelClass();
@@ -942,26 +942,26 @@ class TreeBehaviorNumberTest extends CakeTestCase {
 
 		$parent = $this->Tree->findByName('1. Root', array('id'));
 		$this->Tree->id = $parent[$modelClass]['id'];
-		$result = $this->Tree->children(null, true, array('name'));
+		$result = $this->Tree->children(NULL, TRUE, array('name'));
 		$expected = array(
-			array($modelClass => array('name' => '1.1')),
-			array($modelClass => array('name' => '1.2')),
-			array($modelClass => array('name' => '1.3')),
-			array($modelClass => array('name' => '1.4')),
-			array($modelClass => array('name' => '1.6')),
-			array($modelClass => array('name' => '1.7')),
-			array($modelClass => array('name' => '1.5')),
-			array($modelClass => array('name' => '1.8')),
-			array($modelClass => array('name' => '1.9')),
-			array($modelClass => array('name' => '1.10')));
+				array($modelClass => array('name' => '1.1')),
+				array($modelClass => array('name' => '1.2')),
+				array($modelClass => array('name' => '1.3')),
+				array($modelClass => array('name' => '1.4')),
+				array($modelClass => array('name' => '1.6')),
+				array($modelClass => array('name' => '1.7')),
+				array($modelClass => array('name' => '1.5')),
+				array($modelClass => array('name' => '1.8')),
+				array($modelClass => array('name' => '1.9')),
+				array($modelClass => array('name' => '1.10')));
 		$this->assertSame($expected, $result);
 	}
 
-/**
- * testSaveNoMove method
- *
- * @return void
- */
+	/**
+	 * testSaveNoMove method
+	 *
+	 * @return void
+	 */
 	public function testSaveNoMove() {
 		extract($this->settings);
 		$this->Tree = new $modelClass();
@@ -972,33 +972,33 @@ class TreeBehaviorNumberTest extends CakeTestCase {
 		$this->Tree->saveField('name', 'renamed');
 		$parent = $this->Tree->findByName('1. Root', array('id'));
 		$this->Tree->id = $parent[$modelClass]['id'];
-		$result = $this->Tree->children(null, true, array('name'));
+		$result = $this->Tree->children(NULL, TRUE, array('name'));
 		$expected = array(
-			array($modelClass => array('name' => '1.1')),
-			array($modelClass => array('name' => '1.2')),
-			array($modelClass => array('name' => '1.3')),
-			array($modelClass => array('name' => '1.4')),
-			array($modelClass => array('name' => 'renamed')),
-			array($modelClass => array('name' => '1.6')),
-			array($modelClass => array('name' => '1.7')),
-			array($modelClass => array('name' => '1.8')),
-			array($modelClass => array('name' => '1.9')),
-			array($modelClass => array('name' => '1.10')));
+				array($modelClass => array('name' => '1.1')),
+				array($modelClass => array('name' => '1.2')),
+				array($modelClass => array('name' => '1.3')),
+				array($modelClass => array('name' => '1.4')),
+				array($modelClass => array('name' => 'renamed')),
+				array($modelClass => array('name' => '1.6')),
+				array($modelClass => array('name' => '1.7')),
+				array($modelClass => array('name' => '1.8')),
+				array($modelClass => array('name' => '1.9')),
+				array($modelClass => array('name' => '1.10')));
 		$this->assertSame($expected, $result);
 	}
 
-/**
- * testMoveToRootAndMoveUp method
- *
- * @return void
- */
+	/**
+	 * testMoveToRootAndMoveUp method
+	 *
+	 * @return void
+	 */
 	public function testMoveToRootAndMoveUp() {
 		extract($this->settings);
 		$this->Tree = new $modelClass();
 		$this->Tree->initialize(1, 1);
 		$data = $this->Tree->find('first', array('fields' => array('id'), 'conditions' => array($modelClass . '.name' => '1.1')));
 		$this->Tree->id = $data[$modelClass]['id'];
-		$this->Tree->save(array($parentField => null));
+		$this->Tree->save(array($parentField => NULL));
 
 		$result = $this->Tree->verify();
 		$this->assertTrue($result);
@@ -1007,15 +1007,15 @@ class TreeBehaviorNumberTest extends CakeTestCase {
 
 		$result = $this->Tree->find('all', array('fields' => 'name', 'order' => $modelClass . '.' . $leftField . ' ASC'));
 		$expected = array(array($modelClass => array('name' => '1.1')),
-			array($modelClass => array('name' => '1. Root')));
+				array($modelClass => array('name' => '1. Root')));
 		$this->assertSame($expected, $result);
 	}
 
-/**
- * testDelete method
- *
- * @return void
- */
+	/**
+	 * testDelete method
+	 *
+	 * @return void
+	 */
 	public function testDelete() {
 		extract($this->settings);
 		$this->Tree = new $modelClass();
@@ -1025,7 +1025,7 @@ class TreeBehaviorNumberTest extends CakeTestCase {
 		$result = $this->Tree->findByName('1.1.1');
 
 		$return = $this->Tree->delete($result[$modelClass]['id']);
-		$this->assertEquals(true, $return);
+		$this->assertEquals(TRUE, $return);
 
 		$laterCount = $this->Tree->find('count');
 		$this->assertEquals($initialCount - 1, $laterCount);
@@ -1037,7 +1037,7 @@ class TreeBehaviorNumberTest extends CakeTestCase {
 		$result = $this->Tree->findByName('1.1');
 
 		$return = $this->Tree->delete($result[$modelClass]['id']);
-		$this->assertEquals(true, $return);
+		$this->assertEquals(TRUE, $return);
 
 		$laterCount = $this->Tree->find('count');
 		$this->assertEquals($initialCount - 2, $laterCount);
@@ -1046,11 +1046,11 @@ class TreeBehaviorNumberTest extends CakeTestCase {
 		$this->assertTrue($validTree);
 	}
 
-/**
- * Test deleting a record that doesn't exist.
- *
- * @return void
- */
+	/**
+	 * Test deleting a record that doesn't exist.
+	 *
+	 * @return void
+	 */
 	public function testDeleteDoesNotExist() {
 		extract($this->settings);
 		$this->Tree = new $modelClass();
@@ -1058,11 +1058,11 @@ class TreeBehaviorNumberTest extends CakeTestCase {
 		$this->Tree->delete(99999);
 	}
 
-/**
- * testRemove method
- *
- * @return void
- */
+	/**
+	 * testRemove method
+	 *
+	 * @return void
+	 */
 	public function testRemove() {
 		extract($this->settings);
 		$this->Tree = new $modelClass();
@@ -1075,47 +1075,47 @@ class TreeBehaviorNumberTest extends CakeTestCase {
 		$laterCount = $this->Tree->find('count');
 		$this->assertEquals($initialCount, $laterCount);
 
-		$children = $this->Tree->children($result[$modelClass][$parentField], true, array('name'));
+		$children = $this->Tree->children($result[$modelClass][$parentField], TRUE, array('name'));
 		$expected = array(array($modelClass => array('name' => '1.1.1')),
-			array($modelClass => array('name' => '1.1.2')),
-			array($modelClass => array('name' => '1.2')));
+				array($modelClass => array('name' => '1.1.2')),
+				array($modelClass => array('name' => '1.2')));
 		$this->assertEquals($expected, $children);
 
-		$topNodes = $this->Tree->children(false, true, array('name'));
+		$topNodes = $this->Tree->children(FALSE, TRUE, array('name'));
 		$expected = array(array($modelClass => array('name' => '1. Root')),
-			array($modelClass => array('name' => '1.1')));
+				array($modelClass => array('name' => '1.1')));
 		$this->assertEquals($expected, $topNodes);
 
 		$validTree = $this->Tree->verify();
 		$this->assertTrue($validTree);
 	}
 
-/**
- * testRemoveLastTopParent method
- *
- * @return void
- */
+	/**
+	 * testRemoveLastTopParent method
+	 *
+	 * @return void
+	 */
 	public function testRemoveLastTopParent() {
 		extract($this->settings);
 		$this->Tree = new $modelClass();
 		$this->Tree->initialize(2, 2);
 
 		$initialCount = $this->Tree->find('count');
-		$initialTopNodes = $this->Tree->childCount(false);
+		$initialTopNodes = $this->Tree->childCount(FALSE);
 
 		$result = $this->Tree->findByName('1. Root');
 		$this->Tree->removeFromTree($result[$modelClass]['id']);
 
 		$laterCount = $this->Tree->find('count');
-		$laterTopNodes = $this->Tree->childCount(false);
+		$laterTopNodes = $this->Tree->childCount(FALSE);
 
 		$this->assertEquals($initialCount, $laterCount);
 		$this->assertEquals($initialTopNodes, $laterTopNodes);
 
-		$topNodes = $this->Tree->children(false, true, array('name'));
+		$topNodes = $this->Tree->children(FALSE, TRUE, array('name'));
 		$expected = array(array($modelClass => array('name' => '1.1')),
-			array($modelClass => array('name' => '1.2')),
-			array($modelClass => array('name' => '1. Root')));
+				array($modelClass => array('name' => '1.2')),
+				array($modelClass => array('name' => '1. Root')));
 
 		$this->assertEquals($expected, $topNodes);
 
@@ -1123,11 +1123,11 @@ class TreeBehaviorNumberTest extends CakeTestCase {
 		$this->assertTrue($validTree);
 	}
 
-/**
- * testRemoveNoChildren method
- *
- * @return void
- */
+	/**
+	 * testRemoveNoChildren method
+	 *
+	 * @return void
+	 */
 	public function testRemoveNoChildren() {
 		extract($this->settings);
 		$this->Tree = new $modelClass();
@@ -1142,13 +1142,13 @@ class TreeBehaviorNumberTest extends CakeTestCase {
 
 		$nodes = $this->Tree->find('list', array('order' => $leftField));
 		$expected = array(
-			1 => '1. Root',
-			2 => '1.1',
-			4 => '1.1.2',
-			5 => '1.2',
-			6 => '1.2.1',
-			7 => '1.2.2',
-			3 => '1.1.1',
+				1 => '1. Root',
+				2 => '1.1',
+				4 => '1.1.2',
+				5 => '1.2',
+				6 => '1.2.1',
+				7 => '1.2.2',
+				3 => '1.1.1',
 		);
 
 		$this->assertEquals($expected, $nodes);
@@ -1157,11 +1157,11 @@ class TreeBehaviorNumberTest extends CakeTestCase {
 		$this->assertTrue($validTree);
 	}
 
-/**
- * testRemoveAndDelete method
- *
- * @return void
- */
+	/**
+	 * testRemoveAndDelete method
+	 *
+	 * @return void
+	 */
 	public function testRemoveAndDelete() {
 		extract($this->settings);
 		$this->Tree = new $modelClass();
@@ -1170,20 +1170,20 @@ class TreeBehaviorNumberTest extends CakeTestCase {
 		$initialCount = $this->Tree->find('count');
 		$result = $this->Tree->findByName('1.1');
 
-		$this->Tree->removeFromTree($result[$modelClass]['id'], true);
+		$this->Tree->removeFromTree($result[$modelClass]['id'], TRUE);
 
 		$laterCount = $this->Tree->find('count');
 		$this->assertEquals($initialCount - 1, $laterCount);
 
-		$children = $this->Tree->children($result[$modelClass][$parentField], true, array('name'), $leftField . ' asc');
+		$children = $this->Tree->children($result[$modelClass][$parentField], TRUE, array('name'), $leftField . ' asc');
 		$expected = array(
-			array($modelClass => array('name' => '1.1.1')),
-			array($modelClass => array('name' => '1.1.2')),
-			array($modelClass => array('name' => '1.2'))
+				array($modelClass => array('name' => '1.1.1')),
+				array($modelClass => array('name' => '1.1.2')),
+				array($modelClass => array('name' => '1.2'))
 		);
 		$this->assertEquals($expected, $children);
 
-		$topNodes = $this->Tree->children(false, true, array('name'));
+		$topNodes = $this->Tree->children(FALSE, TRUE, array('name'));
 		$expected = array(array($modelClass => array('name' => '1. Root')));
 		$this->assertEquals($expected, $topNodes);
 
@@ -1191,11 +1191,11 @@ class TreeBehaviorNumberTest extends CakeTestCase {
 		$this->assertTrue($validTree);
 	}
 
-/**
- * testRemoveAndDeleteNoChildren method
- *
- * @return void
- */
+	/**
+	 * testRemoveAndDeleteNoChildren method
+	 *
+	 * @return void
+	 */
 	public function testRemoveAndDeleteNoChildren() {
 		extract($this->settings);
 		$this->Tree = new $modelClass();
@@ -1203,19 +1203,19 @@ class TreeBehaviorNumberTest extends CakeTestCase {
 		$initialCount = $this->Tree->find('count');
 
 		$result = $this->Tree->findByName('1.1.1');
-		$this->Tree->removeFromTree($result[$modelClass]['id'], true);
+		$this->Tree->removeFromTree($result[$modelClass]['id'], TRUE);
 
 		$laterCount = $this->Tree->find('count');
 		$this->assertEquals($initialCount - 1, $laterCount);
 
 		$nodes = $this->Tree->find('list', array('order' => $leftField));
 		$expected = array(
-			1 => '1. Root',
-			2 => '1.1',
-			4 => '1.1.2',
-			5 => '1.2',
-			6 => '1.2.1',
-			7 => '1.2.2',
+				1 => '1. Root',
+				2 => '1.1',
+				4 => '1.1.2',
+				5 => '1.2',
+				6 => '1.2.1',
+				7 => '1.2.2',
 		);
 		$this->assertEquals($expected, $nodes);
 
@@ -1223,11 +1223,11 @@ class TreeBehaviorNumberTest extends CakeTestCase {
 		$this->assertTrue($validTree);
 	}
 
-/**
- * testChildren method
- *
- * @return void
- */
+	/**
+	 * testChildren method
+	 *
+	 * @return void
+	 */
 	public function testChildren() {
 		extract($this->settings);
 		$this->Tree = new $modelClass();
@@ -1236,28 +1236,28 @@ class TreeBehaviorNumberTest extends CakeTestCase {
 		$data = $this->Tree->find('first', array('conditions' => array($modelClass . '.name' => '1. Root')));
 		$this->Tree->id = $data[$modelClass]['id'];
 
-		$direct = $this->Tree->children(null, true, array('id', 'name', $parentField, $leftField, $rightField));
+		$direct = $this->Tree->children(NULL, TRUE, array('id', 'name', $parentField, $leftField, $rightField));
 		$expected = array(array($modelClass => array('id' => 2, 'name' => '1.1', $parentField => 1, $leftField => 2, $rightField => 7)),
-			array($modelClass => array('id' => 5, 'name' => '1.2', $parentField => 1, $leftField => 8, $rightField => 13)));
+				array($modelClass => array('id' => 5, 'name' => '1.2', $parentField => 1, $leftField => 8, $rightField => 13)));
 		$this->assertEquals($expected, $direct);
 
-		$total = $this->Tree->children(null, null, array('id', 'name', $parentField, $leftField, $rightField));
+		$total = $this->Tree->children(NULL, NULL, array('id', 'name', $parentField, $leftField, $rightField));
 		$expected = array(array($modelClass => array('id' => 2, 'name' => '1.1', $parentField => 1, $leftField => 2, $rightField => 7)),
-			array($modelClass => array('id' => 3, 'name' => '1.1.1', $parentField => 2, $leftField => 3, $rightField => 4)),
-			array($modelClass => array('id' => 4, 'name' => '1.1.2', $parentField => 2, $leftField => 5, $rightField => 6)),
-			array($modelClass => array('id' => 5, 'name' => '1.2', $parentField => 1, $leftField => 8, $rightField => 13)),
-			array($modelClass => array('id' => 6, 'name' => '1.2.1', $parentField => 5, $leftField => 9, $rightField => 10)),
-			array($modelClass => array('id' => 7, 'name' => '1.2.2', $parentField => 5, $leftField => 11, $rightField => 12)));
+				array($modelClass => array('id' => 3, 'name' => '1.1.1', $parentField => 2, $leftField => 3, $rightField => 4)),
+				array($modelClass => array('id' => 4, 'name' => '1.1.2', $parentField => 2, $leftField => 5, $rightField => 6)),
+				array($modelClass => array('id' => 5, 'name' => '1.2', $parentField => 1, $leftField => 8, $rightField => 13)),
+				array($modelClass => array('id' => 6, 'name' => '1.2.1', $parentField => 5, $leftField => 9, $rightField => 10)),
+				array($modelClass => array('id' => 7, 'name' => '1.2.2', $parentField => 5, $leftField => 11, $rightField => 12)));
 		$this->assertEquals($expected, $total);
 
 		$this->assertEquals(array(), $this->Tree->children(10000));
 	}
 
-/**
- * testCountChildren method
- *
- * @return void
- */
+	/**
+	 * testCountChildren method
+	 *
+	 * @return void
+	 */
 	public function testCountChildren() {
 		extract($this->settings);
 		$this->Tree = new $modelClass();
@@ -1266,23 +1266,23 @@ class TreeBehaviorNumberTest extends CakeTestCase {
 		$data = $this->Tree->find('first', array('conditions' => array($modelClass . '.name' => '1. Root')));
 		$this->Tree->id = $data[$modelClass]['id'];
 
-		$direct = $this->Tree->childCount(null, true);
+		$direct = $this->Tree->childCount(NULL, TRUE);
 		$this->assertEquals(2, $direct);
 
 		$total = $this->Tree->childCount();
 		$this->assertEquals(6, $total);
 
-		$this->Tree->read(null, $data[$modelClass]['id']);
+		$this->Tree->read(NULL, $data[$modelClass]['id']);
 		$id = $this->Tree->field('id', array($modelClass . '.name' => '1.2'));
 		$total = $this->Tree->childCount($id);
 		$this->assertEquals(2, $total);
 	}
 
-/**
- * testGetParentNode method
- *
- * @return void
- */
+	/**
+	 * testGetParentNode method
+	 *
+	 * @return void
+	 */
 	public function testGetParentNode() {
 		extract($this->settings);
 		$this->Tree = new $modelClass();
@@ -1291,16 +1291,16 @@ class TreeBehaviorNumberTest extends CakeTestCase {
 		$data = $this->Tree->find('first', array('conditions' => array($modelClass . '.name' => '1.2.2')));
 		$this->Tree->id = $data[$modelClass]['id'];
 
-		$result = $this->Tree->getParentNode(null, array('name'));
+		$result = $this->Tree->getParentNode(NULL, array('name'));
 		$expected = array($modelClass => array('name' => '1.2'));
 		$this->assertSame($expected, $result);
 	}
 
-/**
- * testGetPath method
- *
- * @return void
- */
+	/**
+	 * testGetPath method
+	 *
+	 * @return void
+	 */
 	public function testGetPath() {
 		extract($this->settings);
 		$this->Tree = new $modelClass();
@@ -1309,50 +1309,50 @@ class TreeBehaviorNumberTest extends CakeTestCase {
 		$data = $this->Tree->find('first', array('conditions' => array($modelClass . '.name' => '1.2.2')));
 		$this->Tree->id = $data[$modelClass]['id'];
 
-		$result = $this->Tree->getPath(null, array('name'));
+		$result = $this->Tree->getPath(NULL, array('name'));
 		$expected = array(array($modelClass => array('name' => '1. Root')),
-			array($modelClass => array('name' => '1.2')),
-			array($modelClass => array('name' => '1.2.2')));
+				array($modelClass => array('name' => '1.2')),
+				array($modelClass => array('name' => '1.2.2')));
 		$this->assertSame($expected, $result);
 	}
 
-/**
- * testNoAmbiguousColumn method
- *
- * @return void
- */
+	/**
+	 * testNoAmbiguousColumn method
+	 *
+	 * @return void
+	 */
 	public function testNoAmbiguousColumn() {
 		extract($this->settings);
 		$this->Tree = new $modelClass();
 		$this->Tree->bindModel(array('belongsTo' => array('Dummy' =>
-			array('className' => $modelClass, 'foreignKey' => $parentField, 'conditions' => array('Dummy.id' => null)))), false);
+				array('className' => $modelClass, 'foreignKey' => $parentField, 'conditions' => array('Dummy.id' => NULL)))), FALSE);
 		$this->Tree->initialize(2, 2);
 
 		$data = $this->Tree->find('first', array('conditions' => array($modelClass . '.name' => '1. Root')));
 		$this->Tree->id = $data[$modelClass]['id'];
 
-		$direct = $this->Tree->children(null, true, array('id', 'name', $parentField, $leftField, $rightField));
+		$direct = $this->Tree->children(NULL, TRUE, array('id', 'name', $parentField, $leftField, $rightField));
 		$expected = array(array($modelClass => array('id' => 2, 'name' => '1.1', $parentField => 1, $leftField => 2, $rightField => 7)),
-			array($modelClass => array('id' => 5, 'name' => '1.2', $parentField => 1, $leftField => 8, $rightField => 13)));
+				array($modelClass => array('id' => 5, 'name' => '1.2', $parentField => 1, $leftField => 8, $rightField => 13)));
 		$this->assertEquals($expected, $direct);
 
-		$total = $this->Tree->children(null, null, array('id', 'name', $parentField, $leftField, $rightField));
+		$total = $this->Tree->children(NULL, NULL, array('id', 'name', $parentField, $leftField, $rightField));
 		$expected = array(
-			array($modelClass => array('id' => 2, 'name' => '1.1', $parentField => 1, $leftField => 2, $rightField => 7)),
-			array($modelClass => array('id' => 3, 'name' => '1.1.1', $parentField => 2, $leftField => 3, $rightField => 4)),
-			array($modelClass => array('id' => 4, 'name' => '1.1.2', $parentField => 2, $leftField => 5, $rightField => 6)),
-			array($modelClass => array('id' => 5, 'name' => '1.2', $parentField => 1, $leftField => 8, $rightField => 13)),
-			array($modelClass => array('id' => 6, 'name' => '1.2.1', $parentField => 5, $leftField => 9, $rightField => 10)),
-			array($modelClass => array('id' => 7, 'name' => '1.2.2', $parentField => 5, $leftField => 11, $rightField => 12))
+				array($modelClass => array('id' => 2, 'name' => '1.1', $parentField => 1, $leftField => 2, $rightField => 7)),
+				array($modelClass => array('id' => 3, 'name' => '1.1.1', $parentField => 2, $leftField => 3, $rightField => 4)),
+				array($modelClass => array('id' => 4, 'name' => '1.1.2', $parentField => 2, $leftField => 5, $rightField => 6)),
+				array($modelClass => array('id' => 5, 'name' => '1.2', $parentField => 1, $leftField => 8, $rightField => 13)),
+				array($modelClass => array('id' => 6, 'name' => '1.2.1', $parentField => 5, $leftField => 9, $rightField => 10)),
+				array($modelClass => array('id' => 7, 'name' => '1.2.2', $parentField => 5, $leftField => 11, $rightField => 12))
 		);
 		$this->assertEquals($expected, $total);
 	}
 
-/**
- * testReorderTree method
- *
- * @return void
- */
+	/**
+	 * testReorderTree method
+	 *
+	 * @return void
+	 */
 	public function testReorderTree() {
 		extract($this->settings);
 		$this->Tree = new $modelClass();
@@ -1377,35 +1377,35 @@ class TreeBehaviorNumberTest extends CakeTestCase {
 		$this->assertSame($nodes, $sortedNodes);
 	}
 
-/**
- * test reordering large-ish trees with cacheQueries = true.
- * This caused infinite loops when moving down elements as stale data is returned
- * from the memory cache
- *
- * @return void
- */
+	/**
+	 * test reordering large-ish trees with cacheQueries = true.
+	 * This caused infinite loops when moving down elements as stale data is returned
+	 * from the memory cache
+	 *
+	 * @return void
+	 */
 	public function testReorderBigTreeWithQueryCaching() {
 		extract($this->settings);
 		$this->Tree = new $modelClass();
 		$this->Tree->initialize(2, 10);
 
 		$original = $this->Tree->cacheQueries;
-		$this->Tree->cacheQueries = true;
+		$this->Tree->cacheQueries = TRUE;
 		$this->Tree->reorder(array('field' => 'name', 'direction' => 'DESC'));
 		$this->assertTrue($this->Tree->cacheQueries, 'cacheQueries was not restored after reorder(). %s');
 		$this->Tree->cacheQueries = $original;
 	}
 
-/**
- * testGenerateTreeListWithSelfJoin method
- *
- * @return void
- */
+	/**
+	 * testGenerateTreeListWithSelfJoin method
+	 *
+	 * @return void
+	 */
 	public function testGenerateTreeListWithSelfJoin() {
 		extract($this->settings);
 		$this->Tree = new $modelClass();
 		$this->Tree->bindModel(array('belongsTo' => array('Dummy' =>
-			array('className' => $modelClass, 'foreignKey' => $parentField, 'conditions' => array('Dummy.id' => null)))), false);
+				array('className' => $modelClass, 'foreignKey' => $parentField, 'conditions' => array('Dummy.id' => NULL)))), FALSE);
 		$this->Tree->initialize(2, 2);
 
 		$result = $this->Tree->generateTreeList();
@@ -1413,31 +1413,31 @@ class TreeBehaviorNumberTest extends CakeTestCase {
 		$this->assertSame($expected, $result);
 	}
 
-/**
- * Test the formatting options of generateTreeList()
- *
- * @return void
- */
+	/**
+	 * Test the formatting options of generateTreeList()
+	 *
+	 * @return void
+	 */
 	public function testGenerateTreeListFormatting() {
 		extract($this->settings);
 		$this->Tree = new $modelClass();
 		$this->Tree->initialize(2, 2);
 
 		$result = $this->Tree->generateTreeList(
-			null,
-			"{n}.$modelClass.id",
-			array('%s - %s', "{n}.$modelClass.id", "{n}.$modelClass.name")
+				NULL,
+				"{n}.$modelClass.id",
+				array('%s - %s', "{n}.$modelClass.id", "{n}.$modelClass.name")
 		);
 		$this->assertEquals('1 - 1. Root', $result[1]);
 		$this->assertEquals('_2 - 1.1', $result[2]);
 		$this->assertEquals('__3 - 1.1.1', $result[3]);
 	}
 
-/**
- * Test the formatting options of formatTreeList()
- *
- * @return void
- */
+	/**
+	 * Test the formatting options of formatTreeList()
+	 *
+	 * @return void
+	 */
 	public function testFormatTreeList() {
 		extract($this->settings);
 		$this->Tree = new $modelClass();
@@ -1447,20 +1447,20 @@ class TreeBehaviorNumberTest extends CakeTestCase {
 		$records = $this->Tree->find('all', $options);
 
 		$options = array(
-			'keyPath' => "{n}.$modelClass.id",
-			'valuePath' => array('%s - %s', "{n}.$modelClass.id", "{n}.$modelClass.name"),
-			'spacer' => '--');
+				'keyPath' => "{n}.$modelClass.id",
+				'valuePath' => array('%s - %s', "{n}.$modelClass.id", "{n}.$modelClass.name"),
+				'spacer' => '--');
 		$result = $this->Tree->formatTreeList($records, $options);
 		$this->assertEquals('1 - 1. Root', $result[1]);
 		$this->assertEquals('--2 - 1.1', $result[2]);
 		$this->assertEquals('----3 - 1.1.1', $result[3]);
 	}
 
-/**
- * testArraySyntax method
- *
- * @return void
- */
+	/**
+	 * testArraySyntax method
+	 *
+	 * @return void
+	 */
 	public function testArraySyntax() {
 		extract($this->settings);
 		$this->Tree = new $modelClass();
@@ -1470,11 +1470,11 @@ class TreeBehaviorNumberTest extends CakeTestCase {
 		$this->assertSame($this->Tree->getPath(4), $this->Tree->getPath(array('id' => 4)));
 	}
 
-/**
- * testFindThreaded method
- *
- * @return void
- */
+	/**
+	 * testFindThreaded method
+	 *
+	 * @return void
+	 */
 	public function testFindThreaded() {
 		$Model = new Person();
 		$Model->recursive = -1;
@@ -1482,72 +1482,72 @@ class TreeBehaviorNumberTest extends CakeTestCase {
 
 		$result = $Model->find('threaded');
 		$expected = array(
-			array(
-				'Person' => array(
-					'id' => '4',
-					'name' => 'mother - grand mother',
-					'mother_id' => '0',
-					'father_id' => '0'
-				),
-				'children' => array(
-					array(
+				array(
 						'Person' => array(
-							'id' => '2',
-							'name' => 'mother',
-							'mother_id' => '4',
-							'father_id' => '5'
+								'id' => '4',
+								'name' => 'mother - grand mother',
+								'mother_id' => '0',
+								'father_id' => '0'
 						),
 						'children' => array(
-							array(
-								'Person' => array(
-									'id' => '1',
-									'name' => 'person',
-									'mother_id' => '2',
-									'father_id' => '3'
-								),
-								'children' => array()
-							)
+								array(
+										'Person' => array(
+												'id' => '2',
+												'name' => 'mother',
+												'mother_id' => '4',
+												'father_id' => '5'
+										),
+										'children' => array(
+												array(
+														'Person' => array(
+																'id' => '1',
+																'name' => 'person',
+																'mother_id' => '2',
+																'father_id' => '3'
+														),
+														'children' => array()
+												)
+										)
+								)
 						)
-					)
-				)
-			),
-			array(
-				'Person' => array(
-					'id' => '5',
-					'name' => 'mother - grand father',
-					'mother_id' => '0',
-					'father_id' => '0'
 				),
-				'children' => array()
-			),
-			array(
-				'Person' => array(
-					'id' => '6',
-					'name' => 'father - grand mother',
-					'mother_id' => '0',
-					'father_id' => '0'
-				),
-				'children' => array(
-					array(
+				array(
 						'Person' => array(
-							'id' => '3',
-							'name' => 'father',
-							'mother_id' => '6',
-							'father_id' => '7'
+								'id' => '5',
+								'name' => 'mother - grand father',
+								'mother_id' => '0',
+								'father_id' => '0'
 						),
 						'children' => array()
-					)
-				)
-			),
-			array(
-				'Person' => array(
-					'id' => '7',
-					'name' => 'father - grand father',
-					'mother_id' => '0',
-					'father_id' => '0'
 				),
-				'children' => array()
-			)
+				array(
+						'Person' => array(
+								'id' => '6',
+								'name' => 'father - grand mother',
+								'mother_id' => '0',
+								'father_id' => '0'
+						),
+						'children' => array(
+								array(
+										'Person' => array(
+												'id' => '3',
+												'name' => 'father',
+												'mother_id' => '6',
+												'father_id' => '7'
+										),
+										'children' => array()
+								)
+						)
+				),
+				array(
+						'Person' => array(
+								'id' => '7',
+								'name' => 'father - grand father',
+								'mother_id' => '0',
+								'father_id' => '0'
+						),
+						'children' => array()
+				)
 		);
 		$this->assertEquals($expected, $result);
 	}
@@ -1577,9 +1577,9 @@ class TreeBehaviorNumberTest extends CakeTestCase {
 
 		// Save with parent_id not changed
 		$this->Tree->save(array(
-			'id' => $result[$modelClass]['id'],
-			'parent_id' => $result[$modelClass]['parent_id'],
-			'name' => 'foo2'
+				'id' => $result[$modelClass]['id'],
+				'parent_id' => $result[$modelClass]['parent_id'],
+				'name' => 'foo2'
 		));
 		$result = $this->Tree->findByName('foo2');
 		$this->assertEquals(2, $result[$modelClass][$level]);
@@ -1587,8 +1587,8 @@ class TreeBehaviorNumberTest extends CakeTestCase {
 		// Save with parent_id changed
 		$result = $this->Tree->findByName('1.1');
 		$this->Tree->save(array(
-			'id' => $result[$modelClass]['id'],
-			'parent_id' => ''
+				'id' => $result[$modelClass]['id'],
+				'parent_id' => ''
 		));
 		$result = $this->Tree->findByName('1.1');
 		$this->assertEquals(0, $result[$modelClass][$level]);
@@ -1599,8 +1599,8 @@ class TreeBehaviorNumberTest extends CakeTestCase {
 		$parent = $this->Tree->findByName('1.1.2');
 		$result = $this->Tree->findByName('1.2');
 		$this->Tree->save(array(
-			'id' => $result[$modelClass]['id'],
-			'parent_id' => $parent[$modelClass]['id']
+				'id' => $result[$modelClass]['id'],
+				'parent_id' => $parent[$modelClass]['id']
 		));
 		$result = $this->Tree->findByName('1.2');
 		$this->assertEquals(2, $result[$modelClass][$level]);

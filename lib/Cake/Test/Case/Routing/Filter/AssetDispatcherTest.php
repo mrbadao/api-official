@@ -25,37 +25,37 @@ App::uses('CakeResponse', 'Network');
  */
 class AssetDispatcherTest extends CakeTestCase {
 
-/**
- * tearDown method
- *
- * @return void
- */
+	/**
+	 * tearDown method
+	 *
+	 * @return void
+	 */
 	public function tearDown() {
 		parent::tearDown();
 		Configure::write('Dispatcher.filters', array());
 	}
 
-/**
- * test that asset filters work for theme and plugin assets
- *
- * @return void
- * @triggers DispatcherTest $this, compact('request', 'response')
- * @triggers DispatcherTest $this, compact('request', 'response')
- * @triggers DispatcherTest $this, compact('request', 'response')
- * @triggers DispatcherTest $this, compact('request', 'response')
- * @triggers DispatcherTest $this, compact('request', 'response')
- * @triggers DispatcherTest $this, compact('request', 'response')
- */
+	/**
+	 * test that asset filters work for theme and plugin assets
+	 *
+	 * @return void
+	 * @triggers DispatcherTest $this, compact('request', 'response')
+	 * @triggers DispatcherTest $this, compact('request', 'response')
+	 * @triggers DispatcherTest $this, compact('request', 'response')
+	 * @triggers DispatcherTest $this, compact('request', 'response')
+	 * @triggers DispatcherTest $this, compact('request', 'response')
+	 * @triggers DispatcherTest $this, compact('request', 'response')
+	 */
 	public function testAssetFilterForThemeAndPlugins() {
 		$filter = new AssetDispatcher();
 		$response = $this->getMock('CakeResponse', array('_sendHeader'));
 		Configure::write('Asset.filter', array(
-			'js' => '',
-			'css' => ''
+				'js' => '',
+				'css' => ''
 		));
 		App::build(array(
-			'Plugin' => array(CAKE . 'Test' . DS . 'test_app' . DS . 'Plugin' . DS),
-			'View' => array(CAKE . 'Test' . DS . 'test_app' . DS . 'View' . DS)
+				'Plugin' => array(CAKE . 'Test' . DS . 'test_app' . DS . 'Plugin' . DS),
+				'View' => array(CAKE . 'Test' . DS . 'test_app' . DS . 'View' . DS)
 		), App::RESET);
 
 		$request = new CakeRequest('theme/test_theme/ccss/cake.generic.css');
@@ -89,23 +89,23 @@ class AssetDispatcherTest extends CakeTestCase {
 		$this->assertFalse($event->isStopped());
 	}
 
-/**
- * AssetDispatcher should not 404 extensions that could be handled
- * by Routing.
- *
- * @return void
- * @triggers DispatcherTest $this, compact('request', 'response')
- */
+	/**
+	 * AssetDispatcher should not 404 extensions that could be handled
+	 * by Routing.
+	 *
+	 * @return void
+	 * @triggers DispatcherTest $this, compact('request', 'response')
+	 */
 	public function testNoHandleRoutedExtension() {
 		$filter = new AssetDispatcher();
 		$response = $this->getMock('CakeResponse', array('_sendHeader'));
 		Configure::write('Asset.filter', array(
-			'js' => '',
-			'css' => ''
+				'js' => '',
+				'css' => ''
 		));
 		App::build(array(
-			'Plugin' => array(CAKE . 'Test' . DS . 'test_app' . DS . 'Plugin' . DS),
-			'View' => array(CAKE . 'Test' . DS . 'test_app' . DS . 'View' . DS)
+				'Plugin' => array(CAKE . 'Test' . DS . 'test_app' . DS . 'Plugin' . DS),
+				'View' => array(CAKE . 'Test' . DS . 'test_app' . DS . 'View' . DS)
 		), App::RESET);
 		Router::parseExtensions('json');
 		Router::connect('/test_plugin/api/v1/:action', array('controller' => 'api'));
@@ -117,23 +117,23 @@ class AssetDispatcherTest extends CakeTestCase {
 		$this->assertFalse($event->isStopped(), 'Events for routed extensions should not be stopped');
 	}
 
-/**
- * Tests that $response->checkNotModified() is called and bypasses
- * file dispatching
- *
- * @return void
- * @triggers DispatcherTest $this, compact('request', 'response')
- * @triggers DispatcherTest $this, compact('request', 'response')
- */
+	/**
+	 * Tests that $response->checkNotModified() is called and bypasses
+	 * file dispatching
+	 *
+	 * @return void
+	 * @triggers DispatcherTest $this, compact('request', 'response')
+	 * @triggers DispatcherTest $this, compact('request', 'response')
+	 */
 	public function testNotModified() {
 		$filter = new AssetDispatcher();
 		Configure::write('Asset.filter', array(
-			'js' => '',
-			'css' => ''
+				'js' => '',
+				'css' => ''
 		));
 		App::build(array(
-			'Plugin' => array(CAKE . 'Test' . DS . 'test_app' . DS . 'Plugin' . DS),
-			'View' => array(CAKE . 'Test' . DS . 'test_app' . DS . 'View' . DS)
+				'Plugin' => array(CAKE . 'Test' . DS . 'test_app' . DS . 'Plugin' . DS),
+				'View' => array(CAKE . 'Test' . DS . 'test_app' . DS . 'View' . DS)
 		));
 		$time = filemtime(App::themePath('TestTheme') . 'webroot' . DS . 'img' . DS . 'cake.power.gif');
 		$time = new DateTime('@' . $time);
@@ -142,8 +142,8 @@ class AssetDispatcherTest extends CakeTestCase {
 		$request = new CakeRequest('theme/test_theme/img/cake.power.gif');
 
 		$response->expects($this->once())->method('checkNotModified')
-			->with($request)
-			->will($this->returnValue(true));
+				->with($request)
+				->will($this->returnValue(TRUE));
 		$event = new CakeEvent('DispatcherTest', $this, compact('request', 'response'));
 
 		ob_start();
@@ -156,8 +156,8 @@ class AssetDispatcherTest extends CakeTestCase {
 		$request = new CakeRequest('theme/test_theme/img/cake.power.gif');
 
 		$response->expects($this->once())->method('checkNotModified')
-			->with($request)
-			->will($this->returnValue(true));
+				->with($request)
+				->will($this->returnValue(TRUE));
 		$response->expects($this->never())->method('send');
 		$event = new CakeEvent('DispatcherTest', $this, compact('request', 'response'));
 
@@ -165,12 +165,12 @@ class AssetDispatcherTest extends CakeTestCase {
 		$this->assertEquals($time->format('D, j M Y H:i:s') . ' GMT', $response->modified());
 	}
 
-/**
- * Test that no exceptions are thrown for //index.php type URLs.
- *
- * @return void
- * @triggers Dispatcher.beforeRequest $this, compact('request', 'response')
- */
+	/**
+	 * Test that no exceptions are thrown for //index.php type URLs.
+	 *
+	 * @return void
+	 * @triggers Dispatcher.beforeRequest $this, compact('request', 'response')
+	 */
 	public function test404OnDoubleSlash() {
 		$filter = new AssetDispatcher();
 
@@ -182,16 +182,16 @@ class AssetDispatcherTest extends CakeTestCase {
 		$this->assertFalse($event->isStopped());
 	}
 
-/**
- * Test that attempts to traverse directories are prevented.
- *
- * @return void
- * @triggers Dispatcher.beforeRequest $this, compact('request', 'response')
- */
+	/**
+	 * Test that attempts to traverse directories are prevented.
+	 *
+	 * @return void
+	 * @triggers Dispatcher.beforeRequest $this, compact('request', 'response')
+	 */
 	public function test404OnDoubleDot() {
 		App::build(array(
-			'Plugin' => array(CAKE . 'Test' . DS . 'test_app' . DS . 'Plugin' . DS),
-			'View' => array(CAKE . 'Test' . DS . 'test_app' . DS . 'View' . DS)
+				'Plugin' => array(CAKE . 'Test' . DS . 'test_app' . DS . 'Plugin' . DS),
+				'View' => array(CAKE . 'Test' . DS . 'test_app' . DS . 'View' . DS)
 		), App::RESET);
 
 		$response = $this->getMock('CakeResponse', array('_sendHeader'));
@@ -205,16 +205,16 @@ class AssetDispatcherTest extends CakeTestCase {
 		$this->assertFalse($event->isStopped());
 	}
 
-/**
- * Test that attempts to traverse directories with urlencoded paths fail.
- *
- * @return void
- * @triggers Dispatcher.beforeRequest $this, compact('request', 'response')
- */
+	/**
+	 * Test that attempts to traverse directories with urlencoded paths fail.
+	 *
+	 * @return void
+	 * @triggers Dispatcher.beforeRequest $this, compact('request', 'response')
+	 */
 	public function test404OnDoubleDotEncoded() {
 		App::build(array(
-			'Plugin' => array(CAKE . 'Test' . DS . 'test_app' . DS . 'Plugin' . DS),
-			'View' => array(CAKE . 'Test' . DS . 'test_app' . DS . 'View' . DS)
+				'Plugin' => array(CAKE . 'Test' . DS . 'test_app' . DS . 'Plugin' . DS),
+				'View' => array(CAKE . 'Test' . DS . 'test_app' . DS . 'View' . DS)
 		), App::RESET);
 
 		$response = $this->getMock('CakeResponse', array('_sendHeader', 'send'));
@@ -228,19 +228,19 @@ class AssetDispatcherTest extends CakeTestCase {
 		$this->assertFalse($event->isStopped());
 	}
 
-/**
- * Test asset content length is unset
- *
- * If content length is unset, then the webserver can figure it out.
- *
- * @outputBuffering enabled
- * @return void
- */
+	/**
+	 * Test asset content length is unset
+	 *
+	 * If content length is unset, then the webserver can figure it out.
+	 *
+	 * @outputBuffering enabled
+	 * @return void
+	 */
 	public function testAssetContentLength() {
 		Router::reload();
 		Configure::write('Dispatcher.filters', array('AssetDispatcher'));
 		App::build(array(
-			'View' => array(CAKE . 'Test' . DS . 'test_app' . DS . 'View' . DS)
+				'View' => array(CAKE . 'Test' . DS . 'test_app' . DS . 'View' . DS)
 		));
 
 		$url = 'theme/test_theme/css/test_asset.css';

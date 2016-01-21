@@ -4,9 +4,9 @@
  *
  * Provides case mapping of Unicode characters for code points U+1E00 through U+1EFF
  *
- * @see http://www.unicode.org/Public/UNIDATA/UCD.html
- * @see http://www.unicode.org/Public/UNIDATA/CaseFolding.txt
- * @see http://www.unicode.org/reports/tr21/tr21-5.html
+ * @see           http://www.unicode.org/Public/UNIDATA/UCD.html
+ * @see           http://www.unicode.org/Public/UNIDATA/CaseFolding.txt
+ * @see           http://www.unicode.org/reports/tr21/tr21-5.html
  *
  * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
@@ -27,7 +27,7 @@
  *
  * The lower filed is an array of the decimal values that form the lower case version of a character.
  *
- *	The status field is:
+ *    The status field is:
  * C: common case folding, common mappings shared by both simple and full mappings.
  * F: full case folding, mappings that cause strings to grow in length. Multiple characters are separated by spaces.
  * S: simple case folding, mappings to single characters where different from F.

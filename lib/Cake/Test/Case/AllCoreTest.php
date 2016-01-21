@@ -25,15 +25,16 @@
  */
 class AllCoreTest extends PHPUnit_Framework_TestSuite {
 
-/**
- * suite method, defines tests for this suite.
- *
- * @return void
- */
+	/**
+	 * suite method, defines tests for this suite.
+	 *
+	 * @return void
+	 */
 	public static function suite() {
 		$suite = new CakeTestSuite('All Core class tests');
 
 		$suite->addTestDirectory(CORE_TEST_CASES . DS . 'Core');
+
 		return $suite;
 	}
 }

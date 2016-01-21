@@ -23,20 +23,21 @@ App::uses('View', 'View');
 /**
  * ScaffoldView provides specific view file loading features for scaffolded views.
  *
- * @package Cake.View
+ * @package    Cake.View
  * @deprecated 3.0.0 Dynamic scaffolding will be removed and replaced in 3.0
  */
 class ScaffoldView extends View {
 
-/**
- * Override _getViewFileName Appends special scaffolding views in.
- *
- * @param string $name name of the view file to get.
- * @return string action
- * @throws MissingViewException
- */
-	protected function _getViewFileName($name = null) {
-		if ($name === null) {
+	/**
+	 * Override _getViewFileName Appends special scaffolding views in.
+	 *
+	 * @param string $name name of the view file to get.
+	 *
+	 * @return string action
+	 * @throws MissingViewException
+	 */
+	protected function _getViewFileName($name = NULL) {
+		if ($name === NULL) {
 			$name = $this->action;
 		}
 		$name = Inflector::underscore($name);
@@ -44,7 +45,7 @@ class ScaffoldView extends View {
 
 		if (!empty($prefixes)) {
 			foreach ($prefixes as $prefix) {
-				if (strpos($name, $prefix . '_') !== false) {
+				if (strpos($name, $prefix . '_') !== FALSE) {
 					$name = substr($name, strlen($prefix) + 1);
 					break;
 				}
@@ -57,10 +58,10 @@ class ScaffoldView extends View {
 
 		$scaffoldAction = 'scaffold.' . $name;
 
-		if ($this->subDir !== null) {
+		if ($this->subDir !== NULL) {
 			$subDir = strtolower($this->subDir) . DS;
 		} else {
-			$subDir = null;
+			$subDir = NULL;
 		}
 
 		$names[] = $this->viewPath . DS . $subDir . $scaffoldAction;

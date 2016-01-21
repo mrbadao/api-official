@@ -26,34 +26,34 @@ App::uses('AppModel', 'Model');
  */
 class ControllerTask extends BakeTask {
 
-/**
- * Tasks to be loaded by this Task
- *
- * @var array
- */
+	/**
+	 * Tasks to be loaded by this Task
+	 *
+	 * @var array
+	 */
 	public $tasks = array('Model', 'Test', 'Template', 'DbConfig', 'Project');
 
-/**
- * path to Controller directory
- *
- * @var array
- */
-	public $path = null;
+	/**
+	 * path to Controller directory
+	 *
+	 * @var array
+	 */
+	public $path = NULL;
 
-/**
- * Override initialize
- *
- * @return void
- */
+	/**
+	 * Override initialize
+	 *
+	 * @return void
+	 */
 	public function initialize() {
 		$this->path = current(App::path('Controller'));
 	}
 
-/**
- * Execution method always used for tasks
- *
- * @return void
- */
+	/**
+	 * Execution method always used for tasks
+	 *
+	 * @return void
+	 */
 	public function execute() {
 		parent::execute();
 		if (empty($this->args)) {
@@ -94,52 +94,13 @@ class ControllerTask extends BakeTask {
 		}
 	}
 
-/**
- * Bake All the controllers at once. Will only bake controllers for models that exist.
- *
- * @return void
- */
-	public function all() {
-		$this->interactive = false;
-		$this->listAll($this->connection, false);
-		ClassRegistry::config('Model', array('ds' => $this->connection));
-		$unitTestExists = $this->_checkUnitTest();
-
-		$admin = false;
-		if (!empty($this->params['admin'])) {
-			$admin = $this->Project->getPrefix();
-		}
-
-		$controllersCreated = 0;
-		foreach ($this->__tables as $table) {
-			$model = $this->_modelName($table);
-			$controller = $this->_controllerName($model);
-			App::uses($model, 'Model');
-			if (class_exists($model)) {
-				$actions = $this->bakeActions($controller);
-				if ($admin) {
-					$this->out(__d('cake_console', 'Adding %s methods', $admin));
-					$actions .= "\n" . $this->bakeActions($controller, $admin);
-				}
-				if ($this->bake($controller, $actions) && $unitTestExists) {
-					$this->bakeTest($controller);
-				}
-				$controllersCreated++;
-			}
-		}
-
-		if (!$controllersCreated) {
-			$this->out(__d('cake_console', 'No Controllers were baked, Models need to exist before Controllers can be baked.'));
-		}
-	}
-
-/**
- * Interactive
- *
- * @return void
- */
+	/**
+	 * Interactive
+	 *
+	 * @return void
+	 */
 	protected function _interactive() {
-		$this->interactive = true;
+		$this->interactive = TRUE;
 		$this->hr();
 		$this->out(__d('cake_console', "Bake Controller\nPath: %s", $this->getPath()));
 		$this->hr();
@@ -167,9 +128,9 @@ class ControllerTask extends BakeTask {
 		$doItInteractive = $this->in(implode("\n", $question), array('y', 'n'), 'y');
 
 		if (strtolower($doItInteractive) === 'y') {
-			$this->interactive = true;
+			$this->interactive = TRUE;
 			$useDynamicScaffold = $this->in(
-				__d('cake_console', "Would you like to use dynamic scaffolding?"), array('y', 'n'), 'n'
+					__d('cake_console', "Would you like to use dynamic scaffolding?"), array('y', 'n'), 'n'
 			);
 
 			if (strtolower($useDynamicScaffold) === 'y') {
@@ -182,7 +143,7 @@ class ControllerTask extends BakeTask {
 				$components = $this->doComponents();
 
 				$wannaUseSession = $this->in(
-					__d('cake_console', "Would you like to use Session flash messages?"), array('y', 'n'), 'y'
+						__d('cake_console', "Would you like to use Session flash messages?"), array('y', 'n'), 'y'
 				);
 
 				if (strtolower($wannaUseSession) === 'y') {
@@ -195,15 +156,15 @@ class ControllerTask extends BakeTask {
 		}
 
 		if (strtolower($wannaBakeCrud) === 'y') {
-			$actions = $this->bakeActions($controllerName, null, strtolower($wannaUseSession) === 'y');
+			$actions = $this->bakeActions($controllerName, NULL, strtolower($wannaUseSession) === 'y');
 		}
 		if (strtolower($wannaBakeAdminCrud) === 'y') {
 			$admin = $this->Project->getPrefix();
 			$actions .= $this->bakeActions($controllerName, $admin, strtolower($wannaUseSession) === 'y');
 		}
 
-		$baked = false;
-		if ($this->interactive === true) {
+		$baked = FALSE;
+		if ($this->interactive === TRUE) {
 			$this->confirmController($controllerName, $useDynamicScaffold, $helpers, $components);
 			$looksGood = $this->in(__d('cake_console', 'Look okay?'), array('y', 'n'), 'y');
 
@@ -219,18 +180,188 @@ class ControllerTask extends BakeTask {
 				$this->bakeTest($controllerName);
 			}
 		}
+
 		return $baked;
 	}
 
-/**
- * Confirm a to be baked controller with the user
- *
- * @param string $controllerName The name of the controller.
- * @param string $useDynamicScaffold Whether or not to use dynamic scaffolds.
- * @param array $helpers The list of helpers to include.
- * @param array $components The list of components to include.
- * @return void
- */
+	/**
+	 * Forces the user to specify the controller he wants to bake, and returns the selected controller name.
+	 *
+	 * @param string $useDbConfig Connection name to get a controller name for.
+	 *
+	 * @return string Controller name
+	 */
+	public function getName($useDbConfig = NULL) {
+		$controllers = $this->listAll($useDbConfig);
+		$enteredController = '';
+
+		while (!$enteredController) {
+			$enteredController = $this->in(__d('cake_console', "Enter a number from the list above,\ntype in the name of another controller, or 'q' to exit"), NULL, 'q');
+			if ($enteredController === 'q') {
+				$this->out(__d('cake_console', 'Exit'));
+
+				return $this->_stop();
+			}
+
+			if (!$enteredController || (int)$enteredController > count($controllers)) {
+				$this->err(__d('cake_console', "The Controller name you supplied was empty,\nor the number you selected was not an option. Please try again."));
+				$enteredController = '';
+			}
+		}
+
+		if ((int)$enteredController > 0 && (int)$enteredController <= count($controllers)) {
+			$controllerName = $controllers[(int)$enteredController - 1];
+		} else {
+			$controllerName = Inflector::camelize($enteredController);
+		}
+
+		return $controllerName;
+	}
+
+	/**
+	 * Outputs and gets the list of possible controllers from database
+	 *
+	 * @param string $useDbConfig Database configuration name
+	 *
+	 * @return array Set of controllers
+	 */
+	public function listAll($useDbConfig = NULL) {
+		if ($useDbConfig === NULL) {
+			$useDbConfig = $this->connection;
+		}
+		$this->__tables = $this->Model->getAllTables($useDbConfig);
+
+		if ($this->interactive) {
+			$this->out(__d('cake_console', 'Possible Controllers based on your current database:'));
+			$this->hr();
+			$this->_controllerNames = array();
+			$count = count($this->__tables);
+			for ($i = 0; $i < $count; $i++) {
+				$this->_controllerNames[] = $this->_controllerName($this->_modelName($this->__tables[$i]));
+				$this->out(sprintf("%2d. %s", $i + 1, $this->_controllerNames[$i]));
+			}
+
+			return $this->_controllerNames;
+		}
+
+		return $this->__tables;
+	}
+
+	/**
+	 * Interact with the user and ask about which methods (admin or regular they want to bake)
+	 *
+	 * @return array Array containing (bakeRegular, bakeAdmin) answers
+	 */
+	protected function _askAboutMethods() {
+		$wannaBakeCrud = $this->in(
+				__d('cake_console', "Would you like to create some basic class methods \n(index(), add(), view(), edit())?"),
+				array('y', 'n'), 'n'
+		);
+		$wannaBakeAdminCrud = $this->in(
+				__d('cake_console', "Would you like to create the basic class methods for admin routing?"),
+				array('y', 'n'), 'n'
+		);
+
+		return array($wannaBakeCrud, $wannaBakeAdminCrud);
+	}
+
+	/**
+	 * Interact with the user and get a list of additional helpers
+	 *
+	 * @return array Helpers that the user wants to use.
+	 */
+	public function doHelpers() {
+		return $this->_doPropertyChoices(
+				__d('cake_console', "Would you like this controller to use other helpers\nbesides HtmlHelper and FormHelper?"),
+				__d('cake_console', "Please provide a comma separated list of the other\nhelper names you'd like to use.\nExample: 'Text, Js, Time'")
+		);
+	}
+
+	/**
+	 * Common code for property choice handling.
+	 *
+	 * @param string $prompt  A yes/no question to precede the list
+	 * @param string $example A question for a comma separated list, with examples.
+	 *
+	 * @return array Array of values for property.
+	 */
+	protected function _doPropertyChoices($prompt, $example) {
+		$proceed = $this->in($prompt, array('y', 'n'), 'n');
+		$property = array();
+		if (strtolower($proceed) === 'y') {
+			$propertyList = $this->in($example);
+			$propertyListTrimmed = str_replace(' ', '', $propertyList);
+			$property = explode(',', $propertyListTrimmed);
+		}
+
+		return array_filter($property);
+	}
+
+	/**
+	 * Interact with the user and get a list of additional components
+	 *
+	 * @return array Components the user wants to use.
+	 */
+	public function doComponents() {
+		$components = array('Paginator', 'Flash');
+
+		return array_merge($components, $this->_doPropertyChoices(
+				__d('cake_console', "Would you like this controller to use other components\nbesides PaginatorComponent and FlashComponent?"),
+				__d('cake_console', "Please provide a comma separated list of the component names you'd like to use.\nExample: 'Acl, Security, RequestHandler'")
+		));
+	}
+
+	/**
+	 * Bake scaffold actions
+	 *
+	 * @param string $controllerName  Controller name
+	 * @param string $admin           Admin route to use
+	 * @param bool   $wannaUseSession Set to true to use sessions, false otherwise
+	 *
+	 * @return string Baked actions
+	 */
+	public function bakeActions($controllerName, $admin = NULL, $wannaUseSession = TRUE) {
+		$currentModelName = $modelImport = $this->_modelName($controllerName);
+		$plugin = $this->plugin;
+		if ($plugin) {
+			$plugin .= '.';
+		}
+		App::uses($modelImport, $plugin . 'Model');
+		if (!class_exists($modelImport)) {
+			$this->err(__d('cake_console', 'You must have a model for this class to build basic methods. Please try again.'));
+
+			return $this->_stop();
+		}
+
+		$modelObj = ClassRegistry::init($currentModelName);
+		$controllerPath = $this->_controllerPath($controllerName);
+		$pluralName = $this->_pluralName($currentModelName);
+		$singularName = Inflector::variable($currentModelName);
+		$singularHumanName = $this->_singularHumanName($controllerName);
+		$pluralHumanName = $this->_pluralName($controllerName);
+		$displayField = $modelObj->displayField;
+		$primaryKey = $modelObj->primaryKey;
+
+		$this->Template->set(compact(
+				'plugin', 'admin', 'controllerPath', 'pluralName', 'singularName',
+				'singularHumanName', 'pluralHumanName', 'modelObj', 'wannaUseSession', 'currentModelName',
+				'displayField', 'primaryKey'
+		));
+		$actions = $this->Template->generate('actions', 'controller_actions');
+
+		return $actions;
+	}
+
+	/**
+	 * Confirm a to be baked controller with the user
+	 *
+	 * @param string $controllerName     The name of the controller.
+	 * @param string $useDynamicScaffold Whether or not to use dynamic scaffolds.
+	 * @param array  $helpers            The list of helpers to include.
+	 * @param array  $components         The list of components to include.
+	 *
+	 * @return void
+	 */
 	public function confirmController($controllerName, $useDynamicScaffold, $helpers, $components) {
 		$this->out();
 		$this->hr();
@@ -243,8 +374,8 @@ class ControllerTask extends BakeTask {
 		}
 
 		$properties = array(
-			'helpers' => __d('cake_console', 'Helpers:'),
-			'components' => __d('cake_console', 'Components:'),
+				'helpers' => __d('cake_console', 'Helpers:'),
+				'components' => __d('cake_console', 'Components:'),
 		);
 
 		foreach ($properties as $var => $title) {
@@ -264,78 +395,25 @@ class ControllerTask extends BakeTask {
 		$this->hr();
 	}
 
-/**
- * Interact with the user and ask about which methods (admin or regular they want to bake)
- *
- * @return array Array containing (bakeRegular, bakeAdmin) answers
- */
-	protected function _askAboutMethods() {
-		$wannaBakeCrud = $this->in(
-			__d('cake_console', "Would you like to create some basic class methods \n(index(), add(), view(), edit())?"),
-			array('y', 'n'), 'n'
-		);
-		$wannaBakeAdminCrud = $this->in(
-			__d('cake_console', "Would you like to create the basic class methods for admin routing?"),
-			array('y', 'n'), 'n'
-		);
-		return array($wannaBakeCrud, $wannaBakeAdminCrud);
-	}
-
-/**
- * Bake scaffold actions
- *
- * @param string $controllerName Controller name
- * @param string $admin Admin route to use
- * @param bool $wannaUseSession Set to true to use sessions, false otherwise
- * @return string Baked actions
- */
-	public function bakeActions($controllerName, $admin = null, $wannaUseSession = true) {
-		$currentModelName = $modelImport = $this->_modelName($controllerName);
-		$plugin = $this->plugin;
-		if ($plugin) {
-			$plugin .= '.';
-		}
-		App::uses($modelImport, $plugin . 'Model');
-		if (!class_exists($modelImport)) {
-			$this->err(__d('cake_console', 'You must have a model for this class to build basic methods. Please try again.'));
-			return $this->_stop();
-		}
-
-		$modelObj = ClassRegistry::init($currentModelName);
-		$controllerPath = $this->_controllerPath($controllerName);
-		$pluralName = $this->_pluralName($currentModelName);
-		$singularName = Inflector::variable($currentModelName);
-		$singularHumanName = $this->_singularHumanName($controllerName);
-		$pluralHumanName = $this->_pluralName($controllerName);
-		$displayField = $modelObj->displayField;
-		$primaryKey = $modelObj->primaryKey;
-
-		$this->Template->set(compact(
-			'plugin', 'admin', 'controllerPath', 'pluralName', 'singularName',
-			'singularHumanName', 'pluralHumanName', 'modelObj', 'wannaUseSession', 'currentModelName',
-			'displayField', 'primaryKey'
-		));
-		$actions = $this->Template->generate('actions', 'controller_actions');
-		return $actions;
-	}
-
-/**
- * Assembles and writes a Controller file
- *
- * @param string $controllerName Controller name already pluralized and correctly cased.
- * @param string $actions Actions to add, or set the whole controller to use $scaffold (set $actions to 'scaffold')
- * @param array $helpers Helpers to use in controller
- * @param array $components Components to use in controller
- * @return string Baked controller
- */
-	public function bake($controllerName, $actions = '', $helpers = null, $components = null) {
+	/**
+	 * Assembles and writes a Controller file
+	 *
+	 * @param string $controllerName Controller name already pluralized and correctly cased.
+	 * @param string $actions        Actions to add, or set the whole controller to use $scaffold (set $actions to
+	 *                               'scaffold')
+	 * @param array  $helpers        Helpers to use in controller
+	 * @param array  $components     Components to use in controller
+	 *
+	 * @return string Baked controller
+	 */
+	public function bake($controllerName, $actions = '', $helpers = NULL, $components = NULL) {
 		$this->out("\n" . __d('cake_console', 'Baking controller class for %s...', $controllerName), 1, Shell::QUIET);
 
-		$isScaffold = ($actions === 'scaffold') ? true : false;
+		$isScaffold = ($actions === 'scaffold') ? TRUE : FALSE;
 
 		$this->Template->set(array(
-			'plugin' => $this->plugin,
-			'pluginPath' => empty($this->plugin) ? '' : $this->plugin . '.'
+				'plugin' => $this->plugin,
+				'pluginPath' => empty($this->plugin) ? '' : $this->plugin . '.'
 		));
 
 		if (!in_array('Paginator', (array)$components)) {
@@ -350,156 +428,98 @@ class ControllerTask extends BakeTask {
 		if ($this->createFile($filename, $contents)) {
 			return $contents;
 		}
-		return false;
+
+		return FALSE;
 	}
 
-/**
- * Assembles and writes a unit test file
- *
- * @param string $className Controller class name
- * @return string Baked test
- */
+	/**
+	 * Assembles and writes a unit test file
+	 *
+	 * @param string $className Controller class name
+	 *
+	 * @return string Baked test
+	 */
 	public function bakeTest($className) {
 		$this->Test->plugin = $this->plugin;
 		$this->Test->connection = $this->connection;
 		$this->Test->interactive = $this->interactive;
+
 		return $this->Test->bake('Controller', $className);
 	}
 
-/**
- * Interact with the user and get a list of additional helpers
- *
- * @return array Helpers that the user wants to use.
- */
-	public function doHelpers() {
-		return $this->_doPropertyChoices(
-			__d('cake_console', "Would you like this controller to use other helpers\nbesides HtmlHelper and FormHelper?"),
-			__d('cake_console', "Please provide a comma separated list of the other\nhelper names you'd like to use.\nExample: 'Text, Js, Time'")
-		);
-	}
+	/**
+	 * Bake All the controllers at once. Will only bake controllers for models that exist.
+	 *
+	 * @return void
+	 */
+	public function all() {
+		$this->interactive = FALSE;
+		$this->listAll($this->connection, FALSE);
+		ClassRegistry::config('Model', array('ds' => $this->connection));
+		$unitTestExists = $this->_checkUnitTest();
 
-/**
- * Interact with the user and get a list of additional components
- *
- * @return array Components the user wants to use.
- */
-	public function doComponents() {
-		$components = array('Paginator', 'Flash');
-		return array_merge($components, $this->_doPropertyChoices(
-			__d('cake_console', "Would you like this controller to use other components\nbesides PaginatorComponent and FlashComponent?"),
-			__d('cake_console', "Please provide a comma separated list of the component names you'd like to use.\nExample: 'Acl, Security, RequestHandler'")
-		));
-	}
-
-/**
- * Common code for property choice handling.
- *
- * @param string $prompt A yes/no question to precede the list
- * @param string $example A question for a comma separated list, with examples.
- * @return array Array of values for property.
- */
-	protected function _doPropertyChoices($prompt, $example) {
-		$proceed = $this->in($prompt, array('y', 'n'), 'n');
-		$property = array();
-		if (strtolower($proceed) === 'y') {
-			$propertyList = $this->in($example);
-			$propertyListTrimmed = str_replace(' ', '', $propertyList);
-			$property = explode(',', $propertyListTrimmed);
+		$admin = FALSE;
+		if (!empty($this->params['admin'])) {
+			$admin = $this->Project->getPrefix();
 		}
-		return array_filter($property);
-	}
 
-/**
- * Outputs and gets the list of possible controllers from database
- *
- * @param string $useDbConfig Database configuration name
- * @return array Set of controllers
- */
-	public function listAll($useDbConfig = null) {
-		if ($useDbConfig === null) {
-			$useDbConfig = $this->connection;
-		}
-		$this->__tables = $this->Model->getAllTables($useDbConfig);
-
-		if ($this->interactive) {
-			$this->out(__d('cake_console', 'Possible Controllers based on your current database:'));
-			$this->hr();
-			$this->_controllerNames = array();
-			$count = count($this->__tables);
-			for ($i = 0; $i < $count; $i++) {
-				$this->_controllerNames[] = $this->_controllerName($this->_modelName($this->__tables[$i]));
-				$this->out(sprintf("%2d. %s", $i + 1, $this->_controllerNames[$i]));
-			}
-			return $this->_controllerNames;
-		}
-		return $this->__tables;
-	}
-
-/**
- * Forces the user to specify the controller he wants to bake, and returns the selected controller name.
- *
- * @param string $useDbConfig Connection name to get a controller name for.
- * @return string Controller name
- */
-	public function getName($useDbConfig = null) {
-		$controllers = $this->listAll($useDbConfig);
-		$enteredController = '';
-
-		while (!$enteredController) {
-			$enteredController = $this->in(__d('cake_console', "Enter a number from the list above,\ntype in the name of another controller, or 'q' to exit"), null, 'q');
-			if ($enteredController === 'q') {
-				$this->out(__d('cake_console', 'Exit'));
-				return $this->_stop();
-			}
-
-			if (!$enteredController || (int)$enteredController > count($controllers)) {
-				$this->err(__d('cake_console', "The Controller name you supplied was empty,\nor the number you selected was not an option. Please try again."));
-				$enteredController = '';
+		$controllersCreated = 0;
+		foreach ($this->__tables as $table) {
+			$model = $this->_modelName($table);
+			$controller = $this->_controllerName($model);
+			App::uses($model, 'Model');
+			if (class_exists($model)) {
+				$actions = $this->bakeActions($controller);
+				if ($admin) {
+					$this->out(__d('cake_console', 'Adding %s methods', $admin));
+					$actions .= "\n" . $this->bakeActions($controller, $admin);
+				}
+				if ($this->bake($controller, $actions) && $unitTestExists) {
+					$this->bakeTest($controller);
+				}
+				$controllersCreated++;
 			}
 		}
 
-		if ((int)$enteredController > 0 && (int)$enteredController <= count($controllers)) {
-			$controllerName = $controllers[(int)$enteredController - 1];
-		} else {
-			$controllerName = Inflector::camelize($enteredController);
+		if (!$controllersCreated) {
+			$this->out(__d('cake_console', 'No Controllers were baked, Models need to exist before Controllers can be baked.'));
 		}
-		return $controllerName;
 	}
 
-/**
- * Gets the option parser instance and configures it.
- *
- * @return ConsoleOptionParser
- */
+	/**
+	 * Gets the option parser instance and configures it.
+	 *
+	 * @return ConsoleOptionParser
+	 */
 	public function getOptionParser() {
 		$parser = parent::getOptionParser();
 
 		$parser->description(
-			__d('cake_console', 'Bake a controller for a model. Using options you can bake public, admin or both.'
-		))->addArgument('name', array(
-			'help' => __d('cake_console', 'Name of the controller to bake. Can use Plugin.name to bake controllers into plugins.')
+				__d('cake_console', 'Bake a controller for a model. Using options you can bake public, admin or both.'
+				))->addArgument('name', array(
+				'help' => __d('cake_console', 'Name of the controller to bake. Can use Plugin.name to bake controllers into plugins.')
 		))->addOption('public', array(
-			'help' => __d('cake_console', 'Bake a controller with basic Crud actions (index, view, add, edit, delete).'),
-			'boolean' => true
+				'help' => __d('cake_console', 'Bake a controller with basic Crud actions (index, view, add, edit, delete).'),
+				'boolean' => TRUE
 		))->addOption('admin', array(
-			'help' => __d('cake_console', 'Bake a controller with Crud actions for one of the Routing.prefixes.'),
-			'boolean' => true
+				'help' => __d('cake_console', 'Bake a controller with Crud actions for one of the Routing.prefixes.'),
+				'boolean' => TRUE
 		))->addOption('plugin', array(
-			'short' => 'p',
-			'help' => __d('cake_console', 'Plugin to bake the controller into.')
+				'short' => 'p',
+				'help' => __d('cake_console', 'Plugin to bake the controller into.')
 		))->addOption('connection', array(
-			'short' => 'c',
-			'help' => __d('cake_console', 'The connection the controller\'s model is on.')
+				'short' => 'c',
+				'help' => __d('cake_console', 'The connection the controller\'s model is on.')
 		))->addOption('theme', array(
-			'short' => 't',
-			'help' => __d('cake_console', 'Theme to use when baking code.')
+				'short' => 't',
+				'help' => __d('cake_console', 'Theme to use when baking code.')
 		))->addOption('force', array(
-			'short' => 'f',
-			'help' => __d('cake_console', 'Force overwriting existing files without prompting.')
+				'short' => 'f',
+				'help' => __d('cake_console', 'Force overwriting existing files without prompting.')
 		))->addSubcommand('all', array(
-			'help' => __d('cake_console', 'Bake all controllers with CRUD methods.')
+				'help' => __d('cake_console', 'Bake all controllers with CRUD methods.')
 		))->epilog(
-			__d('cake_console', 'Omitting all arguments and options will enter into an interactive mode.')
+				__d('cake_console', 'Omitting all arguments and options will enter into an interactive mode.')
 		);
 
 		return $parser;

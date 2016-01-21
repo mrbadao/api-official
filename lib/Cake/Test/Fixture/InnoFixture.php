@@ -23,27 +23,27 @@
  */
 class InnoFixture extends CakeTestFixture {
 
-/**
- * fields property
- *
- * @var array
- */
+	/**
+	 * fields property
+	 *
+	 * @var array
+	 */
 	public $fields = array(
-		'id' => array('type' => 'integer', 'key' => 'primary'),
-		'name' => array('type' => 'string', 'null' => true),
-		'tableParameters' => array(
-			'engine' => 'InnoDB'
-		)
+			'id' => array('type' => 'integer', 'key' => 'primary'),
+			'name' => array('type' => 'string', 'null' => TRUE),
+			'tableParameters' => array(
+					'engine' => 'InnoDB'
+			)
 	);
 
-/**
- * records property
- *
- * @var array
- */
+	/**
+	 * records property
+	 *
+	 * @var array
+	 */
 	public $records = array(
-		array('name' => 'Name 1'),
-		array('name' => 'Name 2'),
+			array('name' => 'Name 1'),
+			array('name' => 'Name 2'),
 	);
 
 }

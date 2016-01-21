@@ -28,24 +28,25 @@ App::uses('Hash', 'Utility');
  * Enables objects to easily tie into an ACL system
  *
  * @package       Cake.Model.Behavior
- * @link http://book.cakephp.org/2.0/en/core-libraries/behaviors/acl.html
+ * @link          http://book.cakephp.org/2.0/en/core-libraries/behaviors/acl.html
  */
 class AclBehavior extends ModelBehavior {
 
-/**
- * Maps ACL type options to ACL models
- *
- * @var array
- */
+	/**
+	 * Maps ACL type options to ACL models
+	 *
+	 * @var array
+	 */
 	protected $_typeMaps = array('requester' => 'Aro', 'controlled' => 'Aco', 'both' => array('Aro', 'Aco'));
 
-/**
- * Sets up the configuration for the model, and loads ACL models if they haven't been already
- *
- * @param Model $model Model using this behavior.
- * @param array $config Configuration options.
- * @return void
- */
+	/**
+	 * Sets up the configuration for the model, and loads ACL models if they haven't been already
+	 *
+	 * @param Model $model  Model using this behavior.
+	 * @param array $config Configuration options.
+	 *
+	 * @return void
+	 */
 	public function setup(Model $model, $config = array()) {
 		if (isset($config[0])) {
 			$config['type'] = $config[0];
@@ -67,37 +68,15 @@ class AclBehavior extends ModelBehavior {
 		}
 	}
 
-/**
- * Retrieves the Aro/Aco node for this model
- *
- * @param Model $model Model using this behavior.
- * @param string|array|Model $ref Array with 'model' and 'foreign_key', model object, or string value
- * @param string $type Only needed when Acl is set up as 'both', specify 'Aro' or 'Aco' to get the correct node
- * @return array
- * @link http://book.cakephp.org/2.0/en/core-libraries/behaviors/acl.html#node
- */
-	public function node(Model $model, $ref = null, $type = null) {
-		if (empty($type)) {
-			$type = $this->_typeMaps[$this->settings[$model->name]['type']];
-			if (is_array($type)) {
-				trigger_error(__d('cake_dev', 'AclBehavior is setup with more then one type, please specify type parameter for node()'), E_USER_WARNING);
-				return array();
-			}
-		}
-		if (empty($ref)) {
-			$ref = array('model' => $model->name, 'foreign_key' => $model->id);
-		}
-		return $model->{$type}->node($ref);
-	}
-
-/**
- * Creates a new ARO/ACO node bound to this record
- *
- * @param Model $model Model using this behavior.
- * @param bool $created True if this is a new record
- * @param array $options Options passed from Model::save().
- * @return void
- */
+	/**
+	 * Creates a new ARO/ACO node bound to this record
+	 *
+	 * @param Model $model   Model using this behavior.
+	 * @param bool  $created True if this is a new record
+	 * @param array $options Options passed from Model::save().
+	 *
+	 * @return void
+	 */
 	public function afterSave(Model $model, $created, $options = array()) {
 		$types = $this->_typeMaps[$this->settings[$model->name]['type']];
 		if (!is_array($types)) {
@@ -109,32 +88,60 @@ class AclBehavior extends ModelBehavior {
 				$parent = $this->node($model, $parent, $type);
 			}
 			$data = array(
-				'parent_id' => isset($parent[0][$type]['id']) ? $parent[0][$type]['id'] : null,
-				'model' => $model->name,
-				'foreign_key' => $model->id
+					'parent_id' => isset($parent[0][$type]['id']) ? $parent[0][$type]['id'] : NULL,
+					'model' => $model->name,
+					'foreign_key' => $model->id
 			);
 			if (!$created) {
-				$node = $this->node($model, null, $type);
-				$data['id'] = isset($node[0][$type]['id']) ? $node[0][$type]['id'] : null;
+				$node = $this->node($model, NULL, $type);
+				$data['id'] = isset($node[0][$type]['id']) ? $node[0][$type]['id'] : NULL;
 			}
 			$model->{$type}->create();
 			$model->{$type}->save($data);
 		}
 	}
 
-/**
- * Destroys the ARO/ACO node bound to the deleted record
- *
- * @param Model $model Model using this behavior.
- * @return void
- */
+	/**
+	 * Retrieves the Aro/Aco node for this model
+	 *
+	 * @param Model              $model Model using this behavior.
+	 * @param string|array|Model $ref   Array with 'model' and 'foreign_key', model object, or string value
+	 * @param string             $type  Only needed when Acl is set up as 'both', specify 'Aro' or 'Aco' to get the
+	 *                                  correct node
+	 *
+	 * @return array
+	 * @link http://book.cakephp.org/2.0/en/core-libraries/behaviors/acl.html#node
+	 */
+	public function node(Model $model, $ref = NULL, $type = NULL) {
+		if (empty($type)) {
+			$type = $this->_typeMaps[$this->settings[$model->name]['type']];
+			if (is_array($type)) {
+				trigger_error(__d('cake_dev', 'AclBehavior is setup with more then one type, please specify type parameter for node()'), E_USER_WARNING);
+
+				return array();
+			}
+		}
+		if (empty($ref)) {
+			$ref = array('model' => $model->name, 'foreign_key' => $model->id);
+		}
+
+		return $model->{$type}->node($ref);
+	}
+
+	/**
+	 * Destroys the ARO/ACO node bound to the deleted record
+	 *
+	 * @param Model $model Model using this behavior.
+	 *
+	 * @return void
+	 */
 	public function afterDelete(Model $model) {
 		$types = $this->_typeMaps[$this->settings[$model->name]['type']];
 		if (!is_array($types)) {
 			$types = array($types);
 		}
 		foreach ($types as $type) {
-			$node = Hash::extract($this->node($model, null, $type), "0.{$type}.id");
+			$node = Hash::extract($this->node($model, NULL, $type), "0.{$type}.id");
 			if (!empty($node)) {
 				$model->{$type}->delete($node);
 			}

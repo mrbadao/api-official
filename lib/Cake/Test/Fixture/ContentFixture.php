@@ -25,25 +25,25 @@ class ContentFixture extends CakeTestFixture {
 
 	public $table = 'Content';
 
-/**
- * fields property
- *
- * @var array
- */
+	/**
+	 * fields property
+	 *
+	 * @var array
+	 */
 	public $fields = array(
-		'iContentId' => array('type' => 'integer', 'key' => 'primary'),
-		'cDescription' => array('type' => 'string', 'length' => 50, 'null' => true)
+			'iContentId' => array('type' => 'integer', 'key' => 'primary'),
+			'cDescription' => array('type' => 'string', 'length' => 50, 'null' => TRUE)
 	);
 
-/**
- * records property
- *
- * @var array
- */
+	/**
+	 * records property
+	 *
+	 * @var array
+	 */
 	public $records = array(
-		array('cDescription' => 'Test Content 1'),
-		array('cDescription' => 'Test Content 2'),
-		array('cDescription' => 'Test Content 3'),
-		array('cDescription' => 'Test Content 4')
+			array('cDescription' => 'Test Content 1'),
+			array('cDescription' => 'Test Content 2'),
+			array('cDescription' => 'Test Content 3'),
+			array('cDescription' => 'Test Content 4')
 	);
 }

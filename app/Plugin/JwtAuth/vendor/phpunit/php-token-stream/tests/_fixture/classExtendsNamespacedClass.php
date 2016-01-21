@@ -1,12 +1,12 @@
 <?php
 
-	namespace Foo\Bar;
+namespace Foo\Bar;
 
-	class Baz {
-	}
+class Baz {
+}
 
-	namespace Other\Space;
+namespace Other\Space;
 
-	class Extender extends \Foo\Bar\Baz {
-	}
+class Extender extends \Foo\Bar\Baz {
+}
 

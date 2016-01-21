@@ -29,72 +29,72 @@ App::uses('DbConfigTask', 'Console/Command/Task');
  */
 class DbConfigTaskTest extends CakeTestCase {
 
-/**
- * setUp method
- *
- * @return void
- */
+	/**
+	 * setUp method
+	 *
+	 * @return void
+	 */
 	public function setUp() {
 		parent::setUp();
-		$out = $this->getMock('ConsoleOutput', array(), array(), '', false);
-		$in = $this->getMock('ConsoleInput', array(), array(), '', false);
+		$out = $this->getMock('ConsoleOutput', array(), array(), '', FALSE);
+		$in = $this->getMock('ConsoleInput', array(), array(), '', FALSE);
 
 		$this->Task = $this->getMock('DbConfigTask',
-			array('in', 'out', 'err', 'hr', 'createFile', '_stop', '_checkUnitTest', '_verify'),
-			array($out, $out, $in)
+				array('in', 'out', 'err', 'hr', 'createFile', '_stop', '_checkUnitTest', '_verify'),
+				array($out, $out, $in)
 		);
 
 		$this->Task->path = APP . 'Config' . DS;
 	}
 
-/**
- * tearDown method
- *
- * @return void
- */
+	/**
+	 * tearDown method
+	 *
+	 * @return void
+	 */
 	public function tearDown() {
 		parent::tearDown();
 		unset($this->Task);
 	}
 
-/**
- * Test the getConfig method.
- *
- * @return void
- */
+	/**
+	 * Test the getConfig method.
+	 *
+	 * @return void
+	 */
 	public function testGetConfig() {
 		$this->Task->expects($this->any())
-			->method('in')
-			->will($this->returnValue('test'));
+				->method('in')
+				->will($this->returnValue('test'));
 
 		$result = $this->Task->getConfig();
 		$this->assertEquals('test', $result);
 	}
 
-/**
- * test that initialize sets the path up.
- *
- * @return void
- */
+	/**
+	 * test that initialize sets the path up.
+	 *
+	 * @return void
+	 */
 	public function testInitialize() {
 		$this->Task->initialize();
 		$this->assertFalse(empty($this->Task->path));
 		$this->assertEquals(APP . 'Config' . DS, $this->Task->path);
 	}
 
-/**
- * test execute and by extension _interactive
- *
- * @return void
- */
+	/**
+	 * test execute and by extension _interactive
+	 *
+	 * @return void
+	 */
 	public function testExecuteIntoInteractive() {
 		$this->Task->initialize();
 
-		$out = $this->getMock('ConsoleOutput', array(), array(), '', false);
-		$in = $this->getMock('ConsoleInput', array(), array(), '', false);
+		$out = $this->getMock('ConsoleOutput', array(), array(), '', FALSE);
+		$in = $this->getMock('ConsoleInput', array(), array(), '', FALSE);
 		$this->Task = $this->getMock(
-			'DbConfigTask',
-			array('in', '_stop', 'createFile', 'bake'), array($out, $out, $in)
+				'DbConfigTask',
+				array('in', '_stop', 'createFile', 'bake'), array($out, $out, $in)
 		);
 
 		$this->Task->expects($this->once())->method('_stop');
@@ -111,21 +111,21 @@ class DbConfigTaskTest extends CakeTestCase {
 		$this->Task->expects($this->at(13))->method('in')->will($this->returnValue('y')); //looks good
 		$this->Task->expects($this->at(14))->method('in')->will($this->returnValue('n')); //another
 		$this->Task->expects($this->at(15))->method('bake')
-			->with(array(
-				array(
-					'name' => 'default',
-					'datasource' => 'mysql',
-					'persistent' => 'false',
-					'host' => 'localhost',
-					'login' => 'root',
-					'password' => 'password',
-					'database' => 'cake_test',
-					'prefix' => null,
-					'encoding' => null,
-					'port' => '',
-					'schema' => null
-				)
-			));
+				->with(array(
+						array(
+								'name' => 'default',
+								'datasource' => 'mysql',
+								'persistent' => 'false',
+								'host' => 'localhost',
+								'login' => 'root',
+								'password' => 'password',
+								'database' => 'cake_test',
+								'prefix' => NULL,
+								'encoding' => NULL,
+								'port' => '',
+								'schema' => NULL
+						)
+				));
 
 		$this->Task->execute();
 	}

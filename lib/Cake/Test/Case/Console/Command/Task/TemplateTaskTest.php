@@ -31,37 +31,37 @@ App::uses('TemplateTask', 'Console/Command/Task');
  */
 class TemplateTaskTest extends CakeTestCase {
 
-/**
- * setUp method
- *
- * @return void
- */
+	/**
+	 * setUp method
+	 *
+	 * @return void
+	 */
 	public function setUp() {
 		parent::setUp();
-		$out = $this->getMock('ConsoleOutput', array(), array(), '', false);
-		$in = $this->getMock('ConsoleInput', array(), array(), '', false);
+		$out = $this->getMock('ConsoleOutput', array(), array(), '', FALSE);
+		$in = $this->getMock('ConsoleInput', array(), array(), '', FALSE);
 
 		$this->Task = $this->getMock('TemplateTask',
-			array('in', 'err', 'createFile', '_stop', 'clear'),
-			array($out, $out, $in)
+				array('in', 'err', 'createFile', '_stop', 'clear'),
+				array($out, $out, $in)
 		);
 	}
 
-/**
- * tearDown method
- *
- * @return void
- */
+	/**
+	 * tearDown method
+	 *
+	 * @return void
+	 */
 	public function tearDown() {
 		parent::tearDown();
 		unset($this->Task);
 	}
 
-/**
- * test that set sets variables
- *
- * @return void
- */
+	/**
+	 * test that set sets variables
+	 *
+	 * @return void
+	 */
 	public function testSet() {
 		$this->Task->set('one', 'two');
 		$this->assertTrue(isset($this->Task->templateVars['one']));
@@ -80,23 +80,23 @@ class TemplateTaskTest extends CakeTestCase {
 		$this->assertEquals($expected, $this->Task->templateVars);
 	}
 
-/**
- * test finding themes installed in
- *
- * @return void
- */
+	/**
+	 * test finding themes installed in
+	 *
+	 * @return void
+	 */
 	public function testFindingInstalledThemesForBake() {
 		$consoleLibs = CAKE . 'Console' . DS;
 		$this->Task->initialize();
 		$this->assertEquals($this->Task->templatePaths['default'], $consoleLibs . 'Templates' . DS . 'default' . DS);
 	}
 
-/**
- * test getting the correct theme name. Ensure that with only one theme, or a theme param
- * that the user is not bugged. If there are more, find and return the correct theme name
- *
- * @return void
- */
+	/**
+	 * test getting the correct theme name. Ensure that with only one theme, or a theme param
+	 * that the user is not bugged. If there are more, find and return the correct theme name
+	 *
+	 * @return void
+	 */
 	public function testGetThemePath() {
 		$defaultTheme = CAKE . 'Console' . DS . 'Templates' . DS . 'default' . DS;
 		$this->Task->templatePaths = array('default' => $defaultTheme);
@@ -117,16 +117,16 @@ class TemplateTaskTest extends CakeTestCase {
 		$this->assertEquals('other', $this->Task->params['theme']);
 	}
 
-/**
- * test generate
- *
- * @return void
- */
+	/**
+	 * test generate
+	 *
+	 * @return void
+	 */
 	public function testGenerate() {
 		App::build(array(
-			'Console' => array(
-				CAKE . 'Test' . DS . 'test_app' . DS . 'Console' . DS
-			)
+				'Console' => array(
+						CAKE . 'Test' . DS . 'test_app' . DS . 'Console' . DS
+				)
 		));
 		$this->Task->initialize();
 		$this->Task->expects($this->any())->method('in')->will($this->returnValue(1));
@@ -136,27 +136,27 @@ class TemplateTaskTest extends CakeTestCase {
 		$this->assertTextEquals($expected, $result);
 	}
 
-/**
- * test generate with a missing template in the chosen theme.
- * ensure fallback to default works.
- *
- * @return void
- */
+	/**
+	 * test generate with a missing template in the chosen theme.
+	 * ensure fallback to default works.
+	 *
+	 * @return void
+	 */
 	public function testGenerateWithTemplateFallbacks() {
 		App::build(array(
-			'Console' => array(
-				CAKE . 'Test' . DS . 'test_app' . DS . 'Console' . DS,
-				CAKE_CORE_INCLUDE_PATH . DS . 'console' . DS
-			)
+				'Console' => array(
+						CAKE . 'Test' . DS . 'test_app' . DS . 'Console' . DS,
+						CAKE_CORE_INCLUDE_PATH . DS . 'console' . DS
+				)
 		));
 		$this->Task->initialize();
 		$this->Task->params['theme'] = 'test';
 		$this->Task->set(array(
-			'model' => 'Article',
-			'table' => 'articles',
-			'import' => false,
-			'records' => false,
-			'schema' => ''
+				'model' => 'Article',
+				'table' => 'articles',
+				'import' => FALSE,
+				'records' => FALSE,
+				'schema' => ''
 		));
 		$result = $this->Task->generate('classes', 'fixture');
 		$this->assertRegExp('/ArticleFixture extends CakeTestFixture/', $result);

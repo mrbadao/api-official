@@ -24,54 +24,60 @@ App::uses('HttpResponse', 'Network/Http');
  */
 class TestHttpResponse extends HttpResponse {
 
-/**
- * Convenience method for testing protected method
- *
- * @param array $header Header as an indexed array (field => value)
- * @return array Parsed header
- */
+	/**
+	 * Convenience method for testing protected method
+	 *
+	 * @param array $header Header as an indexed array (field => value)
+	 *
+	 * @return array Parsed header
+	 */
 	public function parseHeader($header) {
 		return parent::_parseHeader($header);
 	}
 
-/**
- * Convenience method for testing protected method
- *
- * @param string $body A string containing the body to decode
- * @param bool|string $encoding Can be false in case no encoding is being used, or a string representing the encoding
- * @return mixed Array or false
- */
+	/**
+	 * Convenience method for testing protected method
+	 *
+	 * @param string      $body     A string containing the body to decode
+	 * @param bool|string $encoding Can be false in case no encoding is being used, or a string representing the
+	 *                              encoding
+	 *
+	 * @return mixed Array or false
+	 */
 	public function decodeBody($body, $encoding = 'chunked') {
 		return parent::_decodeBody($body, $encoding);
 	}
 
-/**
- * Convenience method for testing protected method
- *
- * @param string $body A string containing the chunked body to decode
- * @return mixed Array or false
- */
+	/**
+	 * Convenience method for testing protected method
+	 *
+	 * @param string $body A string containing the chunked body to decode
+	 *
+	 * @return mixed Array or false
+	 */
 	public function decodeChunkedBody($body) {
 		return parent::_decodeChunkedBody($body);
 	}
 
-/**
- * Convenience method for testing protected method
- *
- * @param string $token Token to unescape
- * @return string Unescaped token
- */
-	public function unescapeToken($token, $chars = null) {
+	/**
+	 * Convenience method for testing protected method
+	 *
+	 * @param string $token Token to unescape
+	 *
+	 * @return string Unescaped token
+	 */
+	public function unescapeToken($token, $chars = NULL) {
 		return parent::_unescapeToken($token, $chars);
 	}
 
-/**
- * Convenience method for testing protected method
- *
- * @param bool $hex true to get them as HEX values, false otherwise
- * @return array Escape chars
- */
-	public function tokenEscapeChars($hex = true, $chars = null) {
+	/**
+	 * Convenience method for testing protected method
+	 *
+	 * @param bool $hex true to get them as HEX values, false otherwise
+	 *
+	 * @return array Escape chars
+	 */
+	public function tokenEscapeChars($hex = TRUE, $chars = NULL) {
 		return parent::_tokenEscapeChars($hex, $chars);
 	}
 
@@ -84,55 +90,69 @@ class TestHttpResponse extends HttpResponse {
  */
 class HttpResponseTest extends CakeTestCase {
 
-/**
- * This function sets up a HttpResponse
- *
- * @return void
- */
+	/**
+	 * data provider function for testInvalidParseResponseData
+	 *
+	 * @return array
+	 */
+	public static function invalidParseResponseDataProvider() {
+		return array(
+				array(array('foo' => 'bar')),
+				array(TRUE),
+				array("HTTP Foo\r\nBar: La"),
+				array('HTTP/1.1 TEST ERROR')
+		);
+	}
+
+	/**
+	 * This function sets up a HttpResponse
+	 *
+	 * @return void
+	 */
 	public function setUp() {
 		parent::setUp();
 		$this->HttpResponse = new TestHttpResponse();
 	}
 
-/**
- * testBody
- *
- * @return void
- */
+	/**
+	 * testBody
+	 *
+	 * @return void
+	 */
 	public function testBody() {
 		$this->HttpResponse->body = 'testing';
 		$this->assertEquals('testing', $this->HttpResponse->body());
 
-		$this->HttpResponse->body = null;
+		$this->HttpResponse->body = NULL;
 		$this->assertSame($this->HttpResponse->body(), '');
 	}
 
-/**
- * testToString
- *
- * @return void
- */
+	/**
+	 * testToString
+	 *
+	 * @return void
+	 */
 	public function testToString() {
 		$this->HttpResponse->body = 'other test';
 		$this->assertEquals('other test', $this->HttpResponse->body());
 		$this->assertEquals('other test', (string)$this->HttpResponse);
 		$this->assertTrue(strpos($this->HttpResponse, 'test') > 0);
 
-		$this->HttpResponse->body = null;
+		$this->HttpResponse->body = NULL;
 		$this->assertEquals('', (string)$this->HttpResponse);
 	}
 
-/**
- * testGetHeader
- *
- * @return void
- */
+	/**
+	 * testGetHeader
+	 *
+	 * @return void
+	 */
 	public function testGetHeader() {
 		$this->HttpResponse->headers = array(
-			'foo' => 'Bar',
-			'Some' => 'ok',
-			'HeAdEr' => 'value',
-			'content-Type' => 'text/plain'
+				'foo' => 'Bar',
+				'Some' => 'ok',
+				'HeAdEr' => 'value',
+				'content-Type' => 'text/plain'
 		);
 
 		$this->assertEquals('Bar', $this->HttpResponse->getHeader('foo'));
@@ -142,15 +162,15 @@ class HttpResponseTest extends CakeTestCase {
 		$this->assertEquals('text/plain', $this->HttpResponse->getHeader('Content-Type'));
 		$this->assertNull($this->HttpResponse->getHeader(0));
 
-		$this->assertEquals('Bar', $this->HttpResponse->getHeader('foo', false));
+		$this->assertEquals('Bar', $this->HttpResponse->getHeader('foo', FALSE));
 		$this->assertEquals('not from class', $this->HttpResponse->getHeader('foo', array('foo' => 'not from class')));
 	}
 
-/**
- * testIsOk
- *
- * @return void
- */
+	/**
+	 * testIsOk
+	 *
+	 * @return void
+	 */
 	public function testIsOk() {
 		$this->HttpResponse->code = 0;
 		$this->assertFalse($this->HttpResponse->isOk());
@@ -188,11 +208,11 @@ class HttpResponseTest extends CakeTestCase {
 		$this->assertFalse($this->HttpResponse->isOk());
 	}
 
-/**
- * testIsRedirect
- *
- * @return void
- */
+	/**
+	 * testIsRedirect
+	 *
+	 * @return void
+	 */
 	public function testIsRedirect() {
 		$this->HttpResponse->code = 0;
 		$this->assertFalse($this->HttpResponse->isRedirect());
@@ -224,96 +244,96 @@ class HttpResponseTest extends CakeTestCase {
 		$this->assertTrue($this->HttpResponse->isRedirect());
 	}
 
-/**
- * Test that HttpSocket::parseHeader can take apart a given (and valid) $header string and turn it into an array.
- *
- * @return void
- */
+	/**
+	 * Test that HttpSocket::parseHeader can take apart a given (and valid) $header string and turn it into an array.
+	 *
+	 * @return void
+	 */
 	public function testParseHeader() {
 		$r = $this->HttpResponse->parseHeader(array('foo' => 'Bar', 'fOO-bAr' => 'quux'));
 		$this->assertEquals(array('foo' => 'Bar', 'fOO-bAr' => 'quux'), $r);
 
-		$r = $this->HttpResponse->parseHeader(true);
-		$this->assertEquals(false, $r);
+		$r = $this->HttpResponse->parseHeader(TRUE);
+		$this->assertEquals(FALSE, $r);
 
 		$header = "Host: cakephp.org\t\r\n";
 		$r = $this->HttpResponse->parseHeader($header);
 		$expected = array(
-			'Host' => 'cakephp.org'
+				'Host' => 'cakephp.org'
 		);
 		$this->assertEquals($expected, $r);
 
 		$header = "Date:Sat, 07 Apr 2007 10:10:25 GMT\r\nX-Powered-By: PHP/5.1.2\r\n";
 		$r = $this->HttpResponse->parseHeader($header);
 		$expected = array(
-			'Date' => 'Sat, 07 Apr 2007 10:10:25 GMT',
-			'X-Powered-By' => 'PHP/5.1.2'
+				'Date' => 'Sat, 07 Apr 2007 10:10:25 GMT',
+				'X-Powered-By' => 'PHP/5.1.2'
 		);
 		$this->assertEquals($expected, $r);
 
 		$header = "people: Jim,John\r\nfoo-LAND: Bar\r\ncAKe-PHP: rocks\r\n";
 		$r = $this->HttpResponse->parseHeader($header);
 		$expected = array(
-			'people' => 'Jim,John',
-			'foo-LAND' => 'Bar',
-			'cAKe-PHP' => 'rocks'
+				'people' => 'Jim,John',
+				'foo-LAND' => 'Bar',
+				'cAKe-PHP' => 'rocks'
 		);
 		$this->assertEquals($expected, $r);
 
 		$header = "People: Jim,John,Tim\r\nPeople: Lisa,Tina,Chelsea\r\n";
 		$r = $this->HttpResponse->parseHeader($header);
 		$expected = array(
-			'People' => array('Jim,John,Tim', 'Lisa,Tina,Chelsea')
+				'People' => array('Jim,John,Tim', 'Lisa,Tina,Chelsea')
 		);
 		$this->assertEquals($expected, $r);
 
 		$header = "Multi-Line: I am a \r\nmulti line\t\r\nfield value.\r\nSingle-Line: I am not\r\n";
 		$r = $this->HttpResponse->parseHeader($header);
 		$expected = array(
-			'Multi-Line' => "I am a\r\nmulti line\r\nfield value.",
-			'Single-Line' => 'I am not'
+				'Multi-Line' => "I am a\r\nmulti line\r\nfield value.",
+				'Single-Line' => 'I am not'
 		);
 		$this->assertEquals($expected, $r);
 
 		$header = "Esc\"@\"ped: value\r\n";
 		$r = $this->HttpResponse->parseHeader($header);
 		$expected = array(
-			'Esc@ped' => 'value'
+				'Esc@ped' => 'value'
 		);
 		$this->assertEquals($expected, $r);
 	}
 
-/**
- * testParseResponse method
- *
- * @return void
- */
+	/**
+	 * testParseResponse method
+	 *
+	 * @return void
+	 */
 	public function testParseResponse() {
 		$tests = array(
-			'simple-request' => array(
-				'response' => array(
-					'status-line' => "HTTP/1.x 200 OK\r\n",
-					'header' => "Date: Mon, 16 Apr 2007 04:14:16 GMT\r\nServer: CakeHttp Server\r\n",
-					'body' => "<h1>Hello World</h1>\r\n<p>It's good to be html</p>"
+				'simple-request' => array(
+						'response' => array(
+								'status-line' => "HTTP/1.x 200 OK\r\n",
+								'header' => "Date: Mon, 16 Apr 2007 04:14:16 GMT\r\nServer: CakeHttp Server\r\n",
+								'body' => "<h1>Hello World</h1>\r\n<p>It's good to be html</p>"
+						),
+						'expectations' => array(
+								'httpVersion' => 'HTTP/1.x',
+								'code' => 200,
+								'reasonPhrase' => 'OK',
+								'headers' => array('Date' => 'Mon, 16 Apr 2007 04:14:16 GMT', 'Server' => 'CakeHttp Server'),
+								'body' => "<h1>Hello World</h1>\r\n<p>It's good to be html</p>"
+						)
 				),
-				'expectations' => array(
-					'httpVersion' => 'HTTP/1.x',
-					'code' => 200,
-					'reasonPhrase' => 'OK',
-					'headers' => array('Date' => 'Mon, 16 Apr 2007 04:14:16 GMT', 'Server' => 'CakeHttp Server'),
-					'body' => "<h1>Hello World</h1>\r\n<p>It's good to be html</p>"
+				'no-header' => array(
+						'response' => array(
+								'status-line' => "HTTP/1.x 404 OK\r\n",
+								'header' => NULL
+						),
+						'expectations' => array(
+								'code' => 404,
+								'headers' => array()
+						)
 				)
-			),
-			'no-header' => array(
-				'response' => array(
-					'status-line' => "HTTP/1.x 404 OK\r\n",
-					'header' => null
-				),
-				'expectations' => array(
-					'code' => 404,
-					'headers' => array()
-				)
-			)
 		);
 
 		$testResponse = array();
@@ -335,47 +355,33 @@ class HttpResponseTest extends CakeTestCase {
 		}
 	}
 
-/**
- * data provider function for testInvalidParseResponseData
- *
- * @return array
- */
-	public static function invalidParseResponseDataProvider() {
-		return array(
-			array(array('foo' => 'bar')),
-			array(true),
-			array("HTTP Foo\r\nBar: La"),
-			array('HTTP/1.1 TEST ERROR')
-		);
-	}
-
-/**
- * testInvalidParseResponseData
- *
- * @dataProvider invalidParseResponseDataProvider
- * @expectedException SocketException
- * @return void
- */
+	/**
+	 * testInvalidParseResponseData
+	 *
+	 * @dataProvider invalidParseResponseDataProvider
+	 * @expectedException SocketException
+	 * @return void
+	 */
 	public function testInvalidParseResponseData($value) {
 		$this->HttpResponse->parseResponse($value);
 	}
 
-/**
- * testDecodeBody method
- *
- * @return void
- */
+	/**
+	 * testDecodeBody method
+	 *
+	 * @return void
+	 */
 	public function testDecodeBody() {
-		$r = $this->HttpResponse->decodeBody(true);
-		$this->assertEquals(false, $r);
+		$r = $this->HttpResponse->decodeBody(TRUE);
+		$this->assertEquals(FALSE, $r);
 
-		$r = $this->HttpResponse->decodeBody('Foobar', false);
-		$this->assertEquals(array('body' => 'Foobar', 'header' => false), $r);
+		$r = $this->HttpResponse->decodeBody('Foobar', FALSE);
+		$this->assertEquals(array('body' => 'Foobar', 'header' => FALSE), $r);
 
 		$encoding = 'chunked';
 		$sample = array(
-			'encoded' => "19\r\nThis is a chunked message\r\n0\r\n",
-			'decoded' => array('body' => "This is a chunked message", 'header' => false)
+				'encoded' => "19\r\nThis is a chunked message\r\n0\r\n",
+				'decoded' => array('body' => "This is a chunked message", 'header' => FALSE)
 		);
 
 		$r = $this->HttpResponse->decodeBody($sample['encoded'], $encoding);
@@ -383,50 +389,50 @@ class HttpResponseTest extends CakeTestCase {
 
 		$encoding = 'chunked';
 		$sample = array(
-			'encoded' => "19\nThis is a chunked message\r\n0\n",
-			'decoded' => array('body' => "This is a chunked message", 'header' => false)
+				'encoded' => "19\nThis is a chunked message\r\n0\n",
+				'decoded' => array('body' => "This is a chunked message", 'header' => FALSE)
 		);
 
 		$r = $this->HttpResponse->decodeBody($sample['encoded'], $encoding);
 		$this->assertEquals($r, $sample['decoded'], 'Inconsistent line terminators should be tolerated.');
 	}
 
-/**
- * testDecodeFooCoded
- *
- * @return void
- */
+	/**
+	 * testDecodeFooCoded
+	 *
+	 * @return void
+	 */
 	public function testDecodeFooCoded() {
-		$r = $this->HttpResponse->decodeBody(true);
-		$this->assertEquals(false, $r);
+		$r = $this->HttpResponse->decodeBody(TRUE);
+		$this->assertEquals(FALSE, $r);
 
-		$r = $this->HttpResponse->decodeBody('Foobar', false);
-		$this->assertEquals(array('body' => 'Foobar', 'header' => false), $r);
+		$r = $this->HttpResponse->decodeBody('Foobar', FALSE);
+		$this->assertEquals(array('body' => 'Foobar', 'header' => FALSE), $r);
 
 		$encoding = 'foo-bar';
 		$sample = array(
-			'encoded' => '!Foobar!',
-			'decoded' => array('body' => '!Foobar!', 'header' => false),
+				'encoded' => '!Foobar!',
+				'decoded' => array('body' => '!Foobar!', 'header' => FALSE),
 		);
 
 		$r = $this->HttpResponse->decodeBody($sample['encoded'], $encoding);
 		$this->assertEquals($r, $sample['decoded']);
 	}
 
-/**
- * testDecodeChunkedBody method
- *
- * @return void
- */
+	/**
+	 * testDecodeChunkedBody method
+	 *
+	 * @return void
+	 */
 	public function testDecodeChunkedBody() {
-		$r = $this->HttpResponse->decodeChunkedBody(true);
-		$this->assertEquals(false, $r);
+		$r = $this->HttpResponse->decodeChunkedBody(TRUE);
+		$this->assertEquals(FALSE, $r);
 
 		$encoded = "19\r\nThis is a chunked message\r\n0\r\n";
 		$decoded = "This is a chunked message";
 		$r = $this->HttpResponse->decodeChunkedBody($encoded);
 		$this->assertEquals($r['body'], $decoded);
-		$this->assertEquals(false, $r['header']);
+		$this->assertEquals(FALSE, $r['header']);
 
 		$encoded = "19 \r\nThis is a chunked message\r\n0\r\n";
 		$r = $this->HttpResponse->decodeChunkedBody($encoded);
@@ -436,12 +442,12 @@ class HttpResponseTest extends CakeTestCase {
 		$decoded = "This is a chunked message\nThat is cool\n";
 		$r = $this->HttpResponse->decodeChunkedBody($encoded);
 		$this->assertEquals($r['body'], $decoded);
-		$this->assertEquals(false, $r['header']);
+		$this->assertEquals(FALSE, $r['header']);
 
 		$encoded = "19\r\nThis is a chunked message\r\nE;foo-chunk=5\r\n\nThat is cool\n\r\n0\r\n";
 		$r = $this->HttpResponse->decodeChunkedBody($encoded);
 		$this->assertEquals($r['body'], $decoded);
-		$this->assertEquals(false, $r['header']);
+		$this->assertEquals(FALSE, $r['header']);
 
 		$encoded = "19\r\nThis is a chunked message\r\nE\r\n\nThat is cool\n\r\n0\r\nfoo-header: bar\r\ncake: PHP\r\n\r\n";
 		$r = $this->HttpResponse->decodeChunkedBody($encoded);
@@ -449,11 +455,11 @@ class HttpResponseTest extends CakeTestCase {
 		$this->assertEquals(array('foo-header' => 'bar', 'cake' => 'PHP'), $r['header']);
 	}
 
-/**
- * testDecodeChunkedBodyError method
- *
- * @return void
- */
+	/**
+	 * testDecodeChunkedBodyError method
+	 *
+	 * @return void
+	 */
 	public function testDecodeChunkedBodyError() {
 		$encoded = "19\r\nThis is a chunked message\r\nE\r\n\nThat is cool\n\r\n";
 		$result = $this->HttpResponse->decodeChunkedBody($encoded);
@@ -461,38 +467,38 @@ class HttpResponseTest extends CakeTestCase {
 		$this->assertEquals($expected, $result['body']);
 	}
 
-/**
- * testParseCookies method
- *
- * @return void
- */
+	/**
+	 * testParseCookies method
+	 *
+	 * @return void
+	 */
 	public function testParseCookies() {
 		$header = array(
-			'Set-Cookie' => array(
-				'foo=bar',
-				'people=jim,jack,johnny";";Path=/accounts',
-				'google=not=nice'
-			),
-			'Transfer-Encoding' => 'chunked',
-			'Date' => 'Sun, 18 Nov 2007 18:57:42 GMT',
+				'Set-Cookie' => array(
+						'foo=bar',
+						'people=jim,jack,johnny";";Path=/accounts',
+						'google=not=nice'
+				),
+				'Transfer-Encoding' => 'chunked',
+				'Date' => 'Sun, 18 Nov 2007 18:57:42 GMT',
 		);
 		$cookies = $this->HttpResponse->parseCookies($header);
 		$expected = array(
-			'foo' => array(
-				'value' => 'bar'
-			),
-			'people' => array(
-				'value' => 'jim,jack,johnny";"',
-				'path' => '/accounts',
-			),
-			'google' => array(
-				'value' => 'not=nice',
-			)
+				'foo' => array(
+						'value' => 'bar'
+				),
+				'people' => array(
+						'value' => 'jim,jack,johnny";"',
+						'path' => '/accounts',
+				),
+				'google' => array(
+						'value' => 'not=nice',
+				)
 		);
 		$this->assertEquals($expected, $cookies);
 
 		$header['Set-Cookie'][] = 'cakephp=great; Secure';
-		$expected['cakephp'] = array('value' => 'great', 'secure' => true);
+		$expected['cakephp'] = array('value' => 'great', 'secure' => TRUE);
 		$cookies = $this->HttpResponse->parseCookies($header);
 		$this->assertEquals($expected, $cookies);
 
@@ -502,15 +508,15 @@ class HttpResponseTest extends CakeTestCase {
 		$this->assertEquals($expected, $cookies);
 	}
 
-/**
- * Test that escaped token strings are properly unescaped by HttpSocket::unescapeToken
- *
- * @return void
- */
+	/**
+	 * Test that escaped token strings are properly unescaped by HttpSocket::unescapeToken
+	 *
+	 * @return void
+	 */
 	public function testUnescapeToken() {
 		$this->assertEquals('Foo', $this->HttpResponse->unescapeToken('Foo'));
 
-		$escape = $this->HttpResponse->tokenEscapeChars(false);
+		$escape = $this->HttpResponse->tokenEscapeChars(FALSE);
 		foreach ($escape as $char) {
 			$token = 'My-special-"' . $char . '"-Token';
 			$unescapedToken = $this->HttpResponse->unescapeToken($token);
@@ -525,22 +531,22 @@ class HttpResponseTest extends CakeTestCase {
 		$this->assertEquals($expectedToken, $escapedToken);
 	}
 
-/**
- * testArrayAccess
- *
- * @return void
- */
+	/**
+	 * testArrayAccess
+	 *
+	 * @return void
+	 */
 	public function testArrayAccess() {
 		$this->HttpResponse->httpVersion = 'HTTP/1.1';
 		$this->HttpResponse->code = 200;
 		$this->HttpResponse->reasonPhrase = 'OK';
 		$this->HttpResponse->headers = array(
-			'Server' => 'CakePHP',
-			'ContEnt-Type' => 'text/plain'
+				'Server' => 'CakePHP',
+				'ContEnt-Type' => 'text/plain'
 		);
 		$this->HttpResponse->cookies = array(
-			'foo' => array('value' => 'bar'),
-			'bar' => array('value' => 'foo')
+				'foo' => array('value' => 'bar'),
+				'bar' => array('value' => 'foo')
 		);
 		$this->HttpResponse->body = 'This is a test!';
 		$this->HttpResponse->raw = "HTTP/1.1 200 OK\r\nServer: CakePHP\r\nContEnt-Type: text/plain\r\n\r\nThis is a test!";
@@ -561,8 +567,8 @@ class HttpResponseTest extends CakeTestCase {
 		$this->assertEquals($expected, $this->HttpResponse['status']['reason-phrase']);
 
 		$expected = array(
-			'Server' => 'CakePHP',
-			'ContEnt-Type' => 'text/plain'
+				'Server' => 'CakePHP',
+				'ContEnt-Type' => 'text/plain'
 		);
 		$this->assertEquals($expected, $this->HttpResponse['header']);
 
@@ -570,8 +576,8 @@ class HttpResponseTest extends CakeTestCase {
 		$this->assertEquals($expected, $this->HttpResponse['body']);
 
 		$expected = array(
-			'foo' => array('value' => 'bar'),
-			'bar' => array('value' => 'foo')
+				'foo' => array('value' => 'bar'),
+				'bar' => array('value' => 'foo')
 		);
 		$this->assertEquals($expected, $this->HttpResponse['cookies']);
 

@@ -27,33 +27,33 @@ App::uses('MootoolsEngineHelper', 'View/Helper');
  */
 class MootoolsEngineHelperTest extends CakeTestCase {
 
-/**
- * setUp
- *
- * @return void
- */
+	/**
+	 * setUp
+	 *
+	 * @return void
+	 */
 	public function setUp() {
 		parent::setUp();
-		$controller = null;
+		$controller = NULL;
 		$this->View = $this->getMock('View', array('addScript'), array(&$controller));
 		$this->Moo = new MootoolsEngineHelper($this->View);
 	}
 
-/**
- * tearDown
- *
- * @return void
- */
+	/**
+	 * tearDown
+	 *
+	 * @return void
+	 */
 	public function tearDown() {
 		parent::tearDown();
 		unset($this->Moo);
 	}
 
-/**
- * test selector method
- *
- * @return void
- */
+	/**
+	 * test selector method
+	 *
+	 * @return void
+	 */
 	public function testSelector() {
 		$result = $this->Moo->get('#content');
 		$this->assertEquals($this->Moo, $result);
@@ -80,18 +80,18 @@ class MootoolsEngineHelperTest extends CakeTestCase {
 		$this->assertEquals($this->Moo->selection, '$$("#some_long-id.class")');
 	}
 
-/**
- * test event binding
- *
- * @return void
- */
+	/**
+	 * test event binding
+	 *
+	 * @return void
+	 */
 	public function testEvent() {
 		$this->Moo->get('#myLink');
-		$result = $this->Moo->event('click', 'doClick', array('wrap' => false));
+		$result = $this->Moo->event('click', 'doClick', array('wrap' => FALSE));
 		$expected = '$("myLink").addEvent("click", doClick);';
 		$this->assertEquals($expected, $result);
 
-		$result = $this->Moo->event('click', 'this.setStyle("display", "");', array('stop' => false));
+		$result = $this->Moo->event('click', 'this.setStyle("display", "");', array('stop' => FALSE));
 		$expected = '$("myLink").addEvent("click", function (event) {this.setStyle("display", "");});';
 		$this->assertEquals($expected, $result);
 
@@ -100,22 +100,22 @@ class MootoolsEngineHelperTest extends CakeTestCase {
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * test dom ready event creation
- *
- * @return void
- */
+	/**
+	 * test dom ready event creation
+	 *
+	 * @return void
+	 */
 	public function testDomReady() {
 		$result = $this->Moo->domReady('foo.name = "bar";');
 		$expected = 'window.addEvent("domready", function (event) {foo.name = "bar";});';
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * test Each method
- *
- * @return void
- */
+	/**
+	 * test Each method
+	 *
+	 * @return void
+	 */
 	public function testEach() {
 		$this->Moo->get('#foo');
 		$result = $this->Moo->each('item.setStyle("display", "none");');
@@ -123,11 +123,11 @@ class MootoolsEngineHelperTest extends CakeTestCase {
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * test Effect generation
- *
- * @return void
- */
+	/**
+	 * test Effect generation
+	 *
+	 * @return void
+	 */
 	public function testEffect() {
 		$this->Moo->get('#foo');
 		$result = $this->Moo->effect('show');
@@ -163,11 +163,11 @@ class MootoolsEngineHelperTest extends CakeTestCase {
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * Test Request Generation
- *
- * @return void
- */
+	/**
+	 * Test Request Generation
+	 *
+	 * @return void
+	 */
 	public function testRequest() {
 		$result = $this->Moo->request(array('controller' => 'posts', 'action' => 'view', 1));
 		$expected = 'var jsRequest = new Request({url:"\\/posts\\/view\\/1"}).send();';
@@ -178,155 +178,155 @@ class MootoolsEngineHelperTest extends CakeTestCase {
 		$this->assertEquals($expected, $result);
 
 		$result = $this->Moo->request('/people/edit/1', array(
-			'method' => 'post',
-			'complete' => 'doSuccess',
-			'error' => 'handleError',
-			'type' => 'json',
-			'data' => array('name' => 'jim', 'height' => '185cm'),
-			'wrapCallbacks' => false
+				'method' => 'post',
+				'complete' => 'doSuccess',
+				'error' => 'handleError',
+				'type' => 'json',
+				'data' => array('name' => 'jim', 'height' => '185cm'),
+				'wrapCallbacks' => FALSE
 		));
 		$expected = 'var jsRequest = new Request.JSON({method:"post", onComplete:doSuccess, onFailure:handleError, url:"\\/people\\/edit\\/1"}).send({"name":"jim","height":"185cm"});';
 		$this->assertEquals($expected, $result);
 
 		$result = $this->Moo->request('/people/edit/1', array(
-			'method' => 'post',
-			'complete' => 'doSuccess',
-			'update' => '#update-zone',
-			'wrapCallbacks' => false
+				'method' => 'post',
+				'complete' => 'doSuccess',
+				'update' => '#update-zone',
+				'wrapCallbacks' => FALSE
 		));
 		$expected = 'var jsRequest = new Request.HTML({method:"post", onComplete:doSuccess, update:"update-zone", url:"\\/people\\/edit\\/1"}).send();';
 		$this->assertEquals($expected, $result);
 
 		$result = $this->Moo->request('/people/edit/1', array(
-			'method' => 'post',
-			'complete' => 'doComplete',
-			'success' => 'doSuccess',
-			'error' => 'doFailure',
-			'before' => 'doBefore',
-			'update' => 'update-zone',
-			'wrapCallbacks' => false
+				'method' => 'post',
+				'complete' => 'doComplete',
+				'success' => 'doSuccess',
+				'error' => 'doFailure',
+				'before' => 'doBefore',
+				'update' => 'update-zone',
+				'wrapCallbacks' => FALSE
 		));
 		$expected = 'var jsRequest = new Request.HTML({method:"post", onComplete:doComplete, onFailure:doFailure, onRequest:doBefore, onSuccess:doSuccess, update:"update-zone", url:"\\/people\\/edit\\/1"}).send();';
 		$this->assertEquals($expected, $result);
 
 		$result = $this->Moo->request('/people/edit/1', array(
-			'method' => 'post',
-			'complete' => 'doComplete',
-			'success' => 'doSuccess',
-			'error' => 'doFailure',
-			'before' => 'doBefore',
-			'update' => 'update-zone',
-			'dataExpression' => true,
-			'data' => '$("foo").toQueryString()',
-			'wrapCallbacks' => false
+				'method' => 'post',
+				'complete' => 'doComplete',
+				'success' => 'doSuccess',
+				'error' => 'doFailure',
+				'before' => 'doBefore',
+				'update' => 'update-zone',
+				'dataExpression' => TRUE,
+				'data' => '$("foo").toQueryString()',
+				'wrapCallbacks' => FALSE
 		));
 		$expected = 'var jsRequest = new Request.HTML({method:"post", onComplete:doComplete, onFailure:doFailure, onRequest:doBefore, onSuccess:doSuccess, update:"update-zone", url:"\\/people\\/edit\\/1"}).send($("foo").toQueryString());';
 		$this->assertEquals($expected, $result);
 
 		$result = $this->Moo->request('/people/edit/1', array(
-			'method' => 'post',
-			'before' => 'doBefore',
-			'success' => 'doSuccess',
-			'complete' => 'doComplete',
-			'update' => '#update-zone',
+				'method' => 'post',
+				'before' => 'doBefore',
+				'success' => 'doSuccess',
+				'complete' => 'doComplete',
+				'update' => '#update-zone',
 		));
 		$expected = 'var jsRequest = new Request.HTML({method:"post", onComplete:function () {doComplete}, onRequest:function () {doBefore}, onSuccess:function (responseText, responseXML) {doSuccess}, update:"update-zone", url:"\\/people\\/edit\\/1"}).send();';
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * test sortable list generation
- *
- * @return void
- */
+	/**
+	 * test sortable list generation
+	 *
+	 * @return void
+	 */
 	public function testSortable() {
 		$this->Moo->get('#myList');
 		$result = $this->Moo->sortable(array(
-			'distance' => 5,
-			'containment' => 'parent',
-			'start' => 'onStart',
-			'complete' => 'onStop',
-			'sort' => 'onSort',
-			'wrapCallbacks' => false
+				'distance' => 5,
+				'containment' => 'parent',
+				'start' => 'onStart',
+				'complete' => 'onStop',
+				'sort' => 'onSort',
+				'wrapCallbacks' => FALSE
 		));
 		$expected = 'var jsSortable = new Sortables($("myList"), {constrain:"parent", onComplete:onStop, onSort:onSort, onStart:onStart, snap:5});';
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * test drag() method
- *
- * @return void
- */
+	/**
+	 * test drag() method
+	 *
+	 * @return void
+	 */
 	public function testDrag() {
 		$this->Moo->get('#drag-me');
 		$result = $this->Moo->drag(array(
-			'start' => 'onStart',
-			'drag' => 'onDrag',
-			'stop' => 'onStop',
-			'snapGrid' => array(10, 10),
-			'wrapCallbacks' => false
+				'start' => 'onStart',
+				'drag' => 'onDrag',
+				'stop' => 'onStop',
+				'snapGrid' => array(10, 10),
+				'wrapCallbacks' => FALSE
 		));
 		$expected = '$("drag-me").makeDraggable({onComplete:onStop, onDrag:onDrag, onStart:onStart, snap:[10,10]});';
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * test drop() method with the required drag option missing
- *
- * @expectedException PHPUnit_Framework_Error_Warning
- * @return void
- */
+	/**
+	 * test drop() method with the required drag option missing
+	 *
+	 * @expectedException PHPUnit_Framework_Error_Warning
+	 * @return void
+	 */
 	public function testDropWithMissingOption() {
 		$this->Moo->get('#drop-me');
 		$this->Moo->drop(array(
-			'drop' => 'onDrop',
-			'leave' => 'onLeave',
-			'hover' => 'onHover',
+				'drop' => 'onDrop',
+				'leave' => 'onLeave',
+				'hover' => 'onHover',
 		));
 	}
 
-/**
- * test drop() method
- *
- * @return void
- */
+	/**
+	 * test drop() method
+	 *
+	 * @return void
+	 */
 	public function testDrop() {
 		$this->Moo->get('#drop-me');
 		$result = $this->Moo->drop(array(
-			'drop' => 'onDrop',
-			'leave' => 'onLeave',
-			'hover' => 'onHover',
-			'drag' => '#my-drag',
-			'wrapCallbacks' => false
+				'drop' => 'onDrop',
+				'leave' => 'onLeave',
+				'hover' => 'onHover',
+				'drag' => '#my-drag',
+				'wrapCallbacks' => FALSE
 		));
 		$expected = '$("my-drag").makeDraggable({droppables:$("drop-me"), onDrop:onDrop, onEnter:onHover, onLeave:onLeave});';
 		$this->assertEquals($expected, $result);
 		$this->assertEquals($this->Moo->selection, '$("drop-me")');
 
 		$result = $this->Moo->drop(array(
-			'drop' => 'onDrop',
-			'leave' => 'onLeave',
-			'hover' => 'onHover',
-			'drag' => '#my-drag',
+				'drop' => 'onDrop',
+				'leave' => 'onLeave',
+				'hover' => 'onHover',
+				'drag' => '#my-drag',
 		));
 		$expected = '$("my-drag").makeDraggable({droppables:$("drop-me"), onDrop:function (element, droppable, event) {onDrop}, onEnter:function (element, droppable) {onHover}, onLeave:function (element, droppable) {onLeave}});';
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * test slider generation
- *
- * @return void
- */
+	/**
+	 * test slider generation
+	 *
+	 * @return void
+	 */
 	public function testSlider() {
 		$this->Moo->get('#slider');
 		$result = $this->Moo->slider(array(
-			'handle' => '#my-handle',
-			'complete' => 'onComplete',
-			'change' => 'onChange',
-			'direction' => 'horizontal',
-			'wrapCallbacks' => false
+				'handle' => '#my-handle',
+				'complete' => 'onComplete',
+				'change' => 'onChange',
+				'direction' => 'horizontal',
+				'wrapCallbacks' => FALSE
 		));
 		$expected = 'var jsSlider = new Slider($("slider"), $("my-handle"), {mode:"horizontal", onChange:onChange, onComplete:onComplete});';
 		$this->assertEquals($expected, $result);
@@ -334,48 +334,48 @@ class MootoolsEngineHelperTest extends CakeTestCase {
 
 		$this->Moo->get('#slider');
 		$result = $this->Moo->slider(array(
-			'handle' => '#my-handle',
-			'complete' => 'onComplete',
-			'change' => 'onChange',
-			'direction' => 'horizontal',
-			'min' => 10,
-			'max' => 40,
-			'wrapCallbacks' => false
+				'handle' => '#my-handle',
+				'complete' => 'onComplete',
+				'change' => 'onChange',
+				'direction' => 'horizontal',
+				'min' => 10,
+				'max' => 40,
+				'wrapCallbacks' => FALSE
 		));
 		$expected = 'var jsSlider = new Slider($("slider"), $("my-handle"), {mode:"horizontal", onChange:onChange, onComplete:onComplete, range:[10,40]});';
 		$this->assertEquals($expected, $result);
 
 		$this->Moo->get('#slider');
 		$result = $this->Moo->slider(array(
-			'handle' => '#my-handle',
-			'complete' => 'complete;',
-			'change' => 'change;',
-			'direction' => 'horizontal',
+				'handle' => '#my-handle',
+				'complete' => 'complete;',
+				'change' => 'change;',
+				'direction' => 'horizontal',
 		));
 		$expected = 'var jsSlider = new Slider($("slider"), $("my-handle"), {mode:"horizontal", onChange:function (step) {change;}, onComplete:function (event) {complete;}});';
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * test the serializeForm implementation.
- *
- * @return void
- */
+	/**
+	 * test the serializeForm implementation.
+	 *
+	 * @return void
+	 */
 	public function testSerializeForm() {
 		$this->Moo->get('#element');
-		$result = $this->Moo->serializeForm(array('isForm' => true));
+		$result = $this->Moo->serializeForm(array('isForm' => TRUE));
 		$expected = '$("element").toQueryString();';
 		$this->assertEquals($expected, $result);
 
-		$result = $this->Moo->serializeForm(array('isForm' => true, 'inline' => true));
+		$result = $this->Moo->serializeForm(array('isForm' => TRUE, 'inline' => TRUE));
 		$expected = '$("element").toQueryString()';
 		$this->assertEquals($expected, $result);
 
-		$result = $this->Moo->serializeForm(array('isForm' => false));
+		$result = $this->Moo->serializeForm(array('isForm' => FALSE));
 		$expected = '$($("element").form).toQueryString();';
 		$this->assertEquals($expected, $result);
 
-		$result = $this->Moo->serializeForm(array('isForm' => false, 'inline' => true));
+		$result = $this->Moo->serializeForm(array('isForm' => FALSE, 'inline' => TRUE));
 		$expected = '$($("element").form).toQueryString()';
 		$this->assertEquals($expected, $result);
 	}

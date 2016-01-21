@@ -8,7 +8,7 @@ App::uses('CakeSessionHandlerInterface', 'Model/Datasource/Session');
 class TestPluginSession implements CakeSessionHandlerInterface {
 
 	public function open() {
-		return true;
+		return TRUE;
 	}
 
 	public function close() {
@@ -23,7 +23,7 @@ class TestPluginSession implements CakeSessionHandlerInterface {
 	public function destroy($id) {
 	}
 
-	public function gc($expires = null) {
+	public function gc($expires = NULL) {
 	}
 
 }

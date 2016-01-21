@@ -26,21 +26,21 @@ App::uses('Router', 'Routing');
  */
 class CakeRouteTest extends CakeTestCase {
 
-/**
- * setUp method
- *
- * @return void
- */
+	/**
+	 * setUp method
+	 *
+	 * @return void
+	 */
 	public function setUp() {
 		parent::setUp();
-		Configure::write('Routing', array('admin' => null, 'prefixes' => array()));
+		Configure::write('Routing', array('admin' => NULL, 'prefixes' => array()));
 	}
 
-/**
- * Test the construction of a CakeRoute
- *
- * @return void
- */
+	/**
+	 * Test the construction of a CakeRoute
+	 *
+	 * @return void
+	 */
 	public function testConstruction() {
 		$route = new CakeRoute('/:controller/:action/:id', array(), array('id' => '[0-9]+'));
 
@@ -50,11 +50,11 @@ class CakeRouteTest extends CakeTestCase {
 		$this->assertFalse($route->compiled());
 	}
 
-/**
- * test Route compiling.
- *
- * @return void
- */
+	/**
+	 * test Route compiling.
+	 *
+	 * @return void
+	 */
 	public function testBasicRouteCompiling() {
 		$route = new CakeRoute('/', array('controller' => 'pages', 'action' => 'display', 'home'));
 		$result = $route->compile();
@@ -87,11 +87,11 @@ class CakeRouteTest extends CakeTestCase {
 		$this->assertRegExp($result, '/test_plugin/posts/edit/5/name:value/nick:name');
 	}
 
-/**
- * test that route parameters that overlap don't cause errors.
- *
- * @return void
- */
+	/**
+	 * test that route parameters that overlap don't cause errors.
+	 *
+	 * @return void
+	 */
 	public function testRouteParameterOverlap() {
 		$route = new CakeRoute('/invoices/add/:idd/:id', array('controller' => 'invoices', 'action' => 'add'));
 		$result = $route->compile();
@@ -102,16 +102,16 @@ class CakeRouteTest extends CakeTestCase {
 		$this->assertRegExp($result, '/invoices/add/1/3');
 	}
 
-/**
- * test compiling routes with keys that have patterns
- *
- * @return void
- */
+	/**
+	 * test compiling routes with keys that have patterns
+	 *
+	 * @return void
+	 */
 	public function testRouteCompilingWithParamPatterns() {
 		$route = new CakeRoute(
-			'/:controller/:action/:id',
-			array(),
-			array('id' => Router::ID)
+				'/:controller/:action/:id',
+				array(),
+				array('id' => Router::ID)
 		);
 		$result = $route->compile();
 		$this->assertRegExp($result, '/posts/edit/1');
@@ -121,9 +121,9 @@ class CakeRouteTest extends CakeTestCase {
 		$this->assertEquals(array('id', 'controller', 'action'), $route->keys);
 
 		$route = new CakeRoute(
-			'/:lang/:controller/:action/:id',
-			array('controller' => 'testing4'),
-			array('id' => Router::ID, 'lang' => '[a-z]{3}')
+				'/:lang/:controller/:action/:id',
+				array('controller' => 'testing4'),
+				array('id' => Router::ID, 'lang' => '[a-z]{3}')
 		);
 		$result = $route->compile();
 		$this->assertRegExp($result, '/eng/posts/edit/1');
@@ -145,9 +145,9 @@ class CakeRouteTest extends CakeTestCase {
 		}
 
 		$route = new CakeRoute(
-			'/posts/:id::title/:year',
-			array('controller' => 'posts', 'action' => 'view'),
-			array('id' => Router::ID, 'year' => Router::YEAR, 'title' => '[a-z-_]+')
+				'/posts/:id::title/:year',
+				array('controller' => 'posts', 'action' => 'view'),
+				array('id' => Router::ID, 'year' => Router::YEAR, 'title' => '[a-z-_]+')
 		);
 		$result = $route->compile();
 		$this->assertRegExp($result, '/posts/1:name-of-article/2009/');
@@ -158,9 +158,9 @@ class CakeRouteTest extends CakeTestCase {
 		$this->assertEquals(array('year', 'title', 'id'), $route->keys);
 
 		$route = new CakeRoute(
-			'/posts/:url_title-(uuid::id)',
-			array('controller' => 'posts', 'action' => 'view'),
-			array('pass' => array('id', 'url_title'), 'id' => Router::ID)
+				'/posts/:url_title-(uuid::id)',
+				array('controller' => 'posts', 'action' => 'view'),
+				array('pass' => array('id', 'url_title'), 'id' => Router::ID)
 		);
 		$result = $route->compile();
 		$this->assertRegExp($result, '/posts/some_title_for_article-(uuid:12534)/');
@@ -171,17 +171,17 @@ class CakeRouteTest extends CakeTestCase {
 		$this->assertEquals(array('url_title', 'id'), $route->keys);
 	}
 
-/**
- * test more complex route compiling & parsing with mid route greedy stars
- * and optional routing parameters
- *
- * @return void
- */
+	/**
+	 * test more complex route compiling & parsing with mid route greedy stars
+	 * and optional routing parameters
+	 *
+	 * @return void
+	 */
 	public function testComplexRouteCompilingAndParsing() {
 		$route = new CakeRoute(
-			'/posts/:month/:day/:year/*',
-			array('controller' => 'posts', 'action' => 'view'),
-			array('year' => Router::YEAR, 'month' => Router::MONTH, 'day' => Router::DAY)
+				'/posts/:month/:day/:year/*',
+				array('controller' => 'posts', 'action' => 'view'),
+				array('year' => Router::YEAR, 'month' => Router::MONTH, 'day' => Router::DAY)
 		);
 		$result = $route->compile();
 		$this->assertRegExp($result, '/posts/08/01/2007/title-of-post');
@@ -196,9 +196,9 @@ class CakeRouteTest extends CakeTestCase {
 		$this->assertEquals('title-of-post', $result['pass'][0]);
 
 		$route = new CakeRoute(
-			"/:extra/page/:slug/*",
-			array('controller' => 'pages', 'action' => 'view', 'extra' => null),
-			array("extra" => '[a-z1-9_]*', "slug" => '[a-z1-9_]+', "action" => 'view')
+				"/:extra/page/:slug/*",
+				array('controller' => 'pages', 'action' => 'view', 'extra' => NULL),
+				array("extra" => '[a-z1-9_]*', "slug" => '[a-z1-9_]+', "action" => 'view')
 		);
 		$result = $route->compile();
 
@@ -207,18 +207,18 @@ class CakeRouteTest extends CakeTestCase {
 		$this->assertEquals(array('slug', 'extra'), $route->keys);
 		$this->assertEquals(array('extra' => '[a-z1-9_]*', 'slug' => '[a-z1-9_]+', 'action' => 'view'), $route->options);
 		$expected = array(
-			'controller' => 'pages',
-			'action' => 'view'
+				'controller' => 'pages',
+				'action' => 'view'
 		);
 		$this->assertEquals($expected, $route->defaults);
 
 		$route = new CakeRoute(
-			'/:controller/:action/*',
-			array('project' => false),
-			array(
-				'controller' => 'source|wiki|commits|tickets|comments|view',
-				'action' => 'branches|history|branch|logs|view|start|add|edit|modify'
-			)
+				'/:controller/:action/*',
+				array('project' => FALSE),
+				array(
+						'controller' => 'source|wiki|commits|tickets|comments|view',
+						'action' => 'branches|history|branch|logs|view|start|add|edit|modify'
+				)
 		);
 		$this->assertFalse($route->parse('/chaw_test/wiki'));
 
@@ -230,20 +230,20 @@ class CakeRouteTest extends CakeTestCase {
 		$this->assertNotRegExp($result, '/source/wierd_action');
 	}
 
-/**
- * test that routes match their pattern.
- *
- * @return void
- */
+	/**
+	 * test that routes match their pattern.
+	 *
+	 * @return void
+	 */
 	public function testMatchBasic() {
-		$route = new CakeRoute('/:controller/:action/:id', array('plugin' => null));
-		$result = $route->match(array('controller' => 'posts', 'action' => 'view', 'plugin' => null));
+		$route = new CakeRoute('/:controller/:action/:id', array('plugin' => NULL));
+		$result = $route->match(array('controller' => 'posts', 'action' => 'view', 'plugin' => NULL));
 		$this->assertFalse($result);
 
-		$result = $route->match(array('plugin' => null, 'controller' => 'posts', 'action' => 'view', 0));
+		$result = $route->match(array('plugin' => NULL, 'controller' => 'posts', 'action' => 'view', 0));
 		$this->assertFalse($result);
 
-		$result = $route->match(array('plugin' => null, 'controller' => 'posts', 'action' => 'view', 'id' => 1));
+		$result = $route->match(array('plugin' => NULL, 'controller' => 'posts', 'action' => 'view', 'id' => 1));
 		$this->assertEquals('/posts/view/1', $result);
 
 		$route = new CakeRoute('/', array('controller' => 'pages', 'action' => 'display', 'home'));
@@ -291,94 +291,94 @@ class CakeRouteTest extends CakeTestCase {
 		$this->assertFalse($result);
 
 		$route = new CakeRoute('/admin/subscriptions/:action/*', array(
-			'controller' => 'subscribe', 'admin' => true, 'prefix' => 'admin'
+				'controller' => 'subscribe', 'admin' => TRUE, 'prefix' => 'admin'
 		));
 
-		$url = array('controller' => 'subscribe', 'admin' => true, 'action' => 'edit', 1);
+		$url = array('controller' => 'subscribe', 'admin' => TRUE, 'action' => 'edit', 1);
 		$result = $route->match($url);
 		$expected = '/admin/subscriptions/edit/1';
 		$this->assertEquals($expected, $result);
 
 		$url = array(
-			'controller' => 'subscribe',
-			'admin' => true,
-			'action' => 'edit_admin_e',
-			1
+				'controller' => 'subscribe',
+				'admin' => TRUE,
+				'action' => 'edit_admin_e',
+				1
 		);
 		$result = $route->match($url);
 		$expected = '/admin/subscriptions/edit_admin_e/1';
 		$this->assertEquals($expected, $result);
 
-		$url = array('controller' => 'subscribe', 'admin' => true, 'action' => 'admin_edit', 1);
+		$url = array('controller' => 'subscribe', 'admin' => TRUE, 'action' => 'admin_edit', 1);
 		$result = $route->match($url);
 		$expected = '/admin/subscriptions/edit/1';
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * test that non-greedy routes fail with extra passed args
- *
- * @return void
- */
+	/**
+	 * test that non-greedy routes fail with extra passed args
+	 *
+	 * @return void
+	 */
 	public function testGreedyRouteFailurePassedArg() {
-		$route = new CakeRoute('/:controller/:action', array('plugin' => null));
+		$route = new CakeRoute('/:controller/:action', array('plugin' => NULL));
 		$result = $route->match(array('controller' => 'posts', 'action' => 'view', '0'));
 		$this->assertFalse($result);
 
-		$route = new CakeRoute('/:controller/:action', array('plugin' => null));
+		$route = new CakeRoute('/:controller/:action', array('plugin' => NULL));
 		$result = $route->match(array('controller' => 'posts', 'action' => 'view', 'test'));
 		$this->assertFalse($result);
 	}
 
-/**
- * test that non-greedy routes fail with extra passed args
- *
- * @return void
- */
+	/**
+	 * test that non-greedy routes fail with extra passed args
+	 *
+	 * @return void
+	 */
 	public function testGreedyRouteFailureNamedParam() {
-		$route = new CakeRoute('/:controller/:action', array('plugin' => null));
+		$route = new CakeRoute('/:controller/:action', array('plugin' => NULL));
 		$result = $route->match(array('controller' => 'posts', 'action' => 'view', 'page' => 1));
 		$this->assertFalse($result);
 	}
 
-/**
- * test that falsey values do not interrupt a match.
- *
- * @return void
- */
+	/**
+	 * test that falsey values do not interrupt a match.
+	 *
+	 * @return void
+	 */
 	public function testMatchWithFalseyValues() {
-		$route = new CakeRoute('/:controller/:action/*', array('plugin' => null));
+		$route = new CakeRoute('/:controller/:action/*', array('plugin' => NULL));
 		$result = $route->match(array(
-			'controller' => 'posts', 'action' => 'index', 'plugin' => null, 'admin' => false
+				'controller' => 'posts', 'action' => 'index', 'plugin' => NULL, 'admin' => FALSE
 		));
 		$this->assertEquals('/posts/index/', $result);
 	}
 
-/**
- * test match() with greedy routes, named parameters and passed args.
- *
- * @return void
- */
+	/**
+	 * test match() with greedy routes, named parameters and passed args.
+	 *
+	 * @return void
+	 */
 	public function testMatchWithNamedParametersAndPassedArgs() {
-		Router::connectNamed(true);
+		Router::connectNamed(TRUE);
 
-		$route = new CakeRoute('/:controller/:action/*', array('plugin' => null));
-		$result = $route->match(array('controller' => 'posts', 'action' => 'index', 'plugin' => null, 'page' => 1));
+		$route = new CakeRoute('/:controller/:action/*', array('plugin' => NULL));
+		$result = $route->match(array('controller' => 'posts', 'action' => 'index', 'plugin' => NULL, 'page' => 1));
 		$this->assertEquals('/posts/index/page:1', $result);
 
-		$result = $route->match(array('controller' => 'posts', 'action' => 'view', 'plugin' => null, 5));
+		$result = $route->match(array('controller' => 'posts', 'action' => 'view', 'plugin' => NULL, 5));
 		$this->assertEquals('/posts/view/5', $result);
 
-		$result = $route->match(array('controller' => 'posts', 'action' => 'view', 'plugin' => null, 0));
+		$result = $route->match(array('controller' => 'posts', 'action' => 'view', 'plugin' => NULL, 0));
 		$this->assertEquals('/posts/view/0', $result);
 
-		$result = $route->match(array('controller' => 'posts', 'action' => 'view', 'plugin' => null, '0'));
+		$result = $route->match(array('controller' => 'posts', 'action' => 'view', 'plugin' => NULL, '0'));
 		$this->assertEquals('/posts/view/0', $result);
 
-		$result = $route->match(array('controller' => 'posts', 'action' => 'view', 'plugin' => null, 5, 'page' => 1, 'limit' => 20, 'order' => 'title'));
+		$result = $route->match(array('controller' => 'posts', 'action' => 'view', 'plugin' => NULL, 5, 'page' => 1, 'limit' => 20, 'order' => 'title'));
 		$this->assertEquals('/posts/view/5/page:1/limit:20/order:title', $result);
 
-		$result = $route->match(array('controller' => 'posts', 'action' => 'view', 'plugin' => null, 'word space', 'order' => 'Θ'));
+		$result = $route->match(array('controller' => 'posts', 'action' => 'view', 'plugin' => NULL, 'word space', 'order' => 'Θ'));
 		$this->assertEquals('/posts/view/word%20space/order:%CE%98', $result);
 
 		$route = new CakeRoute('/test2/*', array('controller' => 'pages', 'action' => 'display', 2));
@@ -392,14 +392,14 @@ class CakeRouteTest extends CakeTestCase {
 		$this->assertFalse($result);
 	}
 
-/**
- * Ensure that named parameters are urldecoded
- *
- * @return void
- */
+	/**
+	 * Ensure that named parameters are urldecoded
+	 *
+	 * @return void
+	 */
 	public function testParseNamedParametersUrlDecode() {
-		Router::connectNamed(true);
-		$route = new CakeRoute('/:controller/:action/*', array('plugin' => null));
+		Router::connectNamed(TRUE);
+		$route = new CakeRoute('/:controller/:action/*', array('plugin' => NULL));
 
 		$result = $route->parse('/posts/index/page:%CE%98');
 		$this->assertEquals('Θ', $result['named']['page']);
@@ -412,14 +412,14 @@ class CakeRouteTest extends CakeTestCase {
 		$this->assertEquals('something else', $result['pass'][0]);
 	}
 
-/**
- * Ensure that keys at named parameters are urldecoded
- *
- * @return void
- */
+	/**
+	 * Ensure that keys at named parameters are urldecoded
+	 *
+	 * @return void
+	 */
 	public function testParseNamedKeyUrlDecode() {
-		Router::connectNamed(true);
-		$route = new CakeRoute('/:controller/:action/*', array('plugin' => null));
+		Router::connectNamed(TRUE);
+		$route = new CakeRoute('/:controller/:action/*', array('plugin' => NULL));
 
 		// checking /post/index/user[0]:a/user[1]:b
 		$result = $route->parse('/posts/index/user%5B0%5D:a/user%5B1%5D:b');
@@ -432,47 +432,47 @@ class CakeRouteTest extends CakeTestCase {
 		$this->assertEquals(array('a', 'b'), $result['named']['user']);
 	}
 
-/**
- * test that named params with null/false are excluded
- *
- * @return void
- */
+	/**
+	 * test that named params with null/false are excluded
+	 *
+	 * @return void
+	 */
 	public function testNamedParamsWithNullFalse() {
 		$route = new CakeRoute('/:controller/:action/*');
-		$result = $route->match(array('controller' => 'posts', 'action' => 'index', 'page' => null, 'sort' => false));
+		$result = $route->match(array('controller' => 'posts', 'action' => 'index', 'page' => NULL, 'sort' => FALSE));
 		$this->assertEquals('/posts/index/', $result);
 	}
 
-/**
- * test that match with patterns works.
- *
- * @return void
- */
+	/**
+	 * test that match with patterns works.
+	 *
+	 * @return void
+	 */
 	public function testMatchWithPatterns() {
-		$route = new CakeRoute('/:controller/:action/:id', array('plugin' => null), array('id' => '[0-9]+'));
+		$route = new CakeRoute('/:controller/:action/:id', array('plugin' => NULL), array('id' => '[0-9]+'));
 		$result = $route->match(array('controller' => 'posts', 'action' => 'view', 'id' => 'foo'));
 		$this->assertFalse($result);
 
-		$result = $route->match(array('plugin' => null, 'controller' => 'posts', 'action' => 'view', 'id' => '9'));
+		$result = $route->match(array('plugin' => NULL, 'controller' => 'posts', 'action' => 'view', 'id' => '9'));
 		$this->assertEquals('/posts/view/9', $result);
 
-		$result = $route->match(array('plugin' => null, 'controller' => 'posts', 'action' => 'view', 'id' => '922'));
+		$result = $route->match(array('plugin' => NULL, 'controller' => 'posts', 'action' => 'view', 'id' => '922'));
 		$this->assertEquals('/posts/view/922', $result);
 
-		$result = $route->match(array('plugin' => null, 'controller' => 'posts', 'action' => 'view', 'id' => 'a99'));
+		$result = $route->match(array('plugin' => NULL, 'controller' => 'posts', 'action' => 'view', 'id' => 'a99'));
 		$this->assertFalse($result);
 	}
 
-/**
- * test persistParams ability to persist parameters from $params and remove params.
- *
- * @return void
- */
+	/**
+	 * test persistParams ability to persist parameters from $params and remove params.
+	 *
+	 * @return void
+	 */
 	public function testPersistParams() {
 		$route = new CakeRoute(
-			'/:lang/:color/blog/:action',
-			array('controller' => 'posts'),
-			array('persist' => array('lang', 'color'))
+				'/:lang/:color/blog/:action',
+				array('controller' => 'posts'),
+				array('persist' => array('lang', 'color'))
 		);
 		$url = array('controller' => 'posts', 'action' => 'index');
 		$params = array('lang' => 'en', 'color' => 'blue');
@@ -487,50 +487,50 @@ class CakeRouteTest extends CakeTestCase {
 		$this->assertEquals('red', $result['color']);
 	}
 
-/**
- * test persist with a non array value
- *
- * @return void
- */
+	/**
+	 * test persist with a non array value
+	 *
+	 * @return void
+	 */
 	public function testPersistParamsNonArray() {
 		$url = array('controller' => 'posts', 'action' => 'index');
 		$params = array('lang' => 'en', 'color' => 'blue');
 
 		$route = new CakeRoute(
-			'/:lang/:color/blog/:action',
-			array('controller' => 'posts')
-			// No persist options
+				'/:lang/:color/blog/:action',
+				array('controller' => 'posts')
+		// No persist options
 		);
 		$result = $route->persistParams($url, $params);
 		$this->assertEquals($url, $result);
 
 		$route = new CakeRoute(
-			'/:lang/:color/blog/:action',
-			array('controller' => 'posts'),
-			array('persist' => false)
+				'/:lang/:color/blog/:action',
+				array('controller' => 'posts'),
+				array('persist' => FALSE)
 		);
 		$result = $route->persistParams($url, $params);
 		$this->assertEquals($url, $result);
 
 		$route = new CakeRoute(
-			'/:lang/:color/blog/:action',
-			array('controller' => 'posts'),
-			array('persist' => 'derp')
+				'/:lang/:color/blog/:action',
+				array('controller' => 'posts'),
+				array('persist' => 'derp')
 		);
 		$result = $route->persistParams($url, $params);
 		$this->assertEquals($url, $result);
 	}
 
-/**
- * test the parse method of CakeRoute.
- *
- * @return void
- */
+	/**
+	 * test the parse method of CakeRoute.
+	 *
+	 * @return void
+	 */
 	public function testParse() {
 		$route = new CakeRoute(
-			'/:controller/:action/:id',
-			array('controller' => 'testing4', 'id' => null),
-			array('id' => Router::ID)
+				'/:controller/:action/:id',
+				array('controller' => 'testing4', 'id' => NULL),
+				array('id' => Router::ID)
 		);
 		$route->compile();
 		$result = $route->parse('/posts/view/1');
@@ -539,8 +539,8 @@ class CakeRouteTest extends CakeTestCase {
 		$this->assertEquals('1', $result['id']);
 
 		$route = new Cakeroute(
-			'/admin/:controller',
-			array('prefix' => 'admin', 'admin' => 1, 'action' => 'index')
+				'/admin/:controller',
+				array('prefix' => 'admin', 'admin' => 1, 'action' => 'index')
 		);
 		$route->compile();
 		$result = $route->parse('/admin/');
@@ -551,15 +551,15 @@ class CakeRouteTest extends CakeTestCase {
 		$this->assertEquals('index', $result['action']);
 	}
 
-/**
- * Test that :key elements are urldecoded
- *
- * @return void
- */
+	/**
+	 * Test that :key elements are urldecoded
+	 *
+	 * @return void
+	 */
 	public function testParseUrlDecodeElements() {
 		$route = new Cakeroute(
-			'/:controller/:slug',
-			array('action' => 'view')
+				'/:controller/:slug',
+				array('action' => 'view')
 		);
 		$route->compile();
 		$result = $route->parse('/posts/%E2%88%82%E2%88%82');
@@ -573,28 +573,28 @@ class CakeRouteTest extends CakeTestCase {
 		$this->assertEquals('∂∂', $result['slug']);
 	}
 
-/**
- * test numerically indexed defaults, get appended to pass
- *
- * @return void
- */
+	/**
+	 * test numerically indexed defaults, get appended to pass
+	 *
+	 * @return void
+	 */
 	public function testParseWithPassDefaults() {
 		$route = new Cakeroute('/:controller', array('action' => 'display', 'home'));
 		$result = $route->parse('/posts');
 		$expected = array(
-			'controller' => 'posts',
-			'action' => 'display',
-			'pass' => array('home'),
-			'named' => array()
+				'controller' => 'posts',
+				'action' => 'display',
+				'pass' => array('home'),
+				'named' => array()
 		);
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * test that http header conditions can cause route failures.
- *
- * @return void
- */
+	/**
+	 * test that http header conditions can cause route failures.
+	 *
+	 * @return void
+	 */
 	public function testParseWithHttpHeaderConditions() {
 		$_SERVER['REQUEST_METHOD'] = 'GET';
 		$route = new CakeRoute('/sample', array('controller' => 'posts', 'action' => 'index', '[method]' => 'POST'));
@@ -602,16 +602,16 @@ class CakeRouteTest extends CakeTestCase {
 		$this->assertFalse($route->parse('/sample'));
 	}
 
-/**
- * test that patterns work for :action
- *
- * @return void
- */
+	/**
+	 * test that patterns work for :action
+	 *
+	 * @return void
+	 */
 	public function testPatternOnAction() {
 		$route = new CakeRoute(
-			'/blog/:action/*',
-			array('controller' => 'blog_posts'),
-			array('action' => 'other|actions')
+				'/blog/:action/*',
+				array('controller' => 'blog_posts'),
+				array('action' => 'other|actions')
 		);
 		$result = $route->match(array('controller' => 'blog_posts', 'action' => 'foo'));
 		$this->assertFalse($result);
@@ -627,134 +627,134 @@ class CakeRouteTest extends CakeTestCase {
 		$this->assertFalse($result);
 	}
 
-/**
- * test the parseArgs method
- *
- * @return void
- */
+	/**
+	 * test the parseArgs method
+	 *
+	 * @return void
+	 */
 	public function testParsePassedArgument() {
 		$route = new CakeRoute('/:controller/:action/*');
 		$result = $route->parse('/posts/edit/1/2/0');
 		$expected = array(
-			'controller' => 'posts',
-			'action' => 'edit',
-			'pass' => array('1', '2', '0'),
-			'named' => array()
+				'controller' => 'posts',
+				'action' => 'edit',
+				'pass' => array('1', '2', '0'),
+				'named' => array()
 		);
 		$this->assertEquals($expected, $result);
 
 		$result = $route->parse('/posts/edit/a-string/page:1/sort:value');
 		$expected = array(
-			'controller' => 'posts',
-			'action' => 'edit',
-			'pass' => array('a-string'),
-			'named' => array(
-				'page' => 1,
-				'sort' => 'value'
-			)
+				'controller' => 'posts',
+				'action' => 'edit',
+				'pass' => array('a-string'),
+				'named' => array(
+						'page' => 1,
+						'sort' => 'value'
+				)
 		);
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * test that only named parameter rules are followed.
- *
- * @return void
- */
+	/**
+	 * test that only named parameter rules are followed.
+	 *
+	 * @return void
+	 */
 	public function testParseNamedParametersWithRules() {
 		$route = new CakeRoute('/:controller/:action/*', array(), array(
-			'named' => array(
-				'wibble',
-				'fish' => array('action' => 'index'),
-				'fizz' => array('controller' => array('comments', 'other')),
-				'pattern' => 'val-[\d]+'
-			)
+				'named' => array(
+						'wibble',
+						'fish' => array('action' => 'index'),
+						'fizz' => array('controller' => array('comments', 'other')),
+						'pattern' => 'val-[\d]+'
+				)
 		));
 		$result = $route->parse('/posts/display/wibble:spin/fish:trout/fizz:buzz/unknown:value');
 		$expected = array(
-			'controller' => 'posts',
-			'action' => 'display',
-			'pass' => array('fish:trout', 'fizz:buzz', 'unknown:value'),
-			'named' => array(
-				'wibble' => 'spin'
-			)
+				'controller' => 'posts',
+				'action' => 'display',
+				'pass' => array('fish:trout', 'fizz:buzz', 'unknown:value'),
+				'named' => array(
+						'wibble' => 'spin'
+				)
 		);
 		$this->assertEquals($expected, $result, 'Fish should not be parsed, as action != index');
 
 		$result = $route->parse('/posts/index/wibble:spin/fish:trout/fizz:buzz');
 		$expected = array(
-			'controller' => 'posts',
-			'action' => 'index',
-			'pass' => array('fizz:buzz'),
-			'named' => array(
-				'wibble' => 'spin',
-				'fish' => 'trout'
-			)
+				'controller' => 'posts',
+				'action' => 'index',
+				'pass' => array('fizz:buzz'),
+				'named' => array(
+						'wibble' => 'spin',
+						'fish' => 'trout'
+				)
 		);
 		$this->assertEquals($expected, $result, 'Fizz should be parsed, as controller == comments|other');
 
 		$result = $route->parse('/comments/index/wibble:spin/fish:trout/fizz:buzz');
 		$expected = array(
-			'controller' => 'comments',
-			'action' => 'index',
-			'pass' => array(),
-			'named' => array(
-				'wibble' => 'spin',
-				'fish' => 'trout',
-				'fizz' => 'buzz'
-			)
+				'controller' => 'comments',
+				'action' => 'index',
+				'pass' => array(),
+				'named' => array(
+						'wibble' => 'spin',
+						'fish' => 'trout',
+						'fizz' => 'buzz'
+				)
 		);
 		$this->assertEquals($expected, $result, 'All params should be parsed as conditions were met.');
 
 		$result = $route->parse('/comments/index/pattern:val--');
 		$expected = array(
-			'controller' => 'comments',
-			'action' => 'index',
-			'pass' => array('pattern:val--'),
-			'named' => array()
+				'controller' => 'comments',
+				'action' => 'index',
+				'pass' => array('pattern:val--'),
+				'named' => array()
 		);
 		$this->assertEquals($expected, $result, 'Named parameter pattern unmet.');
 
 		$result = $route->parse('/comments/index/pattern:val-2');
 		$expected = array(
-			'controller' => 'comments',
-			'action' => 'index',
-			'pass' => array(),
-			'named' => array('pattern' => 'val-2')
+				'controller' => 'comments',
+				'action' => 'index',
+				'pass' => array(),
+				'named' => array('pattern' => 'val-2')
 		);
 		$this->assertEquals($expected, $result, 'Named parameter pattern met.');
 	}
 
-/**
- * test that greedyNamed ignores rules.
- *
- * @return void
- */
+	/**
+	 * test that greedyNamed ignores rules.
+	 *
+	 * @return void
+	 */
 	public function testParseGreedyNamed() {
 		$route = new CakeRoute('/:controller/:action/*', array(), array(
-			'named' => array(
-				'fizz' => array('controller' => 'comments'),
-				'pattern' => 'val-[\d]+',
-			),
-			'greedyNamed' => true
+				'named' => array(
+						'fizz' => array('controller' => 'comments'),
+						'pattern' => 'val-[\d]+',
+				),
+				'greedyNamed' => TRUE
 		));
 		$result = $route->parse('/posts/display/wibble:spin/fizz:buzz/pattern:ignored');
 		$expected = array(
-			'controller' => 'posts',
-			'action' => 'display',
-			'pass' => array('fizz:buzz', 'pattern:ignored'),
-			'named' => array(
-				'wibble' => 'spin',
-			)
+				'controller' => 'posts',
+				'action' => 'display',
+				'pass' => array('fizz:buzz', 'pattern:ignored'),
+				'named' => array(
+						'wibble' => 'spin',
+				)
 		);
 		$this->assertEquals($expected, $result, 'Greedy named grabs everything, rules are followed');
 	}
 
-/**
- * Having greedNamed enabled should not capture routing.prefixes.
- *
- * @return void
- */
+	/**
+	 * Having greedNamed enabled should not capture routing.prefixes.
+	 *
+	 * @return void
+	 */
 	public function testMatchGreedyNamedExcludesPrefixes() {
 		Configure::write('Routing.prefixes', array('admin'));
 		Router::reload();
@@ -763,109 +763,109 @@ class CakeRouteTest extends CakeTestCase {
 		$this->assertFalse($route->match(array('controller' => 'sales', 'action' => 'index', 'admin' => 1)), 'Greedy named consume routing prefixes.');
 	}
 
-/**
- * test that parsing array format named parameters works
- *
- * @return void
- */
+	/**
+	 * test that parsing array format named parameters works
+	 *
+	 * @return void
+	 */
 	public function testParseArrayNamedParameters() {
 		$route = new CakeRoute('/:controller/:action/*');
 		$result = $route->parse('/tests/action/var[]:val1/var[]:val2');
 		$expected = array(
-			'controller' => 'tests',
-			'action' => 'action',
-			'named' => array(
-				'var' => array(
-					'val1',
-					'val2'
-				)
-			),
-			'pass' => array(),
+				'controller' => 'tests',
+				'action' => 'action',
+				'named' => array(
+						'var' => array(
+								'val1',
+								'val2'
+						)
+				),
+				'pass' => array(),
 		);
 		$this->assertEquals($expected, $result);
 
 		$result = $route->parse('/tests/action/theanswer[is]:42/var[]:val2/var[]:val3');
 		$expected = array(
-			'controller' => 'tests',
-			'action' => 'action',
-			'named' => array(
-				'theanswer' => array(
-					'is' => 42
+				'controller' => 'tests',
+				'action' => 'action',
+				'named' => array(
+						'theanswer' => array(
+								'is' => 42
+						),
+						'var' => array(
+								'val2',
+								'val3'
+						)
 				),
-				'var' => array(
-					'val2',
-					'val3'
-				)
-			),
-			'pass' => array(),
+				'pass' => array(),
 		);
 		$this->assertEquals($expected, $result);
 
 		$result = $route->parse('/tests/action/theanswer[is][not]:42/theanswer[]:5/theanswer[is]:6');
 		$expected = array(
-			'controller' => 'tests',
-			'action' => 'action',
-			'named' => array(
-				'theanswer' => array(
-					5,
-					'is' => array(
-						6,
-						'not' => 42
-					)
+				'controller' => 'tests',
+				'action' => 'action',
+				'named' => array(
+						'theanswer' => array(
+								5,
+								'is' => array(
+										6,
+										'not' => 42
+								)
+						),
 				),
-			),
-			'pass' => array(),
+				'pass' => array(),
 		);
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * Test that match can handle array named parameters
- *
- * @return void
- */
+	/**
+	 * Test that match can handle array named parameters
+	 *
+	 * @return void
+	 */
 	public function testMatchNamedParametersArray() {
 		$route = new CakeRoute('/:controller/:action/*');
 
 		$url = array(
-			'controller' => 'posts',
-			'action' => 'index',
-			'filter' => array(
-				'one',
-				'model' => 'value'
-			)
+				'controller' => 'posts',
+				'action' => 'index',
+				'filter' => array(
+						'one',
+						'model' => 'value'
+				)
 		);
 		$result = $route->match($url);
 		$expected = '/posts/index/filter%5B0%5D:one/filter%5Bmodel%5D:value';
 		$this->assertEquals($expected, $result);
 
 		$url = array(
-			'controller' => 'posts',
-			'action' => 'index',
-			'filter' => array(
-				'one',
-				'model' => array(
-					'two',
-					'order' => 'field'
+				'controller' => 'posts',
+				'action' => 'index',
+				'filter' => array(
+						'one',
+						'model' => array(
+								'two',
+								'order' => 'field'
+						)
 				)
-			)
 		);
 		$result = $route->match($url);
 		$expected = '/posts/index/filter%5B0%5D:one/filter%5Bmodel%5D%5B0%5D:two/filter%5Bmodel%5D%5Border%5D:field';
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * Test matching of parameters where one parameter name starts with another parameter name
- *
- * @return void
- */
+	/**
+	 * Test matching of parameters where one parameter name starts with another parameter name
+	 *
+	 * @return void
+	 */
 	public function testMatchSimilarParameters() {
 		$route = new CakeRoute('/:thisParam/:thisParamIsLonger');
 
 		$url = array(
-			'thisParamIsLonger' => 'bar',
-			'thisParam' => 'foo',
+				'thisParamIsLonger' => 'bar',
+				'thisParam' => 'foo',
 		);
 
 		$result = $route->match($url);
@@ -873,99 +873,99 @@ class CakeRouteTest extends CakeTestCase {
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * Test match() with trailing ** style routes.
- *
- * @return void
- */
+	/**
+	 * Test match() with trailing ** style routes.
+	 *
+	 * @return void
+	 */
 	public function testMatchTrailing() {
 		$route = new CakeRoute('/pages/**', array('controller' => 'pages', 'action' => 'display'));
 		$id = 'test/ spaces/漢字/la†în';
 		$result = $route->match(array(
-			'controller' => 'pages',
-			'action' => 'display',
-			$id
+				'controller' => 'pages',
+				'action' => 'display',
+				$id
 		));
 		$expected = '/pages/test/%20spaces/%E6%BC%A2%E5%AD%97/la%E2%80%A0%C3%AEn';
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * test restructuring args with pass key
- *
- * @return void
- */
+	/**
+	 * test restructuring args with pass key
+	 *
+	 * @return void
+	 */
 	public function testPassArgRestructure() {
 		$route = new CakeRoute('/:controller/:action/:slug', array(), array(
-			'pass' => array('slug')
+				'pass' => array('slug')
 		));
 		$result = $route->parse('/posts/view/my-title');
 		$expected = array(
-			'controller' => 'posts',
-			'action' => 'view',
-			'slug' => 'my-title',
-			'pass' => array('my-title'),
-			'named' => array()
+				'controller' => 'posts',
+				'action' => 'view',
+				'slug' => 'my-title',
+				'pass' => array('my-title'),
+				'named' => array()
 		);
 		$this->assertEquals($expected, $result, 'Slug should have moved');
 	}
 
-/**
- * Test the /** special type on parsing.
- *
- * @return void
- */
+	/**
+	 * Test the /** special type on parsing.
+	 *
+	 * @return void
+	 */
 	public function testParseTrailing() {
 		$route = new CakeRoute('/:controller/:action/**');
 		$result = $route->parse('/posts/index/1/2/3/foo:bar');
 		$expected = array(
-			'controller' => 'posts',
-			'action' => 'index',
-			'pass' => array('1/2/3/foo:bar'),
-			'named' => array()
+				'controller' => 'posts',
+				'action' => 'index',
+				'pass' => array('1/2/3/foo:bar'),
+				'named' => array()
 		);
 		$this->assertEquals($expected, $result);
 
 		$result = $route->parse('/posts/index/http://example.com');
 		$expected = array(
-			'controller' => 'posts',
-			'action' => 'index',
-			'pass' => array('http://example.com'),
-			'named' => array()
+				'controller' => 'posts',
+				'action' => 'index',
+				'pass' => array('http://example.com'),
+				'named' => array()
 		);
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * Test the /** special type on parsing - UTF8.
- *
- * @return void
- */
+	/**
+	 * Test the /** special type on parsing - UTF8.
+	 *
+	 * @return void
+	 */
 	public function testParseTrailingUTF8() {
 		$route = new CakeRoute('/category/**', array('controller' => 'categories', 'action' => 'index'));
 		$result = $route->parse('/category/%D9%85%D9%88%D8%A8%D8%A7%DB%8C%D9%84');
 		$expected = array(
-			'controller' => 'categories',
-			'action' => 'index',
-			'pass' => array('موبایل'),
-			'named' => array()
+				'controller' => 'categories',
+				'action' => 'index',
+				'pass' => array('موبایل'),
+				'named' => array()
 		);
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * test that utf-8 patterns work for :section
- *
- * @return void
- */
+	/**
+	 * test that utf-8 patterns work for :section
+	 *
+	 * @return void
+	 */
 	public function testUTF8PatternOnSection() {
 		$route = new CakeRoute(
-			'/:section',
-			array('plugin' => 'blogs', 'controller' => 'posts', 'action' => 'index'),
-			array(
-				'persist' => array('section'),
-				'section' => 'آموزش|weblog'
-			)
+				'/:section',
+				array('plugin' => 'blogs', 'controller' => 'posts', 'action' => 'index'),
+				array(
+						'persist' => array('section'),
+						'section' => 'آموزش|weblog'
+				)
 		);
 
 		$result = $route->parse('/%D8%A2%D9%85%D9%88%D8%B2%D8%B4');
@@ -977,28 +977,28 @@ class CakeRouteTest extends CakeTestCase {
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * Test for __set_state magic method on CakeRoute
- *
- * @return void
- */
+	/**
+	 * Test for __set_state magic method on CakeRoute
+	 *
+	 * @return void
+	 */
 	public function testSetState() {
 		$route = CakeRoute::__set_state(array(
-			'keys' => array(),
-			'options' => array(),
-			'defaults' => array(
-				'controller' => 'pages',
-				'action' => 'display',
-				'home',
-			),
-			'template' => '/',
-			'_greedy' => false,
-			'_compiledRoute' => null,
-			'_headerMap' => array (
-				'type' => 'content_type',
-				'method' => 'request_method',
-				'server' => 'server_name',
-			),
+				'keys' => array(),
+				'options' => array(),
+				'defaults' => array(
+						'controller' => 'pages',
+						'action' => 'display',
+						'home',
+				),
+				'template' => '/',
+				'_greedy' => FALSE,
+				'_compiledRoute' => NULL,
+				'_headerMap' => array(
+						'type' => 'content_type',
+						'method' => 'request_method',
+						'server' => 'server_name',
+				),
 		));
 		$this->assertInstanceOf('CakeRoute', $route);
 		$this->assertSame('/', $route->match(array('controller' => 'pages', 'action' => 'display', 'home')));

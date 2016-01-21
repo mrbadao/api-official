@@ -21,37 +21,37 @@ App::uses('CakeText', 'Utility');
 /**
  * CakeText Tests
  *
- * @package Cake.Test.Case.Utility
+ * @package            Cake.Test.Case.Utility
  * @coversDefaultClass CakeText
  */
 class CakeTextTest extends CakeTestCase {
 
-/**
- * Setup object under test
- *
- * @return void
- */
+	/**
+	 * Setup object under test
+	 *
+	 * @return void
+	 */
 	public function setUp() {
 		parent::setUp();
 		$this->Text = new CakeText();
 	}
 
-/**
- * Tear down object under test
- *
- * @return void
- */
+	/**
+	 * Tear down object under test
+	 *
+	 * @return void
+	 */
 	public function tearDown() {
 		parent::tearDown();
 		unset($this->Text);
 	}
 
-/**
- * testUuidGeneration method
- *
- * @return void
- * @covers ::uuid
- */
+	/**
+	 * testUuidGeneration method
+	 *
+	 * @return void
+	 * @covers ::uuid
+	 */
 	public function testUuidGeneration() {
 		$result = CakeText::uuid();
 		$pattern = "/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/";
@@ -59,12 +59,12 @@ class CakeTextTest extends CakeTestCase {
 		$this->assertTrue($match);
 	}
 
-/**
- * testMultipleUuidGeneration method
- *
- * @return void
- * @covers ::uuid
- */
+	/**
+	 * testMultipleUuidGeneration method
+	 *
+	 * @return void
+	 * @covers ::uuid
+	 */
 	public function testMultipleUuidGeneration() {
 		$check = array();
 		$count = mt_rand(10, 1000);
@@ -79,12 +79,12 @@ class CakeTextTest extends CakeTestCase {
 		}
 	}
 
-/**
- * testInsert method
- *
- * @return void
- * @covers ::insert
- */
+	/**
+	 * testInsert method
+	 *
+	 * @return void
+	 * @covers ::insert
+	 */
 	public function testInsert() {
 		$string = 'some string';
 		$expected = 'some string';
@@ -140,32 +140,32 @@ class CakeTextTest extends CakeTestCase {
 
 		$string = ':a :b :c';
 		$expected = '2 3';
-		$result = CakeText::insert($string, array('b' => 2, 'c' => 3), array('clean' => true));
+		$result = CakeText::insert($string, array('b' => 2, 'c' => 3), array('clean' => TRUE));
 		$this->assertEquals($expected, $result);
 
 		$string = ':a :b :c';
 		$expected = '1 3';
-		$result = CakeText::insert($string, array('a' => 1, 'c' => 3), array('clean' => true));
+		$result = CakeText::insert($string, array('a' => 1, 'c' => 3), array('clean' => TRUE));
 		$this->assertEquals($expected, $result);
 
 		$string = ':a :b :c';
 		$expected = '2 3';
-		$result = CakeText::insert($string, array('b' => 2, 'c' => 3), array('clean' => true));
+		$result = CakeText::insert($string, array('b' => 2, 'c' => 3), array('clean' => TRUE));
 		$this->assertEquals($expected, $result);
 
 		$string = ':a, :b and :c';
 		$expected = '2 and 3';
-		$result = CakeText::insert($string, array('b' => 2, 'c' => 3), array('clean' => true));
+		$result = CakeText::insert($string, array('b' => 2, 'c' => 3), array('clean' => TRUE));
 		$this->assertEquals($expected, $result);
 
 		$string = '":a, :b and :c"';
 		$expected = '"1, 2"';
-		$result = CakeText::insert($string, array('a' => 1, 'b' => 2), array('clean' => true));
+		$result = CakeText::insert($string, array('a' => 1, 'b' => 2), array('clean' => TRUE));
 		$this->assertEquals($expected, $result);
 
 		$string = '"${a}, ${b} and ${c}"';
 		$expected = '"1, 2"';
-		$result = CakeText::insert($string, array('a' => 1, 'b' => 2), array('before' => '${', 'after' => '}', 'clean' => true));
+		$result = CakeText::insert($string, array('a' => 1, 'b' => 2), array('before' => '${', 'after' => '}', 'clean' => TRUE));
 		$this->assertEquals($expected, $result);
 
 		$string = '<img src=":src" alt=":alt" class="foo :extra bar"/>';
@@ -209,9 +209,9 @@ class CakeTextTest extends CakeTestCase {
 		$this->assertEquals($expected, $result);
 
 		$result = CakeText::insert(
-			':I.am: :not.yet: passing.',
-			array('I.am' => 'We are'),
-			array('before' => ':', 'after' => ':', 'clean' => true)
+				':I.am: :not.yet: passing.',
+				array('I.am' => 'We are'),
+				array('before' => ':', 'after' => ':', 'clean' => TRUE)
 		);
 		$expected = "We are passing.";
 		$this->assertEquals($expected, $result);
@@ -241,65 +241,65 @@ class CakeTextTest extends CakeTestCase {
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * test Clean Insert
- *
- * @return void
- * @covers ::cleanInsert
- */
+	/**
+	 * test Clean Insert
+	 *
+	 * @return void
+	 * @covers ::cleanInsert
+	 */
 	public function testCleanInsert() {
 		$result = CakeText::cleanInsert(':incomplete', array(
-			'clean' => true, 'before' => ':', 'after' => ''
+				'clean' => TRUE, 'before' => ':', 'after' => ''
 		));
 		$this->assertEquals('', $result);
 
 		$result = CakeText::cleanInsert(':incomplete', array(
-			'clean' => array('method' => 'text', 'replacement' => 'complete'),
-			'before' => ':', 'after' => '')
+						'clean' => array('method' => 'text', 'replacement' => 'complete'),
+						'before' => ':', 'after' => '')
 		);
 		$this->assertEquals('complete', $result);
 
 		$result = CakeText::cleanInsert(':in.complete', array(
-			'clean' => true, 'before' => ':', 'after' => ''
+				'clean' => TRUE, 'before' => ':', 'after' => ''
 		));
 		$this->assertEquals('', $result);
 
 		$result = CakeText::cleanInsert(':in.complete and', array(
-			'clean' => true, 'before' => ':', 'after' => '')
+						'clean' => TRUE, 'before' => ':', 'after' => '')
 		);
 		$this->assertEquals('', $result);
 
 		$result = CakeText::cleanInsert(':in.complete or stuff', array(
-			'clean' => true, 'before' => ':', 'after' => ''
+				'clean' => TRUE, 'before' => ':', 'after' => ''
 		));
 		$this->assertEquals('stuff', $result);
 
 		$result = CakeText::cleanInsert(
-			'<p class=":missing" id=":missing">Text here</p>',
-			array('clean' => 'html', 'before' => ':', 'after' => '')
+				'<p class=":missing" id=":missing">Text here</p>',
+				array('clean' => 'html', 'before' => ':', 'after' => '')
 		);
 		$this->assertEquals('<p>Text here</p>', $result);
 	}
 
-/**
- * Tests that non-insertable variables (i.e. arrays) are skipped when used as values in
- * CakeText::insert().
- *
- * @return void
- * @covers ::insert
- */
+	/**
+	 * Tests that non-insertable variables (i.e. arrays) are skipped when used as values in
+	 * CakeText::insert().
+	 *
+	 * @return void
+	 * @covers ::insert
+	 */
 	public function testAutoIgnoreBadInsertData() {
 		$data = array('foo' => 'alpha', 'bar' => 'beta', 'fale' => array());
 		$result = CakeText::insert('(:foo > :bar || :fale!)', $data, array('clean' => 'text'));
 		$this->assertEquals('(alpha > beta || !)', $result);
 	}
 
-/**
- * testTokenize method
- *
- * @return void
- * @covers ::tokenize
- */
+	/**
+	 * testTokenize method
+	 *
+	 * @return void
+	 * @covers ::tokenize
+	 */
 	public function testTokenize() {
 		$result = CakeText::tokenize('A,(short,boring test)');
 		$expected = array('A', '(short,boring test)');
@@ -331,65 +331,65 @@ class CakeTextTest extends CakeTestCase {
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * testReplaceWithQuestionMarkInString method
- *
- * @return void
- * @covers ::insert
- */
+	/**
+	 * testReplaceWithQuestionMarkInString method
+	 *
+	 * @return void
+	 * @covers ::insert
+	 */
 	public function testReplaceWithQuestionMarkInString() {
 		$string = ':a, :b and :c?';
 		$expected = '2 and 3?';
-		$result = CakeText::insert($string, array('b' => 2, 'c' => 3), array('clean' => true));
+		$result = CakeText::insert($string, array('b' => 2, 'c' => 3), array('clean' => TRUE));
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * test that wordWrap() works the same as built-in wordwrap function
- *
- * @dataProvider wordWrapProvider
- * @return void
- * @covers ::wordWrap
- * @covers ::_wordWrap
- */
-	public function testWordWrap($text, $width, $break = "\n", $cut = false) {
+	/**
+	 * test that wordWrap() works the same as built-in wordwrap function
+	 *
+	 * @dataProvider wordWrapProvider
+	 * @return void
+	 * @covers ::wordWrap
+	 * @covers ::_wordWrap
+	 */
+	public function testWordWrap($text, $width, $break = "\n", $cut = FALSE) {
 		$result = CakeText::wordWrap($text, $width, $break, $cut);
 		$expected = wordwrap($text, $width, $break, $cut);
 		$this->assertTextEquals($expected, $result, 'Text not wrapped same as built-in function.');
 	}
 
-/**
- * data provider for testWordWrap method
- *
- * @return array
- */
+	/**
+	 * data provider for testWordWrap method
+	 *
+	 * @return array
+	 */
 	public function wordWrapProvider() {
 		return array(
-			array(
-				'The quick brown fox jumped over the lazy dog.',
-				33
-			),
-			array(
-				'A very long woooooooooooord.',
-				8
-			),
-			array(
-				'A very long woooooooooooord. Right.',
-				8
-			),
+				array(
+						'The quick brown fox jumped over the lazy dog.',
+						33
+				),
+				array(
+						'A very long woooooooooooord.',
+						8
+				),
+				array(
+						'A very long woooooooooooord. Right.',
+						8
+				),
 		);
 	}
 
-/**
- * test that wordWrap() properly handle unicode strings.
- *
- * @return void
- * @covers ::wordWrap
- * @covers ::_wordWrap
- */
+	/**
+	 * test that wordWrap() properly handle unicode strings.
+	 *
+	 * @return void
+	 * @covers ::wordWrap
+	 * @covers ::_wordWrap
+	 */
 	public function testWordWrapUnicodeAware() {
 		$text = 'Но вим омниюм факёльиси элыктрам, мюнырэ лэгыры векж ыт. Выльёт квюандо нюмквуам ты кюм. Зыд эю рыбюм.';
-		$result = CakeText::wordWrap($text, 33, "\n", true);
+		$result = CakeText::wordWrap($text, 33, "\n", TRUE);
 		$expected = <<<TEXT
 Но вим омниюм факёльиси элыктрам,
 мюнырэ лэгыры векж ыт. Выльёт квю
@@ -409,13 +409,13 @@ TEXT;
 		$this->assertTextEquals($expected, $result, 'Text not wrapped.');
 	}
 
-/**
- * test that wordWrap() properly handle newline characters.
- *
- * @return void
- * @covers ::wordWrap
- * @covers ::_wordWrap
- */
+	/**
+	 * test that wordWrap() properly handle newline characters.
+	 *
+	 * @return void
+	 * @covers ::wordWrap
+	 * @covers ::_wordWrap
+	 */
 	public function testWordWrapNewlineAware() {
 		$text = 'This is a line that is almost the 55 chars long.
 This is a new sentence which is manually newlined, but is so long it needs two lines.';
@@ -428,14 +428,14 @@ TEXT;
 		$this->assertTextEquals($expected, $result, 'Text not wrapped.');
 	}
 
-/**
- * test wrap method.
- *
- * @return void
- * @covers ::wrap
- * @covers ::wordWrap
- * @covers ::_wordWrap
- */
+	/**
+	 * test wrap method.
+	 *
+	 * @return void
+	 * @covers ::wrap
+	 * @covers ::wordWrap
+	 * @covers ::_wordWrap
+	 */
 	public function testWrap() {
 		$text = 'This is the song that never ends. This is the song that never ends. This is the song that never ends.';
 		$result = CakeText::wrap($text, 33);
@@ -446,13 +446,13 @@ This is the song that never ends.
 TEXT;
 		$this->assertTextEquals($expected, $result, 'Text not wrapped.');
 
-		$result = CakeText::wrap($text, array('width' => 20, 'wordWrap' => false));
+		$result = CakeText::wrap($text, array('width' => 20, 'wordWrap' => FALSE));
 		$expected = 'This is the song th' . "\n" .
-			'at never ends. This' . "\n" .
-			' is the song that n' . "\n" .
-			'ever ends. This is ' . "\n" .
-			'the song that never' . "\n" .
-			' ends.';
+				'at never ends. This' . "\n" .
+				' is the song that n' . "\n" .
+				'ever ends. This is ' . "\n" .
+				'the song that never' . "\n" .
+				' ends.';
 		$this->assertTextEquals($expected, $result, 'Text not wrapped.');
 
 		$text = 'Но вим омниюм факёльиси элыктрам, мюнырэ лэгыры векж ыт. Выльёт квюандо нюмквуам ты кюм. Зыд эю рыбюм.';
@@ -466,14 +466,14 @@ TEXT;
 		$this->assertTextEquals($expected, $result, 'Text not wrapped.');
 	}
 
-/**
- * test wrap() indenting
- *
- * @return void
- * @covers ::wrap
- * @covers ::wordWrap
- * @covers ::_wordWrap
- */
+	/**
+	 * test wrap() indenting
+	 *
+	 * @return void
+	 * @covers ::wrap
+	 * @covers ::wordWrap
+	 * @covers ::_wordWrap
+	 */
 	public function testWrapIndent() {
 		$text = 'This is the song that never ends. This is the song that never ends. This is the song that never ends.';
 		$result = CakeText::wrap($text, array('width' => 33, 'indent' => "\t", 'indentAt' => 1));
@@ -485,12 +485,12 @@ TEXT;
 		$this->assertTextEquals($expected, $result);
 	}
 
-/**
- * testTruncate method
- *
- * @return void
- * @covers ::truncate
- */
+	/**
+	 * testTruncate method
+	 *
+	 * @return void
+	 * @covers ::truncate
+	 */
 	public function testTruncate() {
 		$text1 = 'The quick brown fox jumps over the lazy dog';
 		$text2 = 'Heiz&ouml;lr&uuml;cksto&szlig;abd&auml;mpfung';
@@ -505,24 +505,24 @@ TEXT;
 
 		$elipsis = "\xe2\x80\xa6";
 		$this->assertSame($this->Text->truncate($text1, 15), 'The quick br...');
-		$this->assertSame($this->Text->truncate($text1, 15, array('exact' => false)), 'The quick...');
+		$this->assertSame($this->Text->truncate($text1, 15, array('exact' => FALSE)), 'The quick...');
 		$this->assertSame($this->Text->truncate($text1, 100), 'The quick brown fox jumps over the lazy dog');
 		$this->assertSame($this->Text->truncate($text2, 10), 'Heiz&ou...');
-		$this->assertSame($this->Text->truncate($text2, 10, array('exact' => false)), '...');
+		$this->assertSame($this->Text->truncate($text2, 10, array('exact' => FALSE)), '...');
 		$this->assertSame($this->Text->truncate($text3, 20), '<b>&copy; 2005-20...');
 		$this->assertSame($this->Text->truncate($text4, 15), '<img src="my...');
 		$this->assertSame($this->Text->truncate($text5, 6, array('ellipsis' => '')), '0<b>1<');
-		$this->assertSame($this->Text->truncate($text1, 15, array('html' => true)), 'The quick brow' . $elipsis);
-		$this->assertSame($this->Text->truncate($text1, 15, array('exact' => false, 'html' => true)), 'The quick' . $elipsis);
-		$this->assertSame($this->Text->truncate($text2, 10, array('html' => true)), 'Heiz&ouml;lr&uuml;c' . $elipsis);
-		$this->assertSame($this->Text->truncate($text2, 10, array('exact' => false, 'html' => true)), $elipsis);
-		$this->assertSame($this->Text->truncate($text3, 20, array('html' => true)), '<b>&copy; 2005-2007, Cake S' . $elipsis . '</b>');
-		$this->assertSame($this->Text->truncate($text4, 15, array('html' => true)), '<img src="mypic.jpg"> This image ta' . $elipsis);
-		$this->assertSame($this->Text->truncate($text4, 45, array('html' => true)), '<img src="mypic.jpg"> This image tag is not XHTML conform!<br><hr/><b>But the' . $elipsis . '</b>');
-		$this->assertSame($this->Text->truncate($text4, 90, array('html' => true)), '<img src="mypic.jpg"> This image tag is not XHTML conform!<br><hr/><b>But the following image tag should be conform <img src="mypic.jpg" alt="Me, myself and I" /></b><br />Great,' . $elipsis);
-		$this->assertSame($this->Text->truncate($text5, 6, array('ellipsis' => '', 'html' => true)), '0<b>1<i>2<span class="myclass">3</span>4<u>5</u></i></b>');
-		$this->assertSame($this->Text->truncate($text5, 20, array('ellipsis' => '', 'html' => true)), $text5);
-		$this->assertSame($this->Text->truncate($text6, 57, array('exact' => false, 'html' => true)), "<p><strong>Extra dates have been announced for this year's" . $elipsis . "</strong></p>");
+		$this->assertSame($this->Text->truncate($text1, 15, array('html' => TRUE)), 'The quick brow' . $elipsis);
+		$this->assertSame($this->Text->truncate($text1, 15, array('exact' => FALSE, 'html' => TRUE)), 'The quick' . $elipsis);
+		$this->assertSame($this->Text->truncate($text2, 10, array('html' => TRUE)), 'Heiz&ouml;lr&uuml;c' . $elipsis);
+		$this->assertSame($this->Text->truncate($text2, 10, array('exact' => FALSE, 'html' => TRUE)), $elipsis);
+		$this->assertSame($this->Text->truncate($text3, 20, array('html' => TRUE)), '<b>&copy; 2005-2007, Cake S' . $elipsis . '</b>');
+		$this->assertSame($this->Text->truncate($text4, 15, array('html' => TRUE)), '<img src="mypic.jpg"> This image ta' . $elipsis);
+		$this->assertSame($this->Text->truncate($text4, 45, array('html' => TRUE)), '<img src="mypic.jpg"> This image tag is not XHTML conform!<br><hr/><b>But the' . $elipsis . '</b>');
+		$this->assertSame($this->Text->truncate($text4, 90, array('html' => TRUE)), '<img src="mypic.jpg"> This image tag is not XHTML conform!<br><hr/><b>But the following image tag should be conform <img src="mypic.jpg" alt="Me, myself and I" /></b><br />Great,' . $elipsis);
+		$this->assertSame($this->Text->truncate($text5, 6, array('ellipsis' => '', 'html' => TRUE)), '0<b>1<i>2<span class="myclass">3</span>4<u>5</u></i></b>');
+		$this->assertSame($this->Text->truncate($text5, 20, array('ellipsis' => '', 'html' => TRUE)), $text5);
+		$this->assertSame($this->Text->truncate($text6, 57, array('exact' => FALSE, 'html' => TRUE)), "<p><strong>Extra dates have been announced for this year's" . $elipsis . "</strong></p>");
 		$this->assertSame($this->Text->truncate($text7, 255), $text7);
 		$this->assertSame($this->Text->truncate($text7, 15), 'El moño está...');
 		$this->assertSame($this->Text->truncate($text8, 15), 'Vive la R' . chr(195) . chr(169) . 'pu...');
@@ -531,9 +531,9 @@ TEXT;
 
 		$text = '<p><span style="font-size: medium;"><a>Iamatestwithnospacesandhtml</a></span></p>';
 		$result = $this->Text->truncate($text, 10, array(
-			'ellipsis' => '...',
-			'exact' => false,
-			'html' => true
+				'ellipsis' => '...',
+				'exact' => FALSE,
+				'html' => TRUE
 		));
 		$expected = '<p><span style="font-size: medium;"><a>...</a></span></p>';
 		$this->assertEquals($expected, $result);
@@ -554,9 +554,9 @@ podeís adquirirla.</span></p>
 <p><span style="font-size: medium;"><a>http://www.amazon.com/Steve-
 Jobs-Walter-Isaacson/dp/1451648537</a></span></p>';
 		$result = $this->Text->truncate($text, 500, array(
-			'ellipsis' => '... ',
-			'exact' => false,
-			'html' => true
+				'ellipsis' => '... ',
+				'exact' => FALSE,
+				'html' => TRUE
 		));
 		$expected = '<p><span style="font-size: medium;">El biógrafo de Steve Jobs, Walter
 Isaacson, explica porqué Jobs le pidió que le hiciera su biografía en
@@ -576,51 +576,51 @@ podeís adquirirla.</span></p>
 
 		// test deprecated `ending` (`ellipsis` taking precedence if both are defined)
 		$result = $this->Text->truncate($text1, 31, array(
-			'ending' => '.',
-			'exact' => false,
+				'ending' => '.',
+				'exact' => FALSE,
 		));
 		$expected = 'The quick brown fox jumps.';
 		$this->assertEquals($expected, $result);
 
 		$result = $this->Text->truncate($text1, 31, array(
-			'ellipsis' => '..',
-			'ending' => '.',
-			'exact' => false,
+				'ellipsis' => '..',
+				'ending' => '.',
+				'exact' => FALSE,
 		));
 		$expected = 'The quick brown fox jumps..';
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * testTruncate method with non utf8 sites
- *
- * @return void
- * @covers ::truncate
- */
+	/**
+	 * testTruncate method with non utf8 sites
+	 *
+	 * @return void
+	 * @covers ::truncate
+	 */
 	public function testTruncateLegacy() {
 		Configure::write('App.encoding', 'ISO-8859-1');
 		$text = '<b>&copy; 2005-2007, Cake Software Foundation, Inc.</b><br />written by Alexander Wegener';
 		$result = $this->Text->truncate($text, 31, array(
-			'html' => true,
-			'exact' => false,
+				'html' => TRUE,
+				'exact' => FALSE,
 		));
 		$expected = '<b>&copy; 2005-2007, Cake Software...</b>';
 		$this->assertEquals($expected, $result);
 
 		$result = $this->Text->truncate($text, 31, array(
-			'html' => true,
-			'exact' => true,
+				'html' => TRUE,
+				'exact' => TRUE,
 		));
 		$expected = '<b>&copy; 2005-2007, Cake Software F...</b>';
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * testTail method
- *
- * @return void
- * @covers ::tail
- */
+	/**
+	 * testTail method
+	 *
+	 * @return void
+	 * @covers ::tail
+	 */
 	public function testTail() {
 		$text1 = 'The quick brown fox jumps over the lazy dog';
 		$text2 = 'Heiz&ouml;lr&uuml;cksto&szlig;abd&auml;mpfung';
@@ -631,7 +631,7 @@ podeís adquirirla.</span></p>
 		$result = $this->Text->tail($text1, 13);
 		$this->assertEquals('...e lazy dog', $result);
 
-		$result = $this->Text->tail($text1, 13, array('exact' => false));
+		$result = $this->Text->tail($text1, 13, array('exact' => FALSE));
 		$this->assertEquals('...lazy dog', $result);
 
 		$result = $this->Text->tail($text1, 100);
@@ -640,7 +640,7 @@ podeís adquirirla.</span></p>
 		$result = $this->Text->tail($text2, 10);
 		$this->assertEquals('...;mpfung', $result);
 
-		$result = $this->Text->tail($text2, 10, array('exact' => false));
+		$result = $this->Text->tail($text2, 10, array('exact' => FALSE));
 		$this->assertEquals('...', $result);
 
 		$result = $this->Text->tail($text3, 255);
@@ -659,12 +659,12 @@ podeís adquirirla.</span></p>
 		$this->assertEquals('чшщъыь', $result);
 	}
 
-/**
- * testHighlight method
- *
- * @return void
- * @covers ::highlight
- */
+	/**
+	 * testHighlight method
+	 *
+	 * @return void
+	 * @covers ::highlight
+	 */
 	public function testHighlight() {
 		$text = 'This is a test text';
 		$phrases = array('This', 'text');
@@ -678,7 +678,7 @@ podeís adquirirla.</span></p>
 		$this->assertEquals($expected, $result);
 
 		$text = 'This is a test text';
-		$phrases = null;
+		$phrases = NULL;
 		$result = $this->Text->highlight($text, $phrases, array('format' => '<b>\1</b>'));
 		$this->assertEquals($text, $result);
 
@@ -694,18 +694,18 @@ podeís adquirirla.</span></p>
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * testHighlightHtml method
- *
- * @return void
- * @covers ::highlight
- */
+	/**
+	 * testHighlightHtml method
+	 *
+	 * @return void
+	 * @covers ::highlight
+	 */
 	public function testHighlightHtml() {
 		$text1 = '<p>strongbow isn&rsquo;t real cider</p>';
 		$text2 = '<p>strongbow <strong>isn&rsquo;t</strong> real cider</p>';
 		$text3 = '<img src="what-a-strong-mouse.png" alt="What a strong mouse!" />';
 		$text4 = 'What a strong mouse: <img src="what-a-strong-mouse.png" alt="What a strong mouse!" />';
-		$options = array('format' => '<b>\1</b>', 'html' => true);
+		$options = array('format' => '<b>\1</b>', 'html' => TRUE);
 
 		$expected = '<p><b>strong</b>bow isn&rsquo;t real cider</p>';
 		$this->assertEquals($expected, $this->Text->highlight($text1, 'strong', $options));
@@ -721,12 +721,12 @@ podeís adquirirla.</span></p>
 		$this->assertEquals($expected, $this->Text->highlight($text4, array('strong', 'what'), $options));
 	}
 
-/**
- * testHighlightMulti method
- *
- * @return void
- * @covers ::highlight
- */
+	/**
+	 * testHighlightMulti method
+	 *
+	 * @return void
+	 * @covers ::highlight
+	 */
 	public function testHighlightMulti() {
 		$text = 'This is a test text';
 		$phrases = array('This', 'text');
@@ -735,12 +735,12 @@ podeís adquirirla.</span></p>
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * testStripLinks method
- *
- * @return void
- * @covers ::stripLinks
- */
+	/**
+	 * testStripLinks method
+	 *
+	 * @return void
+	 * @covers ::stripLinks
+	 */
 	public function testStripLinks() {
 		$text = 'This is a test text';
 		$expected = 'This is a test text';
@@ -763,12 +763,12 @@ podeís adquirirla.</span></p>
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * testHighlightCaseInsensitivity method
- *
- * @return void
- * @covers ::highlight
- */
+	/**
+	 * testHighlightCaseInsensitivity method
+	 *
+	 * @return void
+	 * @covers ::highlight
+	 */
 	public function testHighlightCaseInsensitivity() {
 		$text = 'This is a Test text';
 		$expected = 'This is a <b>Test</b> text';
@@ -780,12 +780,12 @@ podeís adquirirla.</span></p>
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * testExcerpt method
- *
- * @return void
- * @covers ::excerpt
- */
+	/**
+	 * testExcerpt method
+	 *
+	 * @return void
+	 * @covers ::excerpt
+	 */
 	public function testExcerpt() {
 		$text = 'This is a phrase with test text to play with';
 
@@ -798,11 +798,11 @@ podeís adquirirla.</span></p>
 		$this->assertEquals($expected, $result);
 
 		$expected = 'This is a phras...';
-		$result = $this->Text->excerpt($text, null, 9, '...');
+		$result = $this->Text->excerpt($text, NULL, 9, '...');
 		$this->assertEquals($expected, $result);
 
 		$expected = $text;
-		$result = $this->Text->excerpt($text, null, 200, '...');
+		$result = $this->Text->excerpt($text, NULL, 200, '...');
 		$this->assertEquals($expected, $result);
 
 		$expected = '...a phrase w...';
@@ -821,12 +821,12 @@ podeís adquirirla.</span></p>
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * testExcerptCaseInsensitivity method
- *
- * @return void
- * @covers ::excerpt
- */
+	/**
+	 * testExcerptCaseInsensitivity method
+	 *
+	 * @return void
+	 * @covers ::excerpt
+	 */
 	public function testExcerptCaseInsensitivity() {
 		$text = 'This is a phrase with test text to play with';
 
@@ -839,12 +839,12 @@ podeís adquirirla.</span></p>
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * testListGeneration method
- *
- * @return void
- * @covers ::toList
- */
+	/**
+	 * testListGeneration method
+	 *
+	 * @return void
+	 * @covers ::toList
+	 */
 	public function testListGeneration() {
 		$result = $this->Text->toList(array());
 		$this->assertEquals('', $result);

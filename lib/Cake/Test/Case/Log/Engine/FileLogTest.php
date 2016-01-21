@@ -25,11 +25,11 @@ App::uses('FileLog', 'Log/Engine');
  */
 class FileLogTest extends CakeTestCase {
 
-/**
- * testLogFileWriting method
- *
- * @return void
- */
+	/**
+	 * testLogFileWriting method
+	 *
+	 * @return void
+	 */
 	public function testLogFileWriting() {
 		$this->_deleteLogs(LOGS);
 
@@ -53,11 +53,23 @@ class FileLogTest extends CakeTestCase {
 		$this->assertRegExp('/^2[0-9]{3}-[0-9]+-[0-9]+ [0-9]+:[0-9]+:[0-9]+ Random: Test warning/', $result);
 	}
 
-/**
- * test using the path setting to write logs in other places.
- *
- * @return void
- */
+	/**
+	 * helper function to clears all log files in specified directory
+	 *
+	 * @return void
+	 */
+	protected function _deleteLogs($dir) {
+		$files = array_merge(glob($dir . '*.log'), glob($dir . '*.log.*'));
+		foreach ($files as $file) {
+			unlink($file);
+		}
+	}
+
+	/**
+	 * test using the path setting to write logs in other places.
+	 *
+	 * @return void
+	 */
 	public function testPathSetting() {
 		$path = TMP . 'tests' . DS;
 		$this->_deleteLogs($path);
@@ -67,20 +79,20 @@ class FileLogTest extends CakeTestCase {
 		$this->assertTrue(file_exists($path . 'error.log'));
 	}
 
-/**
- * test log rotation
- *
- * @return void
- */
+	/**
+	 * test log rotation
+	 *
+	 * @return void
+	 */
 	public function testRotation() {
 		$path = TMP . 'tests' . DS;
 		$this->_deleteLogs($path);
 
 		file_put_contents($path . 'error.log', "this text is under 35 bytes\n");
 		$log = new FileLog(array(
-			'path' => $path,
-			'size' => 35,
-			'rotate' => 2
+				'path' => $path,
+				'size' => 35,
+				'rotate' => 2
 		));
 		$log->write('warning', 'Test warning one');
 		$this->assertTrue(file_exists($path . 'error.log'));
@@ -136,9 +148,9 @@ class FileLogTest extends CakeTestCase {
 
 		file_put_contents($path . 'debug.log', "this text is just greater than 35 bytes\n");
 		$log = new FileLog(array(
-			'path' => $path,
-			'size' => 35,
-			'rotate' => 0
+				'path' => $path,
+				'size' => 35,
+				'rotate' => 0
 		));
 		file_put_contents($path . 'debug.log.0000000000', "The oldest log file with over 35 bytes.\n");
 		$log->write('debug', 'Test debug');
@@ -178,17 +190,5 @@ class FileLogTest extends CakeTestCase {
 		$expected = '0640';
 		$this->assertEquals($expected, $result);
 		unlink($path . 'error.log');
-	}
-
-/**
- * helper function to clears all log files in specified directory
- *
- * @return void
- */
-	protected function _deleteLogs($dir) {
-		$files = array_merge(glob($dir . '*.log'), glob($dir . '*.log.*'));
-		foreach ($files as $file) {
-			unlink($file);
-		}
 	}
 }

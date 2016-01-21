@@ -30,48 +30,48 @@ App::uses('ComponentCollection', 'Controller');
  */
 class AclShellTest extends CakeTestCase {
 
-/**
- * Fixtures
- *
- * @var array
- */
+	/**
+	 * Fixtures
+	 *
+	 * @var array
+	 */
 	public $fixtures = array('core.aco', 'core.aro', 'core.aros_aco');
 
-/**
- * setUp method
- *
- * @return void
- */
+	/**
+	 * setUp method
+	 *
+	 * @return void
+	 */
 	public function setUp() {
 		parent::setUp();
 		Configure::write('Acl.database', 'test');
 		Configure::write('Acl.classname', 'DbAcl');
 
-		$out = $this->getMock('ConsoleOutput', array(), array(), '', false);
-		$in = $this->getMock('ConsoleInput', array(), array(), '', false);
+		$out = $this->getMock('ConsoleOutput', array(), array(), '', FALSE);
+		$in = $this->getMock('ConsoleInput', array(), array(), '', FALSE);
 
 		$this->Task = $this->getMock(
-			'AclShell',
-			array('in', 'out', 'hr', 'createFile', 'error', 'err', 'clear', 'dispatchShell'),
-			array($out, $out, $in)
+				'AclShell',
+				array('in', 'out', 'hr', 'createFile', 'error', 'err', 'clear', 'dispatchShell'),
+				array($out, $out, $in)
 		);
 		$collection = new ComponentCollection();
 		$this->Task->Acl = new AclComponent($collection);
 		$this->Task->params['datasource'] = 'test';
 	}
 
-/**
- * test that model.foreign_key output works when looking at acl rows
- *
- * @return void
- */
+	/**
+	 * test that model.foreign_key output works when looking at acl rows
+	 *
+	 * @return void
+	 */
 	public function testViewWithModelForeignKeyOutput() {
 		$this->Task->command = 'view';
 		$this->Task->startup();
 		$data = array(
-			'parent_id' => null,
-			'model' => 'MyModel',
-			'foreign_key' => 2,
+				'parent_id' => NULL,
+				'model' => 'MyModel',
+				'foreign_key' => 2,
 		);
 		$this->Task->Acl->Aro->create($data);
 		$this->Task->Acl->Aro->save();
@@ -79,22 +79,22 @@ class AclShellTest extends CakeTestCase {
 
 		$this->Task->expects($this->at(0))->method('out')->with('Aro tree:');
 		$this->Task->expects($this->at(2))->method('out')
-			->with($this->stringContains('[1] ROOT'));
+				->with($this->stringContains('[1] ROOT'));
 
 		$this->Task->expects($this->at(4))->method('out')
-			->with($this->stringContains('[3] Gandalf'));
+				->with($this->stringContains('[3] Gandalf'));
 
 		$this->Task->expects($this->at(6))->method('out')
-			->with($this->stringContains('[5] MyModel.2'));
+				->with($this->stringContains('[5] MyModel.2'));
 
 		$this->Task->view();
 	}
 
-/**
- * test view with an argument
- *
- * @return void
- */
+	/**
+	 * test view with an argument
+	 *
+	 * @return void
+	 */
 	public function testViewWithArgument() {
 		$this->Task->args = array('aro', 'admins');
 
@@ -106,11 +106,11 @@ class AclShellTest extends CakeTestCase {
 		$this->Task->view();
 	}
 
-/**
- * test the method that splits model.foreign key. and that it returns an array.
- *
- * @return void
- */
+	/**
+	 * test the method that splits model.foreign key. and that it returns an array.
+	 *
+	 * @return void
+	 */
 	public function testParsingModelAndForeignKey() {
 		$result = $this->Task->parseIdentifier('Model.foreignKey');
 		$expected = array('model' => 'Model', 'foreign_key' => 'foreignKey');
@@ -123,11 +123,11 @@ class AclShellTest extends CakeTestCase {
 		$this->assertEquals('111234', $result);
 	}
 
-/**
- * test creating aro/aco nodes
- *
- * @return void
- */
+	/**
+	 * test creating aro/aco nodes
+	 *
+	 * @return void
+	 */
 	public function testCreate() {
 		$this->Task->args = array('aro', 'root', 'User.1');
 		$this->Task->expects($this->at(0))->method('out')->with("<success>New Aro</success> 'User.1' created.", 2);
@@ -137,11 +137,11 @@ class AclShellTest extends CakeTestCase {
 		$this->Task->create();
 
 		$Aro = ClassRegistry::init('Aro');
-		$Aro->cacheQueries = false;
+		$Aro->cacheQueries = FALSE;
 		$result = $Aro->read();
 		$this->assertEquals('User', $result['Aro']['model']);
 		$this->assertEquals(1, $result['Aro']['foreign_key']);
-		$this->assertEquals(null, $result['Aro']['parent_id']);
+		$this->assertEquals(NULL, $result['Aro']['parent_id']);
 		$id = $result['Aro']['id'];
 
 		$this->Task->args = array('aro', 'User.1', 'User.3');
@@ -159,20 +159,20 @@ class AclShellTest extends CakeTestCase {
 		$Aro = ClassRegistry::init('Aro');
 		$result = $Aro->read();
 		$this->assertEquals('somealias', $result['Aro']['alias']);
-		$this->assertEquals(null, $result['Aro']['model']);
-		$this->assertEquals(null, $result['Aro']['foreign_key']);
-		$this->assertEquals(null, $result['Aro']['parent_id']);
+		$this->assertEquals(NULL, $result['Aro']['model']);
+		$this->assertEquals(NULL, $result['Aro']['foreign_key']);
+		$this->assertEquals(NULL, $result['Aro']['parent_id']);
 	}
 
-/**
- * test the delete method with different node types.
- *
- * @return void
- */
+	/**
+	 * test the delete method with different node types.
+	 *
+	 * @return void
+	 */
 	public function testDelete() {
 		$this->Task->args = array('aro', 'AuthUser.1');
 		$this->Task->expects($this->at(0))->method('out')
-			->with("<success>Aro deleted.</success>", 2);
+				->with("<success>Aro deleted.</success>", 2);
 		$this->Task->delete();
 
 		$Aro = ClassRegistry::init('Aro');
@@ -180,69 +180,69 @@ class AclShellTest extends CakeTestCase {
 		$this->assertSame(array(), $result);
 	}
 
-/**
- * test setParent method.
- *
- * @return void
- */
+	/**
+	 * test setParent method.
+	 *
+	 * @return void
+	 */
 	public function testSetParent() {
 		$this->Task->args = array('aro', 'AuthUser.2', 'root');
 		$this->Task->setParent();
 
 		$Aro = ClassRegistry::init('Aro');
-		$result = $Aro->read(null, 4);
-		$this->assertEquals(null, $result['Aro']['parent_id']);
+		$result = $Aro->read(NULL, 4);
+		$this->assertEquals(NULL, $result['Aro']['parent_id']);
 	}
 
-/**
- * test grant
- *
- * @return void
- */
+	/**
+	 * test grant
+	 *
+	 * @return void
+	 */
 	public function testGrant() {
 		$this->Task->args = array('AuthUser.2', 'ROOT/Controller1', 'create');
 		$this->Task->expects($this->at(0))->method('out')
-			->with($this->matchesRegularExpression('/granted/'), true);
+				->with($this->matchesRegularExpression('/granted/'), TRUE);
 		$this->Task->grant();
 		$node = $this->Task->Acl->Aro->node(array('model' => 'AuthUser', 'foreign_key' => 2));
-		$node = $this->Task->Acl->Aro->read(null, $node[0]['Aro']['id']);
+		$node = $this->Task->Acl->Aro->read(NULL, $node[0]['Aro']['id']);
 
 		$this->assertFalse(empty($node['Aco'][0]));
 		$this->assertEquals(1, $node['Aco'][0]['Permission']['_create']);
 	}
 
-/**
- * test deny
- *
- * @return void
- */
+	/**
+	 * test deny
+	 *
+	 * @return void
+	 */
 	public function testDeny() {
 		$this->Task->args = array('AuthUser.2', 'ROOT/Controller1', 'create');
 		$this->Task->expects($this->at(0))->method('out')
-			->with($this->stringContains('Permission denied'), true);
+				->with($this->stringContains('Permission denied'), TRUE);
 
 		$this->Task->deny();
 
 		$node = $this->Task->Acl->Aro->node(array('model' => 'AuthUser', 'foreign_key' => 2));
-		$node = $this->Task->Acl->Aro->read(null, $node[0]['Aro']['id']);
+		$node = $this->Task->Acl->Aro->read(NULL, $node[0]['Aro']['id']);
 		$this->assertFalse(empty($node['Aco'][0]));
 		$this->assertEquals(-1, $node['Aco'][0]['Permission']['_create']);
 	}
 
-/**
- * test checking allowed and denied perms
- *
- * @return void
- */
+	/**
+	 * test checking allowed and denied perms
+	 *
+	 * @return void
+	 */
 	public function testCheck() {
 		$this->Task->expects($this->at(0))->method('out')
-			->with($this->matchesRegularExpression('/not allowed/'), true);
+				->with($this->matchesRegularExpression('/not allowed/'), TRUE);
 		$this->Task->expects($this->at(1))->method('out')
-			->with($this->matchesRegularExpression('/granted/'), true);
+				->with($this->matchesRegularExpression('/granted/'), TRUE);
 		$this->Task->expects($this->at(2))->method('out')
-			->with($this->matchesRegularExpression('/is.*allowed/'), true);
+				->with($this->matchesRegularExpression('/is.*allowed/'), TRUE);
 		$this->Task->expects($this->at(3))->method('out')
-			->with($this->matchesRegularExpression('/not.*allowed/'), true);
+				->with($this->matchesRegularExpression('/not.*allowed/'), TRUE);
 
 		$this->Task->args = array('AuthUser.2', 'ROOT/Controller1', '*');
 		$this->Task->check();
@@ -257,16 +257,16 @@ class AclShellTest extends CakeTestCase {
 		$this->Task->check();
 	}
 
-/**
- * test inherit and that it 0's the permission fields.
- *
- * @return void
- */
+	/**
+	 * test inherit and that it 0's the permission fields.
+	 *
+	 * @return void
+	 */
 	public function testInherit() {
 		$this->Task->expects($this->at(0))->method('out')
-			->with($this->matchesRegularExpression('/Permission .*granted/'), true);
+				->with($this->matchesRegularExpression('/Permission .*granted/'), TRUE);
 		$this->Task->expects($this->at(1))->method('out')
-			->with($this->matchesRegularExpression('/Permission .*inherited/'), true);
+				->with($this->matchesRegularExpression('/Permission .*inherited/'), TRUE);
 
 		$this->Task->args = array('AuthUser.2', 'ROOT/Controller1', 'create');
 		$this->Task->grant();
@@ -275,16 +275,16 @@ class AclShellTest extends CakeTestCase {
 		$this->Task->inherit();
 
 		$node = $this->Task->Acl->Aro->node(array('model' => 'AuthUser', 'foreign_key' => 2));
-		$node = $this->Task->Acl->Aro->read(null, $node[0]['Aro']['id']);
+		$node = $this->Task->Acl->Aro->read(NULL, $node[0]['Aro']['id']);
 		$this->assertFalse(empty($node['Aco'][0]));
 		$this->assertEquals(0, $node['Aco'][0]['Permission']['_create']);
 	}
 
-/**
- * test getting the path for an aro/aco
- *
- * @return void
- */
+	/**
+	 * test getting the path for an aro/aco
+	 *
+	 * @return void
+	 */
 	public function testGetPath() {
 		$this->Task->args = array('aro', 'AuthUser.2');
 		$node = $this->Task->Acl->Aro->node(array('model' => 'AuthUser', 'foreign_key' => 2));
@@ -297,14 +297,14 @@ class AclShellTest extends CakeTestCase {
 		$this->Task->getPath();
 	}
 
-/**
- * test that initdb makes the correct call.
- *
- * @return void
- */
+	/**
+	 * test that initdb makes the correct call.
+	 *
+	 * @return void
+	 */
 	public function testInitDb() {
 		$this->Task->expects($this->once())->method('dispatchShell')
-			->with('schema create DbAcl');
+				->with('schema create DbAcl');
 
 		$this->Task->initdb();
 	}

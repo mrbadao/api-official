@@ -48,11 +48,11 @@ if ($plugins = CakePlugin::loaded()) {
 		$plugins[$key] = Inflector::underscore($value);
 	}
 	$pluginPattern = implode('|', $plugins);
-	$match = array('plugin' => $pluginPattern, 'defaultRoute' => true);
-	$shortParams = array('routeClass' => 'PluginShortRoute', 'plugin' => $pluginPattern, 'defaultRoute' => true);
+	$match = array('plugin' => $pluginPattern, 'defaultRoute' => TRUE);
+	$shortParams = array('routeClass' => 'PluginShortRoute', 'plugin' => $pluginPattern, 'defaultRoute' => TRUE);
 
 	foreach ($prefixes as $prefix) {
-		$params = array('prefix' => $prefix, $prefix => true);
+		$params = array('prefix' => $prefix, $prefix => TRUE);
 		$indexParams = $params + array('action' => 'index');
 		Router::connect("/{$prefix}/:plugin", $indexParams, $shortParams);
 		Router::connect("/{$prefix}/:plugin/:controller", $indexParams, $match);
@@ -64,19 +64,19 @@ if ($plugins = CakePlugin::loaded()) {
 }
 
 foreach ($prefixes as $prefix) {
-	$params = array('prefix' => $prefix, $prefix => true);
+	$params = array('prefix' => $prefix, $prefix => TRUE);
 	$indexParams = $params + array('action' => 'index');
-	Router::connect("/{$prefix}/:controller", $indexParams, array('defaultRoute' => true));
-	Router::connect("/{$prefix}/:controller/:action/*", $params, array('defaultRoute' => true));
+	Router::connect("/{$prefix}/:controller", $indexParams, array('defaultRoute' => TRUE));
+	Router::connect("/{$prefix}/:controller/:action/*", $params, array('defaultRoute' => TRUE));
 }
-Router::connect('/:controller', array('action' => 'index'), array('defaultRoute' => true));
-Router::connect('/:controller/:action/*', array(), array('defaultRoute' => true));
+Router::connect('/:controller', array('action' => 'index'), array('defaultRoute' => TRUE));
+Router::connect('/:controller/:action/*', array(), array('defaultRoute' => TRUE));
 
 $namedConfig = Router::namedConfig();
-if ($namedConfig['rules'] === false) {
-	Router::connectNamed(true);
+if ($namedConfig['rules'] === FALSE) {
+	Router::connectNamed(TRUE);
 }
 
 unset($namedConfig, $params, $indexParams, $prefix, $prefixes, $shortParams, $match,
-	$pluginPattern, $plugins, $key, $value);
+		$pluginPattern, $plugins, $key, $value);
 

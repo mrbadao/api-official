@@ -4,7 +4,7 @@ class TestAppsExceptionRenderer extends ExceptionRenderer {
 
 	protected function _getController($exception) {
 		App::uses('TestAppsErrorController', 'Controller');
-		if (!$request = Router::getRequest(true)) {
+		if (!$request = Router::getRequest(TRUE)) {
 			$request = new CakeRequest();
 		}
 		$response = new CakeResponse();
@@ -15,6 +15,7 @@ class TestAppsExceptionRenderer extends ExceptionRenderer {
 			$controller = new Controller($request, $response);
 			$controller->viewPath = 'Errors';
 		}
+
 		return $controller;
 	}
 

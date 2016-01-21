@@ -1,18 +1,18 @@
 <?php
 
-	/**
-	 * Represents foo.
-	 */
-	class Foo {
-	}
+/**
+ * Represents foo.
+ */
+class Foo {
+}
 
-	/**
-	 * @param mixed $bar
-	 */
-	function &foo($bar) {
-		$baz = function () {
-		};
-		$a = TRUE ? TRUE : FALSE;
-		$b = "{$a}";
-		$c = "${b}";
-	}
+/**
+ * @param mixed $bar
+ */
+function &foo($bar) {
+	$baz = function () {
+	};
+	$a = TRUE ? TRUE : FALSE;
+	$b = "{$a}";
+	$c = "${b}";
+}

@@ -7,11 +7,11 @@
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright	  Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link		  http://cakephp.org CakePHP(tm) Project
- * @package		  Cake.Test.TestApp.Routing.Filter
- * @since		  CakePHP(tm) v 2.2
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @copyright        Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @link             http://cakephp.org CakePHP(tm) Project
+ * @package          Cake.Test.TestApp.Routing.Filter
+ * @since            CakePHP(tm) v 2.2
+ * @license          http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
 App::uses('DispatcherFilter', 'Routing');
@@ -19,12 +19,12 @@ App::uses('DispatcherFilter', 'Routing');
 /**
  * Class TestDispatcherFilter
  *
- * @package		  Cake.Test.TestApp.Routing.Filter
+ * @package          Cake.Test.TestApp.Routing.Filter
  */
 class TestDispatcherFilter extends DispatcherFilter {
 
 	public function beforeDispatch(CakeEvent $event) {
-		$event->data['request']->params['altered'] = true;
+		$event->data['request']->params['altered'] = TRUE;
 	}
 
 	public function afterDispatch(CakeEvent $event) {

@@ -23,14 +23,15 @@
  */
 class DigestAuthentication {
 
-/**
- * Authentication
- *
- * @param HttpSocket $http Http socket instance.
- * @param array &$authInfo Authentication info.
- * @return void
- * @link http://www.ietf.org/rfc/rfc2617.txt
- */
+	/**
+	 * Authentication
+	 *
+	 * @param HttpSocket $http      Http socket instance.
+	 * @param array      &$authInfo Authentication info.
+	 *
+	 * @return void
+	 * @link http://www.ietf.org/rfc/rfc2617.txt
+	 */
 	public static function authentication(HttpSocket $http, &$authInfo) {
 		if (isset($authInfo['user'], $authInfo['pass'])) {
 			if (!isset($authInfo['realm']) && !static::_getServerInformation($http, $authInfo)) {
@@ -40,22 +41,23 @@ class DigestAuthentication {
 		}
 	}
 
-/**
- * Retrieve information about the authentication
- *
- * @param HttpSocket $http Http socket instance.
- * @param array &$authInfo Authentication info.
- * @return bool
- */
+	/**
+	 * Retrieve information about the authentication
+	 *
+	 * @param HttpSocket $http      Http socket instance.
+	 * @param array      &$authInfo Authentication info.
+	 *
+	 * @return bool
+	 */
 	protected static function _getServerInformation(HttpSocket $http, &$authInfo) {
 		$originalRequest = $http->request;
-		$http->configAuth(false);
+		$http->configAuth(FALSE);
 		$http->request($http->request);
 		$http->request = $originalRequest;
 		$http->configAuth('Digest', $authInfo);
 
 		if (empty($http->response['header']['WWW-Authenticate'])) {
-			return false;
+			return FALSE;
 		}
 		preg_match_all('@(\w+)=(?:(?:")([^"]+)"|([^\s,$]+))@', $http->response['header']['WWW-Authenticate'], $matches, PREG_SET_ORDER);
 		foreach ($matches as $match) {
@@ -64,16 +66,18 @@ class DigestAuthentication {
 		if (!empty($authInfo['qop']) && empty($authInfo['nc'])) {
 			$authInfo['nc'] = 1;
 		}
-		return true;
+
+		return TRUE;
 	}
 
-/**
- * Generate the header Authorization
- *
- * @param HttpSocket $http Http socket instance.
- * @param array &$authInfo Authentication info.
- * @return string
- */
+	/**
+	 * Generate the header Authorization
+	 *
+	 * @param HttpSocket $http      Http socket instance.
+	 * @param array      &$authInfo Authentication info.
+	 *
+	 * @return string
+	 */
 	protected static function _generateHeader(HttpSocket $http, &$authInfo) {
 		$a1 = md5($authInfo['user'] . ':' . $authInfo['realm'] . ':' . $authInfo['pass']);
 		$a2 = md5($http->request['method'] . ':' . $http->request['uri']['path']);
@@ -98,6 +102,7 @@ class DigestAuthentication {
 		if (!empty($authInfo['qop'])) {
 			$authHeader .= ', qop="auth", nc=' . $nc . ', cnonce="' . $authInfo['cnonce'] . '"';
 		}
+
 		return $authHeader;
 	}
 

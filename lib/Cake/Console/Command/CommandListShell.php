@@ -24,29 +24,29 @@ App::uses('Inflector', 'Utility');
  */
 class CommandListShell extends AppShell {
 
-/**
- * Contains tasks to load and instantiate
- *
- * @var array
- */
+	/**
+	 * Contains tasks to load and instantiate
+	 *
+	 * @var array
+	 */
 	public $tasks = array('Command');
 
-/**
- * startup
- *
- * @return void
- */
+	/**
+	 * startup
+	 *
+	 * @return void
+	 */
 	public function startup() {
 		if (empty($this->params['xml'])) {
 			parent::startup();
 		}
 	}
 
-/**
- * Main function Prints out the list of shells.
- *
- * @return void
- */
+	/**
+	 * Main function Prints out the list of shells.
+	 *
+	 * @return void
+	 */
 	public function main() {
 		if (empty($this->params['xml'])) {
 			$this->out(__d('cake_console', "<info>Current Paths:</info>"), 2);
@@ -74,12 +74,13 @@ class CommandListShell extends AppShell {
 		}
 	}
 
-/**
- * Output text.
- *
- * @param array $shellList The shell list.
- * @return void
- */
+	/**
+	 * Output text.
+	 *
+	 * @param array $shellList The shell list.
+	 *
+	 * @return void
+	 */
 	protected function _asText($shellList) {
 		foreach ($shellList as $plugin => $commands) {
 			sort($commands);
@@ -92,12 +93,13 @@ class CommandListShell extends AppShell {
 		$this->out(__d('cake_console', "To get help on a specific command, type <info>cake shell_name --help</info>"), 2);
 	}
 
-/**
- * Output as XML
- *
- * @param array $shellList The shell list.
- * @return void
- */
+	/**
+	 * Output as XML
+	 *
+	 * @param array $shellList The shell list.
+	 *
+	 * @return void
+	 */
 	protected function _asXml($shellList) {
 		$plugins = CakePlugin::loaded();
 		$shells = new SimpleXmlElement('<shells></shells>');
@@ -119,22 +121,22 @@ class CommandListShell extends AppShell {
 		$this->out($shells->saveXml());
 	}
 
-/**
- * Gets the option parser instance and configures it.
- *
- * @return ConsoleOptionParser
- */
+	/**
+	 * Gets the option parser instance and configures it.
+	 *
+	 * @return ConsoleOptionParser
+	 */
 	public function getOptionParser() {
 		$parser = parent::getOptionParser();
 
 		$parser->description(
-			__d('cake_console', 'Get the list of available shells for this CakePHP application.')
+				__d('cake_console', 'Get the list of available shells for this CakePHP application.')
 		)->addOption('sort', array(
-			'help' => __d('cake_console', 'Does nothing (deprecated)'),
-			'boolean' => true
+				'help' => __d('cake_console', 'Does nothing (deprecated)'),
+				'boolean' => TRUE
 		))->addOption('xml', array(
-			'help' => __d('cake_console', 'Get the listing as XML.'),
-			'boolean' => true
+				'help' => __d('cake_console', 'Get the listing as XML.'),
+				'boolean' => TRUE
 		));
 
 		return $parser;

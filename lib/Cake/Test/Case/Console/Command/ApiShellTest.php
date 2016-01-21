@@ -29,62 +29,62 @@ App::uses('ApiShell', 'Console/Command');
  */
 class ApiShellTest extends CakeTestCase {
 
-/**
- * setUp method
- *
- * @return void
- */
+	/**
+	 * setUp method
+	 *
+	 * @return void
+	 */
 	public function setUp() {
 		parent::setUp();
-		$out = $this->getMock('ConsoleOutput', array(), array(), '', false);
-		$in = $this->getMock('ConsoleInput', array(), array(), '', false);
+		$out = $this->getMock('ConsoleOutput', array(), array(), '', FALSE);
+		$in = $this->getMock('ConsoleInput', array(), array(), '', FALSE);
 
 		$this->Shell = $this->getMock(
-			'ApiShell',
-			array('in', 'out', 'createFile', 'hr', '_stop'),
-			array($out, $out, $in)
+				'ApiShell',
+				array('in', 'out', 'createFile', 'hr', '_stop'),
+				array($out, $out, $in)
 		);
 	}
 
-/**
- * Test that method names are detected properly including those with no arguments.
- *
- * @return void
- */
+	/**
+	 * Test that method names are detected properly including those with no arguments.
+	 *
+	 * @return void
+	 */
 	public function testMethodNameDetection() {
 		$this->Shell->expects($this->any())->method('in')->will($this->returnValue('q'));
 		$this->Shell->expects($this->at(0))->method('out')->with('Controller');
 
 		$expected = array(
-			'1. afterFilter()',
-			'2. afterScaffoldSave($method)',
-			'3. afterScaffoldSaveError($method)',
-			'4. beforeFilter()',
-			'5. beforeRedirect($url, $status = NULL, $exit = true)',
-			'6. beforeRender()',
-			'7. beforeScaffold($method)',
-			'8. constructClasses()',
-			'9. disableCache()',
-			'10. flash($message, $url, $pause = 1, $layout = \'flash\')',
-			'11. getEventManager()',
-			'12. header($status)',
-			'13. httpCodes($code = NULL)',
-			'14. implementedEvents()',
-			'15. invokeAction($request)',
-			'16. loadModel($modelClass = NULL, $id = NULL)',
-			'17. paginate($object = NULL, $scope = array (), $whitelist = array ())',
-			'18. postConditions($data = array (), $op = NULL, $bool = \'AND\', $exclusive = false)',
-			'19. redirect($url, $status = NULL, $exit = true)',
-			'20. referer($default = NULL, $local = false)',
-			'21. render($view = NULL, $layout = NULL)',
-			'22. scaffoldError($method)',
-			'23. set($one, $two = NULL)',
-			'24. setAction($action)',
-			'25. setRequest($request)',
-			'26. shutdownProcess()',
-			'27. startupProcess()',
-			'28. validate()',
-			'29. validateErrors()'
+				'1. afterFilter()',
+				'2. afterScaffoldSave($method)',
+				'3. afterScaffoldSaveError($method)',
+				'4. beforeFilter()',
+				'5. beforeRedirect($url, $status = NULL, $exit = true)',
+				'6. beforeRender()',
+				'7. beforeScaffold($method)',
+				'8. constructClasses()',
+				'9. disableCache()',
+				'10. flash($message, $url, $pause = 1, $layout = \'flash\')',
+				'11. getEventManager()',
+				'12. header($status)',
+				'13. httpCodes($code = NULL)',
+				'14. implementedEvents()',
+				'15. invokeAction($request)',
+				'16. loadModel($modelClass = NULL, $id = NULL)',
+				'17. paginate($object = NULL, $scope = array (), $whitelist = array ())',
+				'18. postConditions($data = array (), $op = NULL, $bool = \'AND\', $exclusive = false)',
+				'19. redirect($url, $status = NULL, $exit = true)',
+				'20. referer($default = NULL, $local = false)',
+				'21. render($view = NULL, $layout = NULL)',
+				'22. scaffoldError($method)',
+				'23. set($one, $two = NULL)',
+				'24. setAction($action)',
+				'25. setRequest($request)',
+				'26. shutdownProcess()',
+				'27. startupProcess()',
+				'28. validate()',
+				'29. validateErrors()'
 		);
 		$this->Shell->expects($this->at(2))->method('out')->with($expected);
 

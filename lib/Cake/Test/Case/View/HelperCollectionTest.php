@@ -33,33 +33,33 @@ class HtmlAliasHelper extends HtmlHelper {
  */
 class HelperCollectionTest extends CakeTestCase {
 
-/**
- * setUp
- *
- * @return void
- */
+	/**
+	 * setUp
+	 *
+	 * @return void
+	 */
 	public function setUp() {
 		parent::setUp();
-		$this->View = $this->getMock('View', array(), array(null));
+		$this->View = $this->getMock('View', array(), array(NULL));
 		$this->Helpers = new HelperCollection($this->View);
 	}
 
-/**
- * tearDown
- *
- * @return void
- */
+	/**
+	 * tearDown
+	 *
+	 * @return void
+	 */
 	public function tearDown() {
 		CakePlugin::unload();
 		unset($this->Helpers, $this->View);
 		parent::tearDown();
 	}
 
-/**
- * test triggering callbacks on loaded helpers
- *
- * @return void
- */
+	/**
+	 * test triggering callbacks on loaded helpers
+	 *
+	 * @return void
+	 */
 	public function testLoad() {
 		$result = $this->Helpers->load('Html');
 		$this->assertInstanceOf('HtmlHelper', $result);
@@ -71,11 +71,11 @@ class HelperCollectionTest extends CakeTestCase {
 		$this->assertTrue($this->Helpers->enabled('Html'));
 	}
 
-/**
- * test lazy loading of helpers
- *
- * @return void
- */
+	/**
+	 * test lazy loading of helpers
+	 *
+	 * @return void
+	 */
 	public function testLazyLoad() {
 		$result = $this->Helpers->Html;
 		$this->assertInstanceOf('HtmlHelper', $result);
@@ -90,21 +90,21 @@ class HelperCollectionTest extends CakeTestCase {
 		$this->assertInstanceOf('OtherHelperHelper', $result);
 	}
 
-/**
- * test lazy loading of helpers
- *
- * @expectedException MissingHelperException
- * @return void
- */
+	/**
+	 * test lazy loading of helpers
+	 *
+	 * @expectedException MissingHelperException
+	 * @return void
+	 */
 	public function testLazyLoadException() {
 		$this->Helpers->NotAHelper;
 	}
 
-/**
- * Tests loading as an alias
- *
- * @return void
- */
+	/**
+	 * Tests loading as an alias
+	 *
+	 * @return void
+	 */
 	public function testLoadWithAlias() {
 		$result = $this->Helpers->load('Html', array('className' => 'HtmlAlias'));
 		$this->assertInstanceOf('HtmlAliasHelper', $result);
@@ -129,37 +129,37 @@ class HelperCollectionTest extends CakeTestCase {
 		App::build();
 	}
 
-/**
- * test that the enabled setting disables the helper.
- *
- * @return void
- */
+	/**
+	 * test that the enabled setting disables the helper.
+	 *
+	 * @return void
+	 */
 	public function testLoadWithEnabledFalse() {
-		$result = $this->Helpers->load('Html', array('enabled' => false));
+		$result = $this->Helpers->load('Html', array('enabled' => FALSE));
 		$this->assertInstanceOf('HtmlHelper', $result);
 		$this->assertInstanceOf('HtmlHelper', $this->Helpers->Html);
 
 		$this->assertFalse($this->Helpers->enabled('Html'), 'Html should be disabled');
 	}
 
-/**
- * test missinghelper exception
- *
- * @expectedException MissingHelperException
- * @return void
- */
+	/**
+	 * test missinghelper exception
+	 *
+	 * @expectedException MissingHelperException
+	 * @return void
+	 */
 	public function testLoadMissingHelper() {
 		$this->Helpers->load('ThisHelperShouldAlwaysBeMissing');
 	}
 
-/**
- * test loading a plugin helper.
- *
- * @return void
- */
+	/**
+	 * test loading a plugin helper.
+	 *
+	 * @return void
+	 */
 	public function testLoadPluginHelper() {
 		App::build(array(
-			'Plugin' => array(CAKE . 'Test' . DS . 'test_app' . DS . 'Plugin' . DS),
+				'Plugin' => array(CAKE . 'Test' . DS . 'test_app' . DS . 'Plugin' . DS),
 		));
 		CakePlugin::load(array('TestPlugin'));
 		$result = $this->Helpers->load('TestPlugin.OtherHelper');
@@ -169,11 +169,11 @@ class HelperCollectionTest extends CakeTestCase {
 		App::build();
 	}
 
-/**
- * test unload()
- *
- * @return void
- */
+	/**
+	 * test unload()
+	 *
+	 * @return void
+	 */
 	public function testUnload() {
 		$this->Helpers->load('Form');
 		$this->Helpers->load('Html');

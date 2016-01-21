@@ -19,18 +19,27 @@
 App::uses('ClassRegistry', 'Utility');
 
 /**
+ * Interface for testing ClassRegistry
+ */
+interface ClassRegistryInterfaceTest {
+
+	public function doSomething();
+
+}
+
+/**
  * ClassRegisterModel class
  *
  * @package       Cake.Test.Case.Utility
  */
 class ClassRegisterModel extends CakeTestModel {
 
-/**
- * useTable property
- *
- * @var bool
- */
-	public $useTable = false;
+	/**
+	 * useTable property
+	 *
+	 * @var bool
+	 */
+	public $useTable = FALSE;
 }
 
 /**
@@ -64,11 +73,11 @@ class RegisterArticleTag extends ClassRegisterModel {
  */
 class RegistryPluginAppModel extends ClassRegisterModel {
 
-/**
- * tablePrefix property
- *
- * @var string
- */
+	/**
+	 * tablePrefix property
+	 *
+	 * @var string
+	 */
 	public $tablePrefix = 'something_';
 }
 
@@ -87,6 +96,7 @@ class TestRegistryPluginModel extends RegistryPluginAppModel {
  */
 class RegisterCategory extends ClassRegisterModel {
 }
+
 /**
  * RegisterPrefixedDs class
  *
@@ -94,11 +104,11 @@ class RegisterCategory extends ClassRegisterModel {
  */
 class RegisterPrefixedDs extends ClassRegisterModel {
 
-/**
- * useDbConfig property
- *
- * @var string
- */
+	/**
+	 * useDbConfig property
+	 *
+	 * @var string
+	 */
 	public $useDbConfig = 'doesnotexist';
 }
 
@@ -112,26 +122,17 @@ abstract class ClassRegistryAbstractModel extends ClassRegisterModel {
 }
 
 /**
- * Interface for testing ClassRegistry
- */
-interface ClassRegistryInterfaceTest {
-
-	public function doSomething();
-
-}
-
-/**
  * ClassRegistryTest class
  *
  * @package       Cake.Test.Case.Utility
  */
 class ClassRegistryTest extends CakeTestCase {
 
-/**
- * testAddModel method
- *
- * @return void
- */
+	/**
+	 * testAddModel method
+	 *
+	 * @return void
+	 */
 	public function testAddModel() {
 		$Tag = ClassRegistry::init('RegisterArticleTag');
 		$this->assertInstanceOf('RegisterArticleTag', $Tag);
@@ -163,10 +164,10 @@ class ClassRegistryTest extends CakeTestCase {
 
 		$this->assertTrue($TagCopy->name === 'SomeOtherName');
 
-		$User = ClassRegistry::init(array('class' => 'RegisterUser', 'alias' => 'User', 'table' => false));
+		$User = ClassRegistry::init(array('class' => 'RegisterUser', 'alias' => 'User', 'table' => FALSE));
 		$this->assertInstanceOf('AppModel', $User);
 
-		$UserCopy = ClassRegistry::init(array('class' => 'RegisterUser', 'alias' => 'User', 'table' => false));
+		$UserCopy = ClassRegistry::init(array('class' => 'RegisterUser', 'alias' => 'User', 'table' => FALSE));
 		$this->assertInstanceOf('AppModel', $UserCopy);
 		$this->assertEquals($User, $UserCopy);
 
@@ -182,11 +183,11 @@ class ClassRegistryTest extends CakeTestCase {
 		$this->assertEquals('ParentCategory', $ParentCategory->alias);
 	}
 
-/**
- * testClassRegistryFlush method
- *
- * @return void
- */
+	/**
+	 * testClassRegistryFlush method
+	 *
+	 * @return void
+	 */
 	public function testClassRegistryFlush() {
 		ClassRegistry::init('RegisterArticleTag');
 
@@ -199,11 +200,11 @@ class ClassRegistryTest extends CakeTestCase {
 		$this->assertInstanceOf('RegisterArticleTag', $ArticleTag);
 	}
 
-/**
- * testAddMultipleModels method
- *
- * @return void
- */
+	/**
+	 * testAddMultipleModels method
+	 *
+	 * @return void
+	 */
 	public function testAddMultipleModels() {
 		$Article = ClassRegistry::isKeySet('Article');
 		$this->assertFalse($Article);
@@ -240,11 +241,11 @@ class ClassRegistryTest extends CakeTestCase {
 		$this->assertInstanceOf('RegisterArticleTag', $Tag);
 	}
 
-/**
- * testPluginAppModel method
- *
- * @return void
- */
+	/**
+	 * testPluginAppModel method
+	 *
+	 * @return void
+	 */
 	public function testPluginAppModel() {
 		$TestRegistryPluginModel = ClassRegistry::isKeySet('TestRegistryPluginModel');
 		$this->assertFalse($TestRegistryPluginModel);
@@ -256,7 +257,7 @@ class ClassRegistryTest extends CakeTestCase {
 
 		$this->assertEquals('something_', $TestRegistryPluginModel->tablePrefix);
 
-		$PluginUser = ClassRegistry::init(array('class' => 'RegistryPlugin.RegisterUser', 'alias' => 'RegistryPluginUser', 'table' => false));
+		$PluginUser = ClassRegistry::init(array('class' => 'RegistryPlugin.RegisterUser', 'alias' => 'RegistryPluginUser', 'table' => FALSE));
 		$this->assertInstanceOf('RegistryPluginAppModel', $PluginUser);
 
 		$PluginUserCopy = ClassRegistry::getObject('RegistryPluginUser');
@@ -265,13 +266,13 @@ class ClassRegistryTest extends CakeTestCase {
 		CakePlugin::unload();
 	}
 
-/**
- * Tests prefixed datasource names for test purposes
- *
- * @return void
- */
+	/**
+	 * Tests prefixed datasource names for test purposes
+	 *
+	 * @return void
+	 */
 	public function testPrefixedTestDatasource() {
-		ClassRegistry::config(array('testing' => true));
+		ClassRegistry::config(array('testing' => TRUE));
 		$Model = ClassRegistry::init('RegisterPrefixedDs');
 		$this->assertEquals('test', $Model->useDbConfig);
 		ClassRegistry::removeObject('RegisterPrefixedDs');
@@ -285,31 +286,31 @@ class ClassRegistryTest extends CakeTestCase {
 		$this->assertEquals('test_doesnotexist', $Model->useDbConfig);
 	}
 
-/**
- * Tests that passing the string parameter to init() will return false if the model does not exists
- *
- * @return void
- */
+	/**
+	 * Tests that passing the string parameter to init() will return false if the model does not exists
+	 *
+	 * @return void
+	 */
 	public function testInitStrict() {
-		$this->assertFalse(ClassRegistry::init('NonExistent', true));
+		$this->assertFalse(ClassRegistry::init('NonExistent', TRUE));
 	}
 
-/**
- * Test that you cannot init() an abstract class. An exception will be raised.
- *
- * @expectedException CakeException
- * @return void
- */
+	/**
+	 * Test that you cannot init() an abstract class. An exception will be raised.
+	 *
+	 * @expectedException CakeException
+	 * @return void
+	 */
 	public function testInitAbstractClass() {
 		ClassRegistry::init('ClassRegistryAbstractModel');
 	}
 
-/**
- * Test that you cannot init() an abstract class. A exception will be raised.
- *
- * @expectedException CakeException
- * @return void
- */
+	/**
+	 * Test that you cannot init() an abstract class. A exception will be raised.
+	 *
+	 * @expectedException CakeException
+	 * @return void
+	 */
 	public function testInitInterface() {
 		ClassRegistry::init('ClassRegistryInterfaceTest');
 	}

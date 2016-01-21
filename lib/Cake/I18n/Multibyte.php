@@ -23,34 +23,166 @@
  */
 class Multibyte {
 
-/**
- *  Holds the case folding values
- *
- * @var array
- */
+	/**
+	 *  Holds the case folding values
+	 *
+	 * @var array
+	 */
 	protected static $_caseFold = array();
 
-/**
- * Holds an array of Unicode code point ranges
- *
- * @var array
- */
+	/**
+	 * Holds an array of Unicode code point ranges
+	 *
+	 * @var array
+	 */
 	protected static $_codeRange = array();
 
-/**
- * Holds the current code point range
- *
- * @var string
- */
-	protected static $_table = null;
+	/**
+	 * Holds the current code point range
+	 *
+	 * @var string
+	 */
+	protected static $_table = NULL;
 
-/**
- * Converts a multibyte character string
- * to the decimal value of the character
- *
- * @param string $string String to convert.
- * @return array
- */
+	/**
+	 * Find position of first occurrence of a case-insensitive string.
+	 *
+	 * @param string $haystack The string from which to get the position of the first occurrence of $needle.
+	 * @param string $needle   The string to find in $haystack.
+	 * @param int    $offset   The position in $haystack to start searching.
+	 *
+	 * @return int|bool The numeric position of the first occurrence of $needle in the $haystack string,
+	 *    or false if $needle is not found.
+	 */
+	public static function stripos($haystack, $needle, $offset = 0) {
+		if (Multibyte::checkMultibyte($haystack)) {
+			$haystack = Multibyte::strtoupper($haystack);
+			$needle = Multibyte::strtoupper($needle);
+
+			return Multibyte::strpos($haystack, $needle, $offset);
+		}
+
+		return stripos($haystack, $needle, $offset);
+	}
+
+	/**
+	 * Check the $string for multibyte characters
+	 *
+	 * @param string $string Value to test.
+	 *
+	 * @return bool
+	 */
+	public static function checkMultibyte($string) {
+		$length = strlen($string);
+
+		for ($i = 0; $i < $length; $i++) {
+			$value = ord(($string[$i]));
+			if ($value > 128) {
+				return TRUE;
+			}
+		}
+
+		return FALSE;
+	}
+
+	/**
+	 * Make a string uppercase
+	 *
+	 * @param string $string The string being uppercased.
+	 *
+	 * @return string with all alphabetic characters converted to uppercase.
+	 */
+	public static function strtoupper($string) {
+		$utf8Map = Multibyte::utf8($string);
+
+		$length = count($utf8Map);
+		$replaced = array();
+		$upperCase = array();
+
+		for ($i = 0; $i < $length; $i++) {
+			$char = $utf8Map[$i];
+
+			if ($char < 128) {
+				$str = strtoupper(chr($char));
+				$strlen = strlen($str);
+				for ($ii = 0; $ii < $strlen; $ii++) {
+					$upper = ord(substr($str, $ii, 1));
+				}
+				$upperCase[] = $upper;
+				$matched = TRUE;
+
+			} else {
+				$matched = FALSE;
+				$keys = static::_find($char);
+				$keyCount = count($keys);
+
+				if (!empty($keys)) {
+					foreach ($keys as $key => $value) {
+						$matched = FALSE;
+						$replace = 0;
+						if ($length > 1 && count($keys[$key]['lower']) > 1) {
+							$j = 0;
+
+							for ($ii = 0, $count = count($keys[$key]['lower']); $ii < $count; $ii++) {
+								$nextChar = $utf8Map[$i + $ii];
+
+								if (isset($nextChar) && ($nextChar == $keys[$key]['lower'][$j + $ii])) {
+									$replace++;
+								}
+							}
+							if ($replace == $count) {
+								$upperCase[] = $keys[$key]['upper'];
+								$replaced = array_merge($replaced, array_values($keys[$key]['lower']));
+								$matched = TRUE;
+								break 1;
+							}
+						} elseif ($length > 1 && $keyCount > 1) {
+							$j = 0;
+							for ($ii = 1; $ii < $keyCount; $ii++) {
+								$nextChar = $utf8Map[$i + $ii - 1];
+
+								if (in_array($nextChar, $keys[$ii]['lower'])) {
+
+									for ($jj = 0, $count = count($keys[$ii]['lower']); $jj < $count; $jj++) {
+										$nextChar = $utf8Map[$i + $jj];
+
+										if (isset($nextChar) && ($nextChar == $keys[$ii]['lower'][$j + $jj])) {
+											$replace++;
+										}
+									}
+									if ($replace == $count) {
+										$upperCase[] = $keys[$ii]['upper'];
+										$replaced = array_merge($replaced, array_values($keys[$ii]['lower']));
+										$matched = TRUE;
+										break 2;
+									}
+								}
+							}
+						}
+						if ($keys[$key]['lower'][0] == $char) {
+							$upperCase[] = $keys[$key]['upper'];
+							$matched = TRUE;
+							break 1;
+						}
+					}
+				}
+			}
+			if ($matched === FALSE && !in_array($char, $replaced, TRUE)) {
+				$upperCase[] = $char;
+			}
+		}
+
+		return Multibyte::ascii($upperCase);
+	}
+
+	/**
+	 * Converts a multibyte character string
+	 * to the decimal value of the character
+	 *
+	 * @param string $string String to convert.
+	 *
+	 * @return array
+	 */
 	public static function utf8($string) {
 		$map = array();
 
@@ -80,703 +212,58 @@ class Multibyte {
 				}
 			}
 		}
+
 		return $map;
 	}
 
-/**
- * Converts the decimal value of a multibyte character string
- * to a string
- *
- * @param array $array Values array.
- * @return string
- */
-	public static function ascii($array) {
-		$ascii = '';
+	/**
+	 * Find the related code folding values for $char
+	 *
+	 * @param int    $char decimal value of character
+	 * @param string $type Type 'lower' or 'upper'. Defaults to 'lower'.
+	 *
+	 * @return array
+	 */
+	protected static function _find($char, $type = 'lower') {
+		$found = array();
+		if (!isset(static::$_codeRange[$char])) {
+			$range = static::_codepoint($char);
+			if ($range === FALSE) {
+				return array();
+			}
+			if (!Configure::configured('_cake_core_')) {
+				App::uses('PhpReader', 'Configure');
+				Configure::config('_cake_core_', new PhpReader(CAKE . 'Config' . DS));
+			}
+			Configure::load('unicode' . DS . 'casefolding' . DS . $range, '_cake_core_');
+			static::$_caseFold[$range] = Configure::read($range);
+			Configure::delete($range);
+		}
 
-		foreach ($array as $utf8) {
-			if ($utf8 < 128) {
-				$ascii .= chr($utf8);
-			} elseif ($utf8 < 2048) {
-				$ascii .= chr(192 + (($utf8 - ($utf8 % 64)) / 64));
-				$ascii .= chr(128 + ($utf8 % 64));
-			} else {
-				$ascii .= chr(224 + (($utf8 - ($utf8 % 4096)) / 4096));
-				$ascii .= chr(128 + ((($utf8 % 4096) - ($utf8 % 64)) / 64));
-				$ascii .= chr(128 + ($utf8 % 64));
+		if (!static::$_codeRange[$char]) {
+			return array();
+		}
+		static::$_table = static::$_codeRange[$char];
+		$count = count(static::$_caseFold[static::$_table]);
+
+		for ($i = 0; $i < $count; $i++) {
+			if ($type === 'lower' && static::$_caseFold[static::$_table][$i][$type][0] === $char) {
+				$found[] = static::$_caseFold[static::$_table][$i];
+			} elseif ($type === 'upper' && static::$_caseFold[static::$_table][$i][$type] === $char) {
+				$found[] = static::$_caseFold[static::$_table][$i];
 			}
 		}
-		return $ascii;
+
+		return $found;
 	}
 
-/**
- * Find position of first occurrence of a case-insensitive string.
- *
- * @param string $haystack The string from which to get the position of the first occurrence of $needle.
- * @param string $needle The string to find in $haystack.
- * @param int $offset The position in $haystack to start searching.
- * @return int|bool The numeric position of the first occurrence of $needle in the $haystack string,
- *    or false if $needle is not found.
- */
-	public static function stripos($haystack, $needle, $offset = 0) {
-		if (Multibyte::checkMultibyte($haystack)) {
-			$haystack = Multibyte::strtoupper($haystack);
-			$needle = Multibyte::strtoupper($needle);
-			return Multibyte::strpos($haystack, $needle, $offset);
-		}
-		return stripos($haystack, $needle, $offset);
-	}
-
-/**
- * Finds first occurrence of a string within another, case insensitive.
- *
- * @param string $haystack The string from which to get the first occurrence of $needle.
- * @param string $needle The string to find in $haystack.
- * @param bool $part Determines which portion of $haystack this function returns.
- *    If set to true, it returns all of $haystack from the beginning to the first occurrence of $needle.
- *    If set to false, it returns all of $haystack from the first occurrence of $needle to the end,
- *    Default value is false.
- * @return int|bool The portion of $haystack, or false if $needle is not found.
- */
-	public static function stristr($haystack, $needle, $part = false) {
-		$php = (PHP_VERSION < 5.3);
-
-		if (($php && $part) || Multibyte::checkMultibyte($haystack)) {
-			$check = Multibyte::strtoupper($haystack);
-			$check = Multibyte::utf8($check);
-			$found = false;
-
-			$haystack = Multibyte::utf8($haystack);
-			$haystackCount = count($haystack);
-
-			$needle = Multibyte::strtoupper($needle);
-			$needle = Multibyte::utf8($needle);
-			$needleCount = count($needle);
-
-			$parts = array();
-			$position = 0;
-
-			while (($found === false) && ($position < $haystackCount)) {
-				if (isset($needle[0]) && $needle[0] === $check[$position]) {
-					for ($i = 1; $i < $needleCount; $i++) {
-						if ($needle[$i] !== $check[$position + $i]) {
-							break;
-						}
-					}
-					if ($i === $needleCount) {
-						$found = true;
-					}
-				}
-				if (!$found) {
-					$parts[] = $haystack[$position];
-					unset($haystack[$position]);
-				}
-				$position++;
-			}
-
-			if ($found && $part && !empty($parts)) {
-				return Multibyte::ascii($parts);
-			} elseif ($found && !empty($haystack)) {
-				return Multibyte::ascii($haystack);
-			}
-			return false;
-		}
-
-		if (!$php) {
-			return stristr($haystack, $needle, $part);
-		}
-		return stristr($haystack, $needle);
-	}
-
-/**
- * Get string length.
- *
- * @param string $string The string being checked for length.
- * @return int The number of characters in string $string
- */
-	public static function strlen($string) {
-		if (Multibyte::checkMultibyte($string)) {
-			$string = Multibyte::utf8($string);
-			return count($string);
-		}
-		return strlen($string);
-	}
-
-/**
- * Find position of first occurrence of a string.
- *
- * @param string $haystack The string being checked.
- * @param string $needle The position counted from the beginning of haystack.
- * @param int $offset The search offset. If it is not specified, 0 is used.
- * @return int|bool The numeric position of the first occurrence of $needle in the $haystack string.
- *    If $needle is not found, it returns false.
- */
-	public static function strpos($haystack, $needle, $offset = 0) {
-		if (Multibyte::checkMultibyte($haystack)) {
-			$found = false;
-
-			$haystack = Multibyte::utf8($haystack);
-			$haystackCount = count($haystack);
-
-			$needle = Multibyte::utf8($needle);
-			$needleCount = count($needle);
-
-			$position = $offset;
-
-			while (($found === false) && ($position < $haystackCount)) {
-				if (isset($needle[0]) && $needle[0] === $haystack[$position]) {
-					for ($i = 1; $i < $needleCount; $i++) {
-						if ($needle[$i] !== $haystack[$position + $i]) {
-							break;
-						}
-					}
-					if ($i === $needleCount) {
-						$found = true;
-						$position--;
-					}
-				}
-				$position++;
-			}
-			if ($found) {
-				return $position;
-			}
-			return false;
-		}
-		return strpos($haystack, $needle, $offset);
-	}
-
-/**
- * Finds the last occurrence of a character in a string within another.
- *
- * @param string $haystack The string from which to get the last occurrence of $needle.
- * @param string $needle The string to find in $haystack.
- * @param bool $part Determines which portion of $haystack this function returns.
- *    If set to true, it returns all of $haystack from the beginning to the last occurrence of $needle.
- *    If set to false, it returns all of $haystack from the last occurrence of $needle to the end,
- *    Default value is false.
- * @return string|bool The portion of $haystack. or false if $needle is not found.
- */
-	public static function strrchr($haystack, $needle, $part = false) {
-		$check = Multibyte::utf8($haystack);
-		$found = false;
-
-		$haystack = Multibyte::utf8($haystack);
-		$haystackCount = count($haystack);
-
-		$matches = array_count_values($check);
-
-		$needle = Multibyte::utf8($needle);
-		$needleCount = count($needle);
-
-		$parts = array();
-		$position = 0;
-
-		while (($found === false) && ($position < $haystackCount)) {
-			if (isset($needle[0]) && $needle[0] === $check[$position]) {
-				for ($i = 1; $i < $needleCount; $i++) {
-					if ($needle[$i] !== $check[$position + $i]) {
-						if ($needle[$i] === $check[($position + $i) - 1]) {
-							$found = true;
-						}
-						unset($parts[$position - 1]);
-						$haystack = array_merge(array($haystack[$position]), $haystack);
-						break;
-					}
-				}
-				if (isset($matches[$needle[0]]) && $matches[$needle[0]] > 1) {
-					$matches[$needle[0]] = $matches[$needle[0]] - 1;
-				} elseif ($i === $needleCount) {
-					$found = true;
-				}
-			}
-
-			if (!$found && isset($haystack[$position])) {
-				$parts[] = $haystack[$position];
-				unset($haystack[$position]);
-			}
-			$position++;
-		}
-
-		if ($found && $part && !empty($parts)) {
-			return Multibyte::ascii($parts);
-		} elseif ($found && !empty($haystack)) {
-			return Multibyte::ascii($haystack);
-		}
-		return false;
-	}
-
-/**
- * Finds the last occurrence of a character in a string within another, case insensitive.
- *
- * @param string $haystack The string from which to get the last occurrence of $needle.
- * @param string $needle The string to find in $haystack.
- * @param bool $part Determines which portion of $haystack this function returns.
- *    If set to true, it returns all of $haystack from the beginning to the last occurrence of $needle.
- *    If set to false, it returns all of $haystack from the last occurrence of $needle to the end,
- *    Default value is false.
- * @return string|bool The portion of $haystack. or false if $needle is not found.
- */
-	public static function strrichr($haystack, $needle, $part = false) {
-		$check = Multibyte::strtoupper($haystack);
-		$check = Multibyte::utf8($check);
-		$found = false;
-
-		$haystack = Multibyte::utf8($haystack);
-		$haystackCount = count($haystack);
-
-		$matches = array_count_values($check);
-
-		$needle = Multibyte::strtoupper($needle);
-		$needle = Multibyte::utf8($needle);
-		$needleCount = count($needle);
-
-		$parts = array();
-		$position = 0;
-
-		while (($found === false) && ($position < $haystackCount)) {
-			if (isset($needle[0]) && $needle[0] === $check[$position]) {
-				for ($i = 1; $i < $needleCount; $i++) {
-					if ($needle[$i] !== $check[$position + $i]) {
-						if ($needle[$i] === $check[($position + $i) - 1]) {
-							$found = true;
-						}
-						unset($parts[$position - 1]);
-						$haystack = array_merge(array($haystack[$position]), $haystack);
-						break;
-					}
-				}
-				if (isset($matches[$needle[0]]) && $matches[$needle[0]] > 1) {
-					$matches[$needle[0]] = $matches[$needle[0]] - 1;
-				} elseif ($i === $needleCount) {
-					$found = true;
-				}
-			}
-
-			if (!$found && isset($haystack[$position])) {
-				$parts[] = $haystack[$position];
-				unset($haystack[$position]);
-			}
-			$position++;
-		}
-
-		if ($found && $part && !empty($parts)) {
-			return Multibyte::ascii($parts);
-		} elseif ($found && !empty($haystack)) {
-			return Multibyte::ascii($haystack);
-		}
-		return false;
-	}
-
-/**
- * Finds position of last occurrence of a string within another, case insensitive
- *
- * @param string $haystack The string from which to get the position of the last occurrence of $needle.
- * @param string $needle The string to find in $haystack.
- * @param int $offset The position in $haystack to start searching.
- * @return int|bool The numeric position of the last occurrence of $needle in the $haystack string,
- *    or false if $needle is not found.
- */
-	public static function strripos($haystack, $needle, $offset = 0) {
-		if (Multibyte::checkMultibyte($haystack)) {
-			$found = false;
-			$haystack = Multibyte::strtoupper($haystack);
-			$haystack = Multibyte::utf8($haystack);
-			$haystackCount = count($haystack);
-
-			$matches = array_count_values($haystack);
-
-			$needle = Multibyte::strtoupper($needle);
-			$needle = Multibyte::utf8($needle);
-			$needleCount = count($needle);
-
-			$position = $offset;
-
-			while (($found === false) && ($position < $haystackCount)) {
-				if (isset($needle[0]) && $needle[0] === $haystack[$position]) {
-					for ($i = 1; $i < $needleCount; $i++) {
-						if ($needle[$i] !== $haystack[$position + $i]) {
-							if ($needle[$i] === $haystack[($position + $i) - 1]) {
-								$position--;
-								$found = true;
-								continue;
-							}
-						}
-					}
-
-					if (!$offset && isset($matches[$needle[0]]) && $matches[$needle[0]] > 1) {
-						$matches[$needle[0]] = $matches[$needle[0]] - 1;
-					} elseif ($i === $needleCount) {
-						$found = true;
-						$position--;
-					}
-				}
-				$position++;
-			}
-			return ($found) ? $position : false;
-		}
-		return strripos($haystack, $needle, $offset);
-	}
-
-/**
- * Find position of last occurrence of a string in a string.
- *
- * @param string $haystack The string being checked, for the last occurrence of $needle.
- * @param string $needle The string to find in $haystack.
- * @param int $offset May be specified to begin searching an arbitrary number of characters into the string.
- *    Negative values will stop searching at an arbitrary point prior to the end of the string.
- * @return int|bool The numeric position of the last occurrence of $needle in the $haystack string.
- *    If $needle is not found, it returns false.
- */
-	public static function strrpos($haystack, $needle, $offset = 0) {
-		if (Multibyte::checkMultibyte($haystack)) {
-			$found = false;
-
-			$haystack = Multibyte::utf8($haystack);
-			$haystackCount = count($haystack);
-
-			$matches = array_count_values($haystack);
-
-			$needle = Multibyte::utf8($needle);
-			$needleCount = count($needle);
-
-			$position = $offset;
-
-			while (($found === false) && ($position < $haystackCount)) {
-				if (isset($needle[0]) && $needle[0] === $haystack[$position]) {
-					for ($i = 1; $i < $needleCount; $i++) {
-						if ($needle[$i] !== $haystack[$position + $i]) {
-							if ($needle[$i] === $haystack[($position + $i) - 1]) {
-								$position--;
-								$found = true;
-								continue;
-							}
-						}
-					}
-
-					if (!$offset && isset($matches[$needle[0]]) && $matches[$needle[0]] > 1) {
-						$matches[$needle[0]] = $matches[$needle[0]] - 1;
-					} elseif ($i === $needleCount) {
-						$found = true;
-						$position--;
-					}
-				}
-				$position++;
-			}
-			return ($found) ? $position : false;
-		}
-		return strrpos($haystack, $needle, $offset);
-	}
-
-/**
- * Finds first occurrence of a string within another
- *
- * @param string $haystack The string from which to get the first occurrence of $needle.
- * @param string $needle The string to find in $haystack
- * @param bool $part Determines which portion of $haystack this function returns.
- *    If set to true, it returns all of $haystack from the beginning to the first occurrence of $needle.
- *    If set to false, it returns all of $haystack from the first occurrence of $needle to the end,
- *    Default value is FALSE.
- * @return string|bool The portion of $haystack, or true if $needle is not found.
- */
-	public static function strstr($haystack, $needle, $part = false) {
-		$php = (PHP_VERSION < 5.3);
-
-		if (($php && $part) || Multibyte::checkMultibyte($haystack)) {
-			$check = Multibyte::utf8($haystack);
-			$found = false;
-
-			$haystack = Multibyte::utf8($haystack);
-			$haystackCount = count($haystack);
-
-			$needle = Multibyte::utf8($needle);
-			$needleCount = count($needle);
-
-			$parts = array();
-			$position = 0;
-
-			while (($found === false) && ($position < $haystackCount)) {
-				if (isset($needle[0]) && $needle[0] === $check[$position]) {
-					for ($i = 1; $i < $needleCount; $i++) {
-						if ($needle[$i] !== $check[$position + $i]) {
-							break;
-						}
-					}
-					if ($i === $needleCount) {
-						$found = true;
-					}
-				}
-				if (!$found) {
-					$parts[] = $haystack[$position];
-					unset($haystack[$position]);
-				}
-				$position++;
-			}
-
-			if ($found && $part && !empty($parts)) {
-				return Multibyte::ascii($parts);
-			} elseif ($found && !empty($haystack)) {
-				return Multibyte::ascii($haystack);
-			}
-			return false;
-		}
-
-		if (!$php) {
-			return strstr($haystack, $needle, $part);
-		}
-		return strstr($haystack, $needle);
-	}
-
-/**
- * Make a string lowercase
- *
- * @param string $string The string being lowercased.
- * @return string with all alphabetic characters converted to lowercase.
- */
-	public static function strtolower($string) {
-		$utf8Map = Multibyte::utf8($string);
-
-		$length = count($utf8Map);
-		$lowerCase = array();
-
-		for ($i = 0; $i < $length; $i++) {
-			$char = $utf8Map[$i];
-
-			if ($char < 128) {
-				$str = strtolower(chr($char));
-				$strlen = strlen($str);
-				for ($ii = 0; $ii < $strlen; $ii++) {
-					$lower = ord(substr($str, $ii, 1));
-				}
-				$lowerCase[] = $lower;
-				$matched = true;
-			} else {
-				$matched = false;
-				$keys = static::_find($char, 'upper');
-
-				if (!empty($keys)) {
-					foreach ($keys as $key => $value) {
-						if ($keys[$key]['upper'] == $char && count($keys[$key]['lower'][0]) === 1) {
-							$lowerCase[] = $keys[$key]['lower'][0];
-							$matched = true;
-							break 1;
-						}
-					}
-				}
-			}
-			if ($matched === false) {
-				$lowerCase[] = $char;
-			}
-		}
-		return Multibyte::ascii($lowerCase);
-	}
-
-/**
- * Make a string uppercase
- *
- * @param string $string The string being uppercased.
- * @return string with all alphabetic characters converted to uppercase.
- */
-	public static function strtoupper($string) {
-		$utf8Map = Multibyte::utf8($string);
-
-		$length = count($utf8Map);
-		$replaced = array();
-		$upperCase = array();
-
-		for ($i = 0; $i < $length; $i++) {
-			$char = $utf8Map[$i];
-
-			if ($char < 128) {
-				$str = strtoupper(chr($char));
-				$strlen = strlen($str);
-				for ($ii = 0; $ii < $strlen; $ii++) {
-					$upper = ord(substr($str, $ii, 1));
-				}
-				$upperCase[] = $upper;
-				$matched = true;
-
-			} else {
-				$matched = false;
-				$keys = static::_find($char);
-				$keyCount = count($keys);
-
-				if (!empty($keys)) {
-					foreach ($keys as $key => $value) {
-						$matched = false;
-						$replace = 0;
-						if ($length > 1 && count($keys[$key]['lower']) > 1) {
-							$j = 0;
-
-							for ($ii = 0, $count = count($keys[$key]['lower']); $ii < $count; $ii++) {
-								$nextChar = $utf8Map[$i + $ii];
-
-								if (isset($nextChar) && ($nextChar == $keys[$key]['lower'][$j + $ii])) {
-									$replace++;
-								}
-							}
-							if ($replace == $count) {
-								$upperCase[] = $keys[$key]['upper'];
-								$replaced = array_merge($replaced, array_values($keys[$key]['lower']));
-								$matched = true;
-								break 1;
-							}
-						} elseif ($length > 1 && $keyCount > 1) {
-							$j = 0;
-							for ($ii = 1; $ii < $keyCount; $ii++) {
-								$nextChar = $utf8Map[$i + $ii - 1];
-
-								if (in_array($nextChar, $keys[$ii]['lower'])) {
-
-									for ($jj = 0, $count = count($keys[$ii]['lower']); $jj < $count; $jj++) {
-										$nextChar = $utf8Map[$i + $jj];
-
-										if (isset($nextChar) && ($nextChar == $keys[$ii]['lower'][$j + $jj])) {
-											$replace++;
-										}
-									}
-									if ($replace == $count) {
-										$upperCase[] = $keys[$ii]['upper'];
-										$replaced = array_merge($replaced, array_values($keys[$ii]['lower']));
-										$matched = true;
-										break 2;
-									}
-								}
-							}
-						}
-						if ($keys[$key]['lower'][0] == $char) {
-							$upperCase[] = $keys[$key]['upper'];
-							$matched = true;
-							break 1;
-						}
-					}
-				}
-			}
-			if ($matched === false && !in_array($char, $replaced, true)) {
-				$upperCase[] = $char;
-			}
-		}
-		return Multibyte::ascii($upperCase);
-	}
-
-/**
- * Count the number of substring occurrences
- *
- * @param string $haystack The string being checked.
- * @param string $needle The string being found.
- * @return int The number of times the $needle substring occurs in the $haystack string.
- */
-	public static function substrCount($haystack, $needle) {
-		$count = 0;
-		$haystack = Multibyte::utf8($haystack);
-		$haystackCount = count($haystack);
-		$matches = array_count_values($haystack);
-		$needle = Multibyte::utf8($needle);
-		$needleCount = count($needle);
-
-		if ($needleCount === 1 && isset($matches[$needle[0]])) {
-			return $matches[$needle[0]];
-		}
-
-		for ($i = 0; $i < $haystackCount; $i++) {
-			if (isset($needle[0]) && $needle[0] === $haystack[$i]) {
-				for ($ii = 1; $ii < $needleCount; $ii++) {
-					if ($needle[$ii] === $haystack[$i + 1]) {
-						if ((isset($needle[$ii + 1]) && $haystack[$i + 2]) && $needle[$ii + 1] !== $haystack[$i + 2]) {
-							$count--;
-						} else {
-							$count++;
-						}
-					}
-				}
-			}
-		}
-		return $count;
-	}
-
-/**
- * Get part of string
- *
- * @param string $string The string being checked.
- * @param int $start The first position used in $string.
- * @param int $length The maximum length of the returned string.
- * @return string The portion of $string specified by the $string and $length parameters.
- */
-	public static function substr($string, $start, $length = null) {
-		if ($start === 0 && $length === null) {
-			return $string;
-		}
-
-		$string = Multibyte::utf8($string);
-
-		for ($i = 1; $i <= $start; $i++) {
-			unset($string[$i - 1]);
-		}
-
-		if ($length === null || count($string) < $length) {
-			return Multibyte::ascii($string);
-		}
-		$string = array_values($string);
-
-		$value = array();
-		for ($i = 0; $i < $length; $i++) {
-			$value[] = $string[$i];
-		}
-		return Multibyte::ascii($value);
-	}
-
-/**
- * Prepare a string for mail transport, using the provided encoding
- *
- * @param string $string value to encode
- * @param string $charset charset to use for encoding. defaults to UTF-8
- * @param string $newline Newline string.
- * @return string
- */
-	public static function mimeEncode($string, $charset = null, $newline = "\r\n") {
-		if (!Multibyte::checkMultibyte($string) && strlen($string) < 75) {
-			return $string;
-		}
-
-		if (empty($charset)) {
-			$charset = Configure::read('App.encoding');
-		}
-		$charset = strtoupper($charset);
-
-		$start = '=?' . $charset . '?B?';
-		$end = '?=';
-		$spacer = $end . $newline . ' ' . $start;
-
-		$length = 75 - strlen($start) - strlen($end);
-		$length = $length - ($length % 4);
-		if ($charset === 'UTF-8') {
-			$parts = array();
-			$maxchars = floor(($length * 3) / 4);
-			$stringLength = strlen($string);
-			while ($stringLength > $maxchars) {
-				$i = (int)$maxchars;
-				$test = ord($string[$i]);
-				while ($test >= 128 && $test <= 191) {
-					$i--;
-					$test = ord($string[$i]);
-				}
-				$parts[] = base64_encode(substr($string, 0, $i));
-				$string = substr($string, $i);
-				$stringLength = strlen($string);
-			}
-			$parts[] = base64_encode($string);
-			$string = implode($spacer, $parts);
-		} else {
-			$string = chunk_split(base64_encode($string), $length, $spacer);
-			$string = preg_replace('/' . preg_quote($spacer) . '$/', '', $string);
-		}
-		return $start . $string . $end;
-	}
-
-/**
- * Return the Code points range for Unicode characters
- *
- * @param int $decimal Decimal value.
- * @return string
- */
+	/**
+	 * Return the Code points range for Unicode characters
+	 *
+	 * @param int $decimal Decimal value.
+	 *
+	 * @return string
+	 */
 	protected static function _codepoint($decimal) {
 		if ($decimal > 128 && $decimal < 256) {
 			$return = '0080_00ff'; // Latin-1 Supplement
@@ -813,67 +300,625 @@ class Multibyte {
 		} elseif ($decimal >= 65280 && $decimal < 65520) {
 			$return = 'ff00_ffef'; // Halfwidth and Fullwidth Forms
 		} else {
-			$return = false;
+			$return = FALSE;
 		}
 		static::$_codeRange[$decimal] = $return;
+
 		return $return;
 	}
 
-/**
- * Find the related code folding values for $char
- *
- * @param int $char decimal value of character
- * @param string $type Type 'lower' or 'upper'. Defaults to 'lower'.
- * @return array
- */
-	protected static function _find($char, $type = 'lower') {
-		$found = array();
-		if (!isset(static::$_codeRange[$char])) {
-			$range = static::_codepoint($char);
-			if ($range === false) {
-				return array();
+	/**
+	 * Converts the decimal value of a multibyte character string
+	 * to a string
+	 *
+	 * @param array $array Values array.
+	 *
+	 * @return string
+	 */
+	public static function ascii($array) {
+		$ascii = '';
+
+		foreach ($array as $utf8) {
+			if ($utf8 < 128) {
+				$ascii .= chr($utf8);
+			} elseif ($utf8 < 2048) {
+				$ascii .= chr(192 + (($utf8 - ($utf8 % 64)) / 64));
+				$ascii .= chr(128 + ($utf8 % 64));
+			} else {
+				$ascii .= chr(224 + (($utf8 - ($utf8 % 4096)) / 4096));
+				$ascii .= chr(128 + ((($utf8 % 4096) - ($utf8 % 64)) / 64));
+				$ascii .= chr(128 + ($utf8 % 64));
 			}
-			if (!Configure::configured('_cake_core_')) {
-				App::uses('PhpReader', 'Configure');
-				Configure::config('_cake_core_', new PhpReader(CAKE . 'Config' . DS));
-			}
-			Configure::load('unicode' . DS . 'casefolding' . DS . $range, '_cake_core_');
-			static::$_caseFold[$range] = Configure::read($range);
-			Configure::delete($range);
 		}
 
-		if (!static::$_codeRange[$char]) {
-			return array();
-		}
-		static::$_table = static::$_codeRange[$char];
-		$count = count(static::$_caseFold[static::$_table]);
-
-		for ($i = 0; $i < $count; $i++) {
-			if ($type === 'lower' && static::$_caseFold[static::$_table][$i][$type][0] === $char) {
-				$found[] = static::$_caseFold[static::$_table][$i];
-			} elseif ($type === 'upper' && static::$_caseFold[static::$_table][$i][$type] === $char) {
-				$found[] = static::$_caseFold[static::$_table][$i];
-			}
-		}
-		return $found;
+		return $ascii;
 	}
 
-/**
- * Check the $string for multibyte characters
- *
- * @param string $string Value to test.
- * @return bool
- */
-	public static function checkMultibyte($string) {
-		$length = strlen($string);
+	/**
+	 * Find position of first occurrence of a string.
+	 *
+	 * @param string $haystack The string being checked.
+	 * @param string $needle   The position counted from the beginning of haystack.
+	 * @param int    $offset   The search offset. If it is not specified, 0 is used.
+	 *
+	 * @return int|bool The numeric position of the first occurrence of $needle in the $haystack string.
+	 *    If $needle is not found, it returns false.
+	 */
+	public static function strpos($haystack, $needle, $offset = 0) {
+		if (Multibyte::checkMultibyte($haystack)) {
+			$found = FALSE;
+
+			$haystack = Multibyte::utf8($haystack);
+			$haystackCount = count($haystack);
+
+			$needle = Multibyte::utf8($needle);
+			$needleCount = count($needle);
+
+			$position = $offset;
+
+			while (($found === FALSE) && ($position < $haystackCount)) {
+				if (isset($needle[0]) && $needle[0] === $haystack[$position]) {
+					for ($i = 1; $i < $needleCount; $i++) {
+						if ($needle[$i] !== $haystack[$position + $i]) {
+							break;
+						}
+					}
+					if ($i === $needleCount) {
+						$found = TRUE;
+						$position--;
+					}
+				}
+				$position++;
+			}
+			if ($found) {
+				return $position;
+			}
+
+			return FALSE;
+		}
+
+		return strpos($haystack, $needle, $offset);
+	}
+
+	/**
+	 * Finds first occurrence of a string within another, case insensitive.
+	 *
+	 * @param string $haystack The string from which to get the first occurrence of $needle.
+	 * @param string $needle   The string to find in $haystack.
+	 * @param bool   $part     Determines which portion of $haystack this function returns.
+	 *                         If set to true, it returns all of $haystack from the beginning to the first occurrence
+	 *                         of $needle. If set to false, it returns all of $haystack from the first occurrence of
+	 *                         $needle to the end, Default value is false.
+	 *
+	 * @return int|bool The portion of $haystack, or false if $needle is not found.
+	 */
+	public static function stristr($haystack, $needle, $part = FALSE) {
+		$php = (PHP_VERSION < 5.3);
+
+		if (($php && $part) || Multibyte::checkMultibyte($haystack)) {
+			$check = Multibyte::strtoupper($haystack);
+			$check = Multibyte::utf8($check);
+			$found = FALSE;
+
+			$haystack = Multibyte::utf8($haystack);
+			$haystackCount = count($haystack);
+
+			$needle = Multibyte::strtoupper($needle);
+			$needle = Multibyte::utf8($needle);
+			$needleCount = count($needle);
+
+			$parts = array();
+			$position = 0;
+
+			while (($found === FALSE) && ($position < $haystackCount)) {
+				if (isset($needle[0]) && $needle[0] === $check[$position]) {
+					for ($i = 1; $i < $needleCount; $i++) {
+						if ($needle[$i] !== $check[$position + $i]) {
+							break;
+						}
+					}
+					if ($i === $needleCount) {
+						$found = TRUE;
+					}
+				}
+				if (!$found) {
+					$parts[] = $haystack[$position];
+					unset($haystack[$position]);
+				}
+				$position++;
+			}
+
+			if ($found && $part && !empty($parts)) {
+				return Multibyte::ascii($parts);
+			} elseif ($found && !empty($haystack)) {
+				return Multibyte::ascii($haystack);
+			}
+
+			return FALSE;
+		}
+
+		if (!$php) {
+			return stristr($haystack, $needle, $part);
+		}
+
+		return stristr($haystack, $needle);
+	}
+
+	/**
+	 * Get string length.
+	 *
+	 * @param string $string The string being checked for length.
+	 *
+	 * @return int The number of characters in string $string
+	 */
+	public static function strlen($string) {
+		if (Multibyte::checkMultibyte($string)) {
+			$string = Multibyte::utf8($string);
+
+			return count($string);
+		}
+
+		return strlen($string);
+	}
+
+	/**
+	 * Finds the last occurrence of a character in a string within another.
+	 *
+	 * @param string $haystack The string from which to get the last occurrence of $needle.
+	 * @param string $needle   The string to find in $haystack.
+	 * @param bool   $part     Determines which portion of $haystack this function returns.
+	 *                         If set to true, it returns all of $haystack from the beginning to the last occurrence of
+	 *                         $needle. If set to false, it returns all of $haystack from the last occurrence of
+	 *                         $needle to the end, Default value is false.
+	 *
+	 * @return string|bool The portion of $haystack. or false if $needle is not found.
+	 */
+	public static function strrchr($haystack, $needle, $part = FALSE) {
+		$check = Multibyte::utf8($haystack);
+		$found = FALSE;
+
+		$haystack = Multibyte::utf8($haystack);
+		$haystackCount = count($haystack);
+
+		$matches = array_count_values($check);
+
+		$needle = Multibyte::utf8($needle);
+		$needleCount = count($needle);
+
+		$parts = array();
+		$position = 0;
+
+		while (($found === FALSE) && ($position < $haystackCount)) {
+			if (isset($needle[0]) && $needle[0] === $check[$position]) {
+				for ($i = 1; $i < $needleCount; $i++) {
+					if ($needle[$i] !== $check[$position + $i]) {
+						if ($needle[$i] === $check[($position + $i) - 1]) {
+							$found = TRUE;
+						}
+						unset($parts[$position - 1]);
+						$haystack = array_merge(array($haystack[$position]), $haystack);
+						break;
+					}
+				}
+				if (isset($matches[$needle[0]]) && $matches[$needle[0]] > 1) {
+					$matches[$needle[0]] = $matches[$needle[0]] - 1;
+				} elseif ($i === $needleCount) {
+					$found = TRUE;
+				}
+			}
+
+			if (!$found && isset($haystack[$position])) {
+				$parts[] = $haystack[$position];
+				unset($haystack[$position]);
+			}
+			$position++;
+		}
+
+		if ($found && $part && !empty($parts)) {
+			return Multibyte::ascii($parts);
+		} elseif ($found && !empty($haystack)) {
+			return Multibyte::ascii($haystack);
+		}
+
+		return FALSE;
+	}
+
+	/**
+	 * Finds the last occurrence of a character in a string within another, case insensitive.
+	 *
+	 * @param string $haystack The string from which to get the last occurrence of $needle.
+	 * @param string $needle   The string to find in $haystack.
+	 * @param bool   $part     Determines which portion of $haystack this function returns.
+	 *                         If set to true, it returns all of $haystack from the beginning to the last occurrence of
+	 *                         $needle. If set to false, it returns all of $haystack from the last occurrence of
+	 *                         $needle to the end, Default value is false.
+	 *
+	 * @return string|bool The portion of $haystack. or false if $needle is not found.
+	 */
+	public static function strrichr($haystack, $needle, $part = FALSE) {
+		$check = Multibyte::strtoupper($haystack);
+		$check = Multibyte::utf8($check);
+		$found = FALSE;
+
+		$haystack = Multibyte::utf8($haystack);
+		$haystackCount = count($haystack);
+
+		$matches = array_count_values($check);
+
+		$needle = Multibyte::strtoupper($needle);
+		$needle = Multibyte::utf8($needle);
+		$needleCount = count($needle);
+
+		$parts = array();
+		$position = 0;
+
+		while (($found === FALSE) && ($position < $haystackCount)) {
+			if (isset($needle[0]) && $needle[0] === $check[$position]) {
+				for ($i = 1; $i < $needleCount; $i++) {
+					if ($needle[$i] !== $check[$position + $i]) {
+						if ($needle[$i] === $check[($position + $i) - 1]) {
+							$found = TRUE;
+						}
+						unset($parts[$position - 1]);
+						$haystack = array_merge(array($haystack[$position]), $haystack);
+						break;
+					}
+				}
+				if (isset($matches[$needle[0]]) && $matches[$needle[0]] > 1) {
+					$matches[$needle[0]] = $matches[$needle[0]] - 1;
+				} elseif ($i === $needleCount) {
+					$found = TRUE;
+				}
+			}
+
+			if (!$found && isset($haystack[$position])) {
+				$parts[] = $haystack[$position];
+				unset($haystack[$position]);
+			}
+			$position++;
+		}
+
+		if ($found && $part && !empty($parts)) {
+			return Multibyte::ascii($parts);
+		} elseif ($found && !empty($haystack)) {
+			return Multibyte::ascii($haystack);
+		}
+
+		return FALSE;
+	}
+
+	/**
+	 * Finds position of last occurrence of a string within another, case insensitive
+	 *
+	 * @param string $haystack The string from which to get the position of the last occurrence of $needle.
+	 * @param string $needle   The string to find in $haystack.
+	 * @param int    $offset   The position in $haystack to start searching.
+	 *
+	 * @return int|bool The numeric position of the last occurrence of $needle in the $haystack string,
+	 *    or false if $needle is not found.
+	 */
+	public static function strripos($haystack, $needle, $offset = 0) {
+		if (Multibyte::checkMultibyte($haystack)) {
+			$found = FALSE;
+			$haystack = Multibyte::strtoupper($haystack);
+			$haystack = Multibyte::utf8($haystack);
+			$haystackCount = count($haystack);
+
+			$matches = array_count_values($haystack);
+
+			$needle = Multibyte::strtoupper($needle);
+			$needle = Multibyte::utf8($needle);
+			$needleCount = count($needle);
+
+			$position = $offset;
+
+			while (($found === FALSE) && ($position < $haystackCount)) {
+				if (isset($needle[0]) && $needle[0] === $haystack[$position]) {
+					for ($i = 1; $i < $needleCount; $i++) {
+						if ($needle[$i] !== $haystack[$position + $i]) {
+							if ($needle[$i] === $haystack[($position + $i) - 1]) {
+								$position--;
+								$found = TRUE;
+								continue;
+							}
+						}
+					}
+
+					if (!$offset && isset($matches[$needle[0]]) && $matches[$needle[0]] > 1) {
+						$matches[$needle[0]] = $matches[$needle[0]] - 1;
+					} elseif ($i === $needleCount) {
+						$found = TRUE;
+						$position--;
+					}
+				}
+				$position++;
+			}
+
+			return ($found) ? $position : FALSE;
+		}
+
+		return strripos($haystack, $needle, $offset);
+	}
+
+	/**
+	 * Find position of last occurrence of a string in a string.
+	 *
+	 * @param string $haystack The string being checked, for the last occurrence of $needle.
+	 * @param string $needle   The string to find in $haystack.
+	 * @param int    $offset   May be specified to begin searching an arbitrary number of characters into the string.
+	 *                         Negative values will stop searching at an arbitrary point prior to the end of the string.
+	 *
+	 * @return int|bool The numeric position of the last occurrence of $needle in the $haystack string.
+	 *    If $needle is not found, it returns false.
+	 */
+	public static function strrpos($haystack, $needle, $offset = 0) {
+		if (Multibyte::checkMultibyte($haystack)) {
+			$found = FALSE;
+
+			$haystack = Multibyte::utf8($haystack);
+			$haystackCount = count($haystack);
+
+			$matches = array_count_values($haystack);
+
+			$needle = Multibyte::utf8($needle);
+			$needleCount = count($needle);
+
+			$position = $offset;
+
+			while (($found === FALSE) && ($position < $haystackCount)) {
+				if (isset($needle[0]) && $needle[0] === $haystack[$position]) {
+					for ($i = 1; $i < $needleCount; $i++) {
+						if ($needle[$i] !== $haystack[$position + $i]) {
+							if ($needle[$i] === $haystack[($position + $i) - 1]) {
+								$position--;
+								$found = TRUE;
+								continue;
+							}
+						}
+					}
+
+					if (!$offset && isset($matches[$needle[0]]) && $matches[$needle[0]] > 1) {
+						$matches[$needle[0]] = $matches[$needle[0]] - 1;
+					} elseif ($i === $needleCount) {
+						$found = TRUE;
+						$position--;
+					}
+				}
+				$position++;
+			}
+
+			return ($found) ? $position : FALSE;
+		}
+
+		return strrpos($haystack, $needle, $offset);
+	}
+
+	/**
+	 * Finds first occurrence of a string within another
+	 *
+	 * @param string $haystack The string from which to get the first occurrence of $needle.
+	 * @param string $needle   The string to find in $haystack
+	 * @param bool   $part     Determines which portion of $haystack this function returns.
+	 *                         If set to true, it returns all of $haystack from the beginning to the first occurrence
+	 *                         of $needle. If set to false, it returns all of $haystack from the first occurrence of
+	 *                         $needle to the end, Default value is FALSE.
+	 *
+	 * @return string|bool The portion of $haystack, or true if $needle is not found.
+	 */
+	public static function strstr($haystack, $needle, $part = FALSE) {
+		$php = (PHP_VERSION < 5.3);
+
+		if (($php && $part) || Multibyte::checkMultibyte($haystack)) {
+			$check = Multibyte::utf8($haystack);
+			$found = FALSE;
+
+			$haystack = Multibyte::utf8($haystack);
+			$haystackCount = count($haystack);
+
+			$needle = Multibyte::utf8($needle);
+			$needleCount = count($needle);
+
+			$parts = array();
+			$position = 0;
+
+			while (($found === FALSE) && ($position < $haystackCount)) {
+				if (isset($needle[0]) && $needle[0] === $check[$position]) {
+					for ($i = 1; $i < $needleCount; $i++) {
+						if ($needle[$i] !== $check[$position + $i]) {
+							break;
+						}
+					}
+					if ($i === $needleCount) {
+						$found = TRUE;
+					}
+				}
+				if (!$found) {
+					$parts[] = $haystack[$position];
+					unset($haystack[$position]);
+				}
+				$position++;
+			}
+
+			if ($found && $part && !empty($parts)) {
+				return Multibyte::ascii($parts);
+			} elseif ($found && !empty($haystack)) {
+				return Multibyte::ascii($haystack);
+			}
+
+			return FALSE;
+		}
+
+		if (!$php) {
+			return strstr($haystack, $needle, $part);
+		}
+
+		return strstr($haystack, $needle);
+	}
+
+	/**
+	 * Make a string lowercase
+	 *
+	 * @param string $string The string being lowercased.
+	 *
+	 * @return string with all alphabetic characters converted to lowercase.
+	 */
+	public static function strtolower($string) {
+		$utf8Map = Multibyte::utf8($string);
+
+		$length = count($utf8Map);
+		$lowerCase = array();
 
 		for ($i = 0; $i < $length; $i++) {
-			$value = ord(($string[$i]));
-			if ($value > 128) {
-				return true;
+			$char = $utf8Map[$i];
+
+			if ($char < 128) {
+				$str = strtolower(chr($char));
+				$strlen = strlen($str);
+				for ($ii = 0; $ii < $strlen; $ii++) {
+					$lower = ord(substr($str, $ii, 1));
+				}
+				$lowerCase[] = $lower;
+				$matched = TRUE;
+			} else {
+				$matched = FALSE;
+				$keys = static::_find($char, 'upper');
+
+				if (!empty($keys)) {
+					foreach ($keys as $key => $value) {
+						if ($keys[$key]['upper'] == $char && count($keys[$key]['lower'][0]) === 1) {
+							$lowerCase[] = $keys[$key]['lower'][0];
+							$matched = TRUE;
+							break 1;
+						}
+					}
+				}
+			}
+			if ($matched === FALSE) {
+				$lowerCase[] = $char;
 			}
 		}
-		return false;
+
+		return Multibyte::ascii($lowerCase);
+	}
+
+	/**
+	 * Count the number of substring occurrences
+	 *
+	 * @param string $haystack The string being checked.
+	 * @param string $needle   The string being found.
+	 *
+	 * @return int The number of times the $needle substring occurs in the $haystack string.
+	 */
+	public static function substrCount($haystack, $needle) {
+		$count = 0;
+		$haystack = Multibyte::utf8($haystack);
+		$haystackCount = count($haystack);
+		$matches = array_count_values($haystack);
+		$needle = Multibyte::utf8($needle);
+		$needleCount = count($needle);
+
+		if ($needleCount === 1 && isset($matches[$needle[0]])) {
+			return $matches[$needle[0]];
+		}
+
+		for ($i = 0; $i < $haystackCount; $i++) {
+			if (isset($needle[0]) && $needle[0] === $haystack[$i]) {
+				for ($ii = 1; $ii < $needleCount; $ii++) {
+					if ($needle[$ii] === $haystack[$i + 1]) {
+						if ((isset($needle[$ii + 1]) && $haystack[$i + 2]) && $needle[$ii + 1] !== $haystack[$i + 2]) {
+							$count--;
+						} else {
+							$count++;
+						}
+					}
+				}
+			}
+		}
+
+		return $count;
+	}
+
+	/**
+	 * Get part of string
+	 *
+	 * @param string $string The string being checked.
+	 * @param int    $start  The first position used in $string.
+	 * @param int    $length The maximum length of the returned string.
+	 *
+	 * @return string The portion of $string specified by the $string and $length parameters.
+	 */
+	public static function substr($string, $start, $length = NULL) {
+		if ($start === 0 && $length === NULL) {
+			return $string;
+		}
+
+		$string = Multibyte::utf8($string);
+
+		for ($i = 1; $i <= $start; $i++) {
+			unset($string[$i - 1]);
+		}
+
+		if ($length === NULL || count($string) < $length) {
+			return Multibyte::ascii($string);
+		}
+		$string = array_values($string);
+
+		$value = array();
+		for ($i = 0; $i < $length; $i++) {
+			$value[] = $string[$i];
+		}
+
+		return Multibyte::ascii($value);
+	}
+
+	/**
+	 * Prepare a string for mail transport, using the provided encoding
+	 *
+	 * @param string $string  value to encode
+	 * @param string $charset charset to use for encoding. defaults to UTF-8
+	 * @param string $newline Newline string.
+	 *
+	 * @return string
+	 */
+	public static function mimeEncode($string, $charset = NULL, $newline = "\r\n") {
+		if (!Multibyte::checkMultibyte($string) && strlen($string) < 75) {
+			return $string;
+		}
+
+		if (empty($charset)) {
+			$charset = Configure::read('App.encoding');
+		}
+		$charset = strtoupper($charset);
+
+		$start = '=?' . $charset . '?B?';
+		$end = '?=';
+		$spacer = $end . $newline . ' ' . $start;
+
+		$length = 75 - strlen($start) - strlen($end);
+		$length = $length - ($length % 4);
+		if ($charset === 'UTF-8') {
+			$parts = array();
+			$maxchars = floor(($length * 3) / 4);
+			$stringLength = strlen($string);
+			while ($stringLength > $maxchars) {
+				$i = (int)$maxchars;
+				$test = ord($string[$i]);
+				while ($test >= 128 && $test <= 191) {
+					$i--;
+					$test = ord($string[$i]);
+				}
+				$parts[] = base64_encode(substr($string, 0, $i));
+				$string = substr($string, $i);
+				$stringLength = strlen($string);
+			}
+			$parts[] = base64_encode($string);
+			$string = implode($spacer, $parts);
+		} else {
+			$string = chunk_split(base64_encode($string), $length, $spacer);
+			$string = preg_replace('/' . preg_quote($spacer) . '$/', '', $string);
+		}
+
+		return $start . $string . $end;
 	}
 
 }

@@ -27,70 +27,70 @@ App::uses('UuidFixture', 'Test/Fixture');
  */
 class CakeFixtureManagerTest extends CakeTestCase {
 
-/**
- * reset environment.
- *
- * @return void
- */
+	/**
+	 * reset environment.
+	 *
+	 * @return void
+	 */
 	public function setUp() {
 		parent::setUp();
 		$this->fixtureManager = new CakeFixtureManager();
 	}
 
-/**
- * tearDown
- *
- * @return void
- */
+	/**
+	 * tearDown
+	 *
+	 * @return void
+	 */
 	public function tearDown() {
 		parent::tearDown();
 		unset($this->fixtureManager);
 	}
 
-/**
- * testLoadTruncatesTable
- *
- * @return void
- */
+	/**
+	 * testLoadTruncatesTable
+	 *
+	 * @return void
+	 */
 	public function testLoadTruncatesTable() {
 		$MockFixture = $this->getMock('UuidFixture', array('truncate'));
 		$MockFixture
-			->expects($this->once())
-			->method('truncate')
-			->will($this->returnValue(true));
+				->expects($this->once())
+				->method('truncate')
+				->will($this->returnValue(TRUE));
 
 		$fixtureManager = $this->fixtureManager;
 		$fixtureManagerReflection = new ReflectionClass($fixtureManager);
 
 		$loadedProperty = $fixtureManagerReflection->getProperty('_loaded');
-		$loadedProperty->setAccessible(true);
+		$loadedProperty->setAccessible(TRUE);
 		$loadedProperty->setValue($fixtureManager, array('core.uuid' => $MockFixture));
 
 		$TestCase = $this->getMock('CakeTestCase');
 		$TestCase->fixtures = array('core.uuid');
-		$TestCase->autoFixtures = true;
-		$TestCase->dropTables = false;
+		$TestCase->autoFixtures = TRUE;
+		$TestCase->dropTables = FALSE;
 
 		$fixtureManager->load($TestCase);
 	}
 
-/**
- * testLoadSingleTruncatesTable
- *
- * @return void
- */
+	/**
+	 * testLoadSingleTruncatesTable
+	 *
+	 * @return void
+	 */
 	public function testLoadSingleTruncatesTable() {
 		$MockFixture = $this->getMock('UuidFixture', array('truncate'));
 		$MockFixture
-			->expects($this->once())
-			->method('truncate')
-			->will($this->returnValue(true));
+				->expects($this->once())
+				->method('truncate')
+				->will($this->returnValue(TRUE));
 
 		$fixtureManager = $this->fixtureManager;
 		$fixtureManagerReflection = new ReflectionClass($fixtureManager);
 
 		$fixtureMapProperty = $fixtureManagerReflection->getProperty('_fixtureMap');
-		$fixtureMapProperty->setAccessible(true);
+		$fixtureMapProperty->setAccessible(TRUE);
 		$fixtureMapProperty->setValue($fixtureManager, array('UuidFixture' => $MockFixture));
 
 		$dboMethods = array_diff(get_class_methods('DboSource'), array('enabled'));
@@ -98,6 +98,6 @@ class CakeFixtureManagerTest extends CakeTestCase {
 		$db = $this->getMock('DboSource', $dboMethods);
 		$db->config['prefix'] = '';
 
-		$fixtureManager->loadSingle('Uuid', $db, false);
+		$fixtureManager->loadSingle('Uuid', $db, FALSE);
 	}
 }

@@ -26,101 +26,103 @@ App::uses('ClassRegistry', 'Utility');
  */
 class DatabaseSession implements CakeSessionHandlerInterface {
 
-/**
- * Reference to the model handling the session data
- *
- * @var Model
- */
+	/**
+	 * Reference to the model handling the session data
+	 *
+	 * @var Model
+	 */
 	protected $_model;
 
-/**
- * Number of seconds to mark the session as expired
- *
- * @var int
- */
+	/**
+	 * Number of seconds to mark the session as expired
+	 *
+	 * @var int
+	 */
 	protected $_timeout;
 
-/**
- * Constructor. Looks at Session configuration information and
- * sets up the session model.
- */
+	/**
+	 * Constructor. Looks at Session configuration information and
+	 * sets up the session model.
+	 */
 	public function __construct() {
 		$modelName = Configure::read('Session.handler.model');
 
 		if (empty($modelName)) {
 			$settings = array(
-				'class' => 'Session',
-				'alias' => 'Session',
-				'table' => 'cake_sessions',
+					'class' => 'Session',
+					'alias' => 'Session',
+					'table' => 'cake_sessions',
 			);
 		} else {
 			$settings = array(
-				'class' => $modelName,
-				'alias' => 'Session',
+					'class' => $modelName,
+					'alias' => 'Session',
 			);
 		}
 		$this->_model = ClassRegistry::init($settings);
 		$this->_timeout = Configure::read('Session.timeout') * 60;
 	}
 
-/**
- * Method called on open of a database session.
- *
- * @return bool Success
- */
+	/**
+	 * Method called on open of a database session.
+	 *
+	 * @return bool Success
+	 */
 	public function open() {
-		return true;
+		return TRUE;
 	}
 
-/**
- * Method called on close of a database session.
- *
- * @return bool Success
- */
+	/**
+	 * Method called on close of a database session.
+	 *
+	 * @return bool Success
+	 */
 	public function close() {
-		return true;
+		return TRUE;
 	}
 
-/**
- * Method used to read from a database session.
- *
- * @param int|string $id The key of the value to read
- * @return mixed The value of the key or false if it does not exist
- */
+	/**
+	 * Method used to read from a database session.
+	 *
+	 * @param int|string $id The key of the value to read
+	 *
+	 * @return mixed The value of the key or false if it does not exist
+	 */
 	public function read($id) {
 		$row = $this->_model->find('first', array(
-			'conditions' => array($this->_model->primaryKey => $id)
+				'conditions' => array($this->_model->primaryKey => $id)
 		));
 
 		if (empty($row[$this->_model->alias]['data'])) {
-			return false;
+			return FALSE;
 		}
 
 		return $row[$this->_model->alias]['data'];
 	}
 
-/**
- * Helper function called on write for database sessions.
- *
- * Will retry, once, if the save triggers a PDOException which
- * can happen if a race condition is encountered
- *
- * @param int $id ID that uniquely identifies session in database
- * @param mixed $data The value of the data to be saved.
- * @return bool True for successful write, false otherwise.
- */
+	/**
+	 * Helper function called on write for database sessions.
+	 *
+	 * Will retry, once, if the save triggers a PDOException which
+	 * can happen if a race condition is encountered
+	 *
+	 * @param int   $id   ID that uniquely identifies session in database
+	 * @param mixed $data The value of the data to be saved.
+	 *
+	 * @return bool True for successful write, false otherwise.
+	 */
 	public function write($id, $data) {
 		if (!$id) {
-			return false;
+			return FALSE;
 		}
 		$expires = time() + $this->_timeout;
 		$record = compact('id', 'data', 'expires');
 		$record[$this->_model->primaryKey] = $id;
 
 		$options = array(
-			'validate' => false,
-			'callbacks' => false,
-			'counterCache' => false
+				'validate' => FALSE,
+				'callbacks' => FALSE,
+				'counterCache' => FALSE
 		);
 		try {
 			return $this->_model->save($record, $options);
@@ -129,29 +131,32 @@ class DatabaseSession implements CakeSessionHandlerInterface {
 		}
 	}
 
-/**
- * Method called on the destruction of a database session.
- *
- * @param int $id ID that uniquely identifies session in database
- * @return bool True for successful delete, false otherwise.
- */
+	/**
+	 * Method called on the destruction of a database session.
+	 *
+	 * @param int $id ID that uniquely identifies session in database
+	 *
+	 * @return bool True for successful delete, false otherwise.
+	 */
 	public function destroy($id) {
 		return $this->_model->delete($id);
 	}
 
-/**
- * Helper function called on gc for database sessions.
- *
- * @param int $expires Timestamp (defaults to current time)
- * @return bool Success
- */
-	public function gc($expires = null) {
+	/**
+	 * Helper function called on gc for database sessions.
+	 *
+	 * @param int $expires Timestamp (defaults to current time)
+	 *
+	 * @return bool Success
+	 */
+	public function gc($expires = NULL) {
 		if (!$expires) {
 			$expires = time();
 		} else {
 			$expires = time() - $expires;
 		}
-		return $this->_model->deleteAll(array($this->_model->alias . ".expires <" => $expires), false, false);
+
+		return $this->_model->deleteAll(array($this->_model->alias . ".expires <" => $expires), FALSE, FALSE);
 	}
 
 }

@@ -22,77 +22,13 @@ App::uses('AppShell', 'Console/Command');
  */
 class CommandTask extends AppShell {
 
-/**
- * Gets the shell command listing.
- *
- * @return array
- */
-	public function getShellList() {
-		$skipFiles = array('AppShell');
-
-		$plugins = CakePlugin::loaded();
-		$shellList = array_fill_keys($plugins, null) + array('CORE' => null, 'app' => null);
-
-		$corePath = App::core('Console/Command');
-		$shells = App::objects('file', $corePath[0]);
-		$shells = array_diff($shells, $skipFiles);
-		$this->_appendShells('CORE', $shells, $shellList);
-
-		$appShells = App::objects('Console/Command', null, false);
-		$appShells = array_diff($appShells, $shells, $skipFiles);
-		$this->_appendShells('app', $appShells, $shellList);
-
-		foreach ($plugins as $plugin) {
-			$pluginShells = App::objects($plugin . '.Console/Command');
-			$this->_appendShells($plugin, $pluginShells, $shellList);
-		}
-
-		return array_filter($shellList);
-	}
-
-/**
- * Scan the provided paths for shells, and append them into $shellList
- *
- * @param string $type The type of object.
- * @param array $shells The shell name.
- * @param array &$shellList List of shells.
- * @return void
- */
-	protected function _appendShells($type, $shells, &$shellList) {
-		foreach ($shells as $shell) {
-			$shellList[$type][] = Inflector::underscore(str_replace('Shell', '', $shell));
-		}
-	}
-
-/**
- * Return a list of all commands
- *
- * @return array
- */
-	public function commands() {
-		$shellList = $this->getShellList();
-
-		$options = array();
-		foreach ($shellList as $type => $commands) {
-			$prefix = '';
-			if (!in_array(strtolower($type), array('app', 'core'))) {
-				$prefix = $type . '.';
-			}
-
-			foreach ($commands as $shell) {
-				$options[] = $prefix . $shell;
-			}
-		}
-
-		return $options;
-	}
-
-/**
- * Return a list of subcommands for a given command
- *
- * @param string $commandName The command you want subcommands from.
- * @return array
- */
+	/**
+	 * Return a list of subcommands for a given command
+	 *
+	 * @param string $commandName The command you want subcommands from.
+	 *
+	 * @return array
+	 */
 	public function subCommands($commandName) {
 		$Shell = $this->getShell($commandName);
 
@@ -124,14 +60,15 @@ class CommandTask extends AppShell {
 		return $return;
 	}
 
-/**
- * Get Shell instance for the given command
- *
- * @param mixed $commandName The command you want.
- * @return mixed
- */
+	/**
+	 * Get Shell instance for the given command
+	 *
+	 * @param mixed $commandName The command you want.
+	 *
+	 * @return mixed
+	 */
 	public function getShell($commandName) {
-		list($pluginDot, $name) = pluginSplit($commandName, true);
+		list($pluginDot, $name) = pluginSplit($commandName, TRUE);
 
 		if (in_array(strtolower($pluginDot), array('app.', 'core.'))) {
 			$commandName = $name;
@@ -139,7 +76,7 @@ class CommandTask extends AppShell {
 		}
 
 		if (!in_array($commandName, $this->commands())) {
-			return false;
+			return FALSE;
 		}
 
 		$name = Inflector::camelize($name);
@@ -154,12 +91,79 @@ class CommandTask extends AppShell {
 		return $Shell;
 	}
 
-/**
- * Get Shell instance for the given command
- *
- * @param mixed $commandName The command to get options for.
- * @return array
- */
+	/**
+	 * Return a list of all commands
+	 *
+	 * @return array
+	 */
+	public function commands() {
+		$shellList = $this->getShellList();
+
+		$options = array();
+		foreach ($shellList as $type => $commands) {
+			$prefix = '';
+			if (!in_array(strtolower($type), array('app', 'core'))) {
+				$prefix = $type . '.';
+			}
+
+			foreach ($commands as $shell) {
+				$options[] = $prefix . $shell;
+			}
+		}
+
+		return $options;
+	}
+
+	/**
+	 * Gets the shell command listing.
+	 *
+	 * @return array
+	 */
+	public function getShellList() {
+		$skipFiles = array('AppShell');
+
+		$plugins = CakePlugin::loaded();
+		$shellList = array_fill_keys($plugins, NULL) + array('CORE' => NULL, 'app' => NULL);
+
+		$corePath = App::core('Console/Command');
+		$shells = App::objects('file', $corePath[0]);
+		$shells = array_diff($shells, $skipFiles);
+		$this->_appendShells('CORE', $shells, $shellList);
+
+		$appShells = App::objects('Console/Command', NULL, FALSE);
+		$appShells = array_diff($appShells, $shells, $skipFiles);
+		$this->_appendShells('app', $appShells, $shellList);
+
+		foreach ($plugins as $plugin) {
+			$pluginShells = App::objects($plugin . '.Console/Command');
+			$this->_appendShells($plugin, $pluginShells, $shellList);
+		}
+
+		return array_filter($shellList);
+	}
+
+	/**
+	 * Scan the provided paths for shells, and append them into $shellList
+	 *
+	 * @param string $type       The type of object.
+	 * @param array  $shells     The shell name.
+	 * @param array  &$shellList List of shells.
+	 *
+	 * @return void
+	 */
+	protected function _appendShells($type, $shells, &$shellList) {
+		foreach ($shells as $shell) {
+			$shellList[$type][] = Inflector::underscore(str_replace('Shell', '', $shell));
+		}
+	}
+
+	/**
+	 * Get Shell instance for the given command
+	 *
+	 * @param mixed $commandName The command to get options for.
+	 *
+	 * @return array
+	 */
 	public function options($commandName) {
 		$Shell = $this->getShell($commandName);
 		if (!$Shell) {
@@ -177,6 +181,7 @@ class CommandTask extends AppShell {
 				$options[] = "-$short";
 			}
 		}
+
 		return $options;
 	}
 

@@ -30,40 +30,40 @@ require_once dirname(dirname(__FILE__)) . DS . 'models.php';
  */
 class TreeBehaviorScopedTest extends CakeTestCase {
 
-/**
- * Whether backup global state for each test method or not
- *
- * @var bool
- */
-	public $backupGlobals = false;
+	/**
+	 * Whether backup global state for each test method or not
+	 *
+	 * @var bool
+	 */
+	public $backupGlobals = FALSE;
 
-/**
- * settings property
- *
- * @var array
- */
+	/**
+	 * settings property
+	 *
+	 * @var array
+	 */
 	public $settings = array(
-		'modelClass' => 'FlagTree',
-		'leftField' => 'lft',
-		'rightField' => 'rght',
-		'parentField' => 'parent_id'
+			'modelClass' => 'FlagTree',
+			'leftField' => 'lft',
+			'rightField' => 'rght',
+			'parentField' => 'parent_id'
 	);
 
-/**
- * fixtures property
- *
- * @var array
- */
+	/**
+	 * fixtures property
+	 *
+	 * @var array
+	 */
 	public $fixtures = array('core.flag_tree', 'core.ad', 'core.campaign', 'core.translate', 'core.number_tree_two');
 
-/**
- * testStringScope method
- *
- * @return void
- */
+	/**
+	 * testStringScope method
+	 *
+	 * @return void
+	 */
 	public function testStringScope() {
 		$this->Tree = new FlagTree();
-		$this->Tree->order = null;
+		$this->Tree->order = NULL;
 		$this->Tree->initialize(2, 3);
 
 		$this->Tree->id = 1;
@@ -73,9 +73,9 @@ class TreeBehaviorScopedTest extends CakeTestCase {
 
 		$result = $this->Tree->children();
 		$expected = array(
-			array('FlagTree' => array('id' => '3', 'name' => '1.1.1', 'parent_id' => '2', 'lft' => '3', 'rght' => '4', 'flag' => '0')),
-			array('FlagTree' => array('id' => '4', 'name' => '1.1.2', 'parent_id' => '2', 'lft' => '5', 'rght' => '6', 'flag' => '0')),
-			array('FlagTree' => array('id' => '5', 'name' => '1.1.3', 'parent_id' => '2', 'lft' => '7', 'rght' => '8', 'flag' => '0'))
+				array('FlagTree' => array('id' => '3', 'name' => '1.1.1', 'parent_id' => '2', 'lft' => '3', 'rght' => '4', 'flag' => '0')),
+				array('FlagTree' => array('id' => '4', 'name' => '1.1.2', 'parent_id' => '2', 'lft' => '5', 'rght' => '6', 'flag' => '0')),
+				array('FlagTree' => array('id' => '5', 'name' => '1.1.3', 'parent_id' => '2', 'lft' => '7', 'rght' => '8', 'flag' => '0'))
 		);
 		$this->assertEquals($expected, $result);
 
@@ -93,14 +93,14 @@ class TreeBehaviorScopedTest extends CakeTestCase {
 		$this->assertEquals(11, $this->Tree->find('count'));
 	}
 
-/**
- * testArrayScope method
- *
- * @return void
- */
+	/**
+	 * testArrayScope method
+	 *
+	 * @return void
+	 */
 	public function testArrayScope() {
 		$this->Tree = new FlagTree();
-		$this->Tree->order = null;
+		$this->Tree->order = NULL;
 		$this->Tree->initialize(2, 3);
 
 		$this->Tree->id = 1;
@@ -110,9 +110,9 @@ class TreeBehaviorScopedTest extends CakeTestCase {
 
 		$result = $this->Tree->children();
 		$expected = array(
-			array('FlagTree' => array('id' => '3', 'name' => '1.1.1', 'parent_id' => '2', 'lft' => '3', 'rght' => '4', 'flag' => '0')),
-			array('FlagTree' => array('id' => '4', 'name' => '1.1.2', 'parent_id' => '2', 'lft' => '5', 'rght' => '6', 'flag' => '0')),
-			array('FlagTree' => array('id' => '5', 'name' => '1.1.3', 'parent_id' => '2', 'lft' => '7', 'rght' => '8', 'flag' => '0'))
+				array('FlagTree' => array('id' => '3', 'name' => '1.1.1', 'parent_id' => '2', 'lft' => '3', 'rght' => '4', 'flag' => '0')),
+				array('FlagTree' => array('id' => '4', 'name' => '1.1.2', 'parent_id' => '2', 'lft' => '5', 'rght' => '6', 'flag' => '0')),
+				array('FlagTree' => array('id' => '5', 'name' => '1.1.3', 'parent_id' => '2', 'lft' => '7', 'rght' => '8', 'flag' => '0'))
 		);
 		$this->assertEquals($expected, $result);
 
@@ -130,37 +130,37 @@ class TreeBehaviorScopedTest extends CakeTestCase {
 		$this->assertEquals(11, $this->Tree->find('count'));
 	}
 
-/**
- * testSaveWithParentAndInvalidScope method
- *
- * Attempting to save an invalid data should not trigger an `Undefined offset`
- * error
- *
- * @return void
- */
+	/**
+	 * testSaveWithParentAndInvalidScope method
+	 *
+	 * Attempting to save an invalid data should not trigger an `Undefined offset`
+	 * error
+	 *
+	 * @return void
+	 */
 	public function testSaveWithParentAndInvalidScope() {
 		$this->Tree = new FlagTree();
-		$this->Tree->order = null;
+		$this->Tree->order = NULL;
 		$data = $this->Tree->create(array(
-			'name' => 'Flag',
+				'name' => 'Flag',
 		));
 		$tree = $this->Tree->save($data);
 		$this->Tree->Behaviors->load('Tree', array(
-			'scope' => array('FlagTree.flag' => 100)
+				'scope' => array('FlagTree.flag' => 100)
 		));
 		$tree['FlagTree']['parent_id'] = 1;
 		$result = $this->Tree->save($tree);
 		$this->assertFalse($result);
 	}
 
-/**
- * testMoveUpWithScope method
- *
- * @return void
- */
+	/**
+	 * testMoveUpWithScope method
+	 *
+	 * @return void
+	 */
 	public function testMoveUpWithScope() {
 		$this->Ad = new Ad();
-		$this->Ad->order = null;
+		$this->Ad->order = NULL;
 		$this->Ad->Behaviors->load('Tree', array('scope' => 'Campaign'));
 		$this->Ad->moveUp(6);
 
@@ -170,14 +170,14 @@ class TreeBehaviorScopedTest extends CakeTestCase {
 		$this->assertEquals(array(2, 2), Hash::extract($result, '{n}.Campaign.id'));
 	}
 
-/**
- * testMoveDownWithScope method
- *
- * @return void
- */
+	/**
+	 * testMoveDownWithScope method
+	 *
+	 * @return void
+	 */
 	public function testMoveDownWithScope() {
 		$this->Ad = new Ad();
-		$this->Ad->order = null;
+		$this->Ad->order = NULL;
 		$this->Ad->Behaviors->load('Tree', array('scope' => 'Campaign'));
 		$this->Ad->moveDown(6);
 
@@ -187,38 +187,38 @@ class TreeBehaviorScopedTest extends CakeTestCase {
 		$this->assertEquals(array(2, 2), Hash::extract($result, '{n}.Campaign.id'));
 	}
 
-/**
- * Tests the interaction (non-interference) between TreeBehavior and other behaviors with respect
- * to callback hooks
- *
- * @return void
- */
+	/**
+	 * Tests the interaction (non-interference) between TreeBehavior and other behaviors with respect
+	 * to callback hooks
+	 *
+	 * @return void
+	 */
 	public function testTranslatingTree() {
 		$this->Tree = new FlagTree();
-		$this->Tree->order = null;
-		$this->Tree->cacheQueries = false;
+		$this->Tree->order = NULL;
+		$this->Tree->cacheQueries = FALSE;
 		$this->Tree->Behaviors->load('Translate', array('title'));
 
 		//Save
 		$this->Tree->create();
 		$this->Tree->locale = 'eng';
 		$data = array('FlagTree' => array(
-			'title' => 'name #1',
-			'name' => 'test',
-			'locale' => 'eng',
-			'parent_id' => null,
+				'title' => 'name #1',
+				'name' => 'test',
+				'locale' => 'eng',
+				'parent_id' => NULL,
 		));
 		$this->Tree->save($data);
 		$result = $this->Tree->find('all');
 		$expected = array(array('FlagTree' => array(
-			'id' => 1,
-			'title' => 'name #1',
-			'name' => 'test',
-			'parent_id' => null,
-			'lft' => 1,
-			'rght' => 2,
-			'flag' => 0,
-			'locale' => 'eng',
+				'id' => 1,
+				'title' => 'name #1',
+				'name' => 'test',
+				'parent_id' => NULL,
+				'lft' => 1,
+				'rght' => 2,
+				'flag' => 0,
+				'locale' => 'eng',
 		)));
 		$this->assertEquals($expected, $result);
 
@@ -229,14 +229,14 @@ class TreeBehaviorScopedTest extends CakeTestCase {
 		$this->Tree->save($data);
 		$result = $this->Tree->find('all');
 		$expected = array(array('FlagTree' => array(
-			'id' => 1,
-			'title' => 'Named 2',
-			'name' => 'test',
-			'parent_id' => null,
-			'lft' => 1,
-			'rght' => 2,
-			'flag' => 0,
-			'locale' => 'eng',
+				'id' => 1,
+				'title' => 'Named 2',
+				'name' => 'test',
+				'parent_id' => NULL,
+				'lft' => 1,
+				'rght' => 2,
+				'flag' => 0,
+				'locale' => 'eng',
 		)));
 		$this->assertEquals($expected, $result);
 
@@ -245,108 +245,108 @@ class TreeBehaviorScopedTest extends CakeTestCase {
 		$this->Tree->locale = 'deu';
 		$this->Tree->id = 1;
 		$data = array('FlagTree' => array(
-			'id' => 1,
-			'parent_id' => null,
-			'title' => 'namen #1',
-			'name' => 'test',
-			'locale' => 'deu',
+				'id' => 1,
+				'parent_id' => NULL,
+				'title' => 'namen #1',
+				'name' => 'test',
+				'locale' => 'deu',
 		));
 		$this->Tree->save($data);
 
 		$this->Tree->locale = 'deu';
 		$result = $this->Tree->find('all');
 		$expected = array(
-			array(
-				'FlagTree' => array(
-					'id' => 1,
-					'title' => 'namen #1',
-					'name' => 'test',
-					'parent_id' => null,
-					'lft' => 1,
-					'rght' => 2,
-					'flag' => 0,
-					'locale' => 'deu',
+				array(
+						'FlagTree' => array(
+								'id' => 1,
+								'title' => 'namen #1',
+								'name' => 'test',
+								'parent_id' => NULL,
+								'lft' => 1,
+								'rght' => 2,
+								'flag' => 0,
+								'locale' => 'deu',
+						)
 				)
-			)
 		);
 		$this->assertEquals($expected, $result);
 
 		// Save with bindTranslation
 		$this->Tree->locale = 'eng';
 		$data = array(
-			'title' => array('eng' => 'New title', 'spa' => 'Nuevo leyenda'),
-			'name' => 'test',
-			'parent_id' => null
+				'title' => array('eng' => 'New title', 'spa' => 'Nuevo leyenda'),
+				'name' => 'test',
+				'parent_id' => NULL
 		);
 		$this->Tree->create($data);
 		$this->Tree->save();
 
 		$this->Tree->unbindTranslation();
 		$translations = array('title' => 'Title');
-		$this->Tree->bindTranslation($translations, false);
+		$this->Tree->bindTranslation($translations, FALSE);
 		$this->Tree->locale = array('eng', 'spa');
 
 		$result = $this->Tree->read();
 		$expected = array(
-			'FlagTree' => array(
-				'id' => 2,
-				'parent_id' => null,
-				'locale' => 'eng',
-				'name' => 'test',
-				'title' => 'New title',
-				'flag' => 0,
-				'lft' => 3,
-				'rght' => 4
-			),
-			'Title' => array(
-				array('id' => 21, 'locale' => 'eng', 'model' => 'FlagTree', 'foreign_key' => 2, 'field' => 'title', 'content' => 'New title'),
-				array('id' => 22, 'locale' => 'spa', 'model' => 'FlagTree', 'foreign_key' => 2, 'field' => 'title', 'content' => 'Nuevo leyenda')
-			),
+				'FlagTree' => array(
+						'id' => 2,
+						'parent_id' => NULL,
+						'locale' => 'eng',
+						'name' => 'test',
+						'title' => 'New title',
+						'flag' => 0,
+						'lft' => 3,
+						'rght' => 4
+				),
+				'Title' => array(
+						array('id' => 21, 'locale' => 'eng', 'model' => 'FlagTree', 'foreign_key' => 2, 'field' => 'title', 'content' => 'New title'),
+						array('id' => 22, 'locale' => 'spa', 'model' => 'FlagTree', 'foreign_key' => 2, 'field' => 'title', 'content' => 'Nuevo leyenda')
+				),
 		);
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * testGenerateTreeListWithSelfJoin method
- *
- * @return void
- */
+	/**
+	 * testGenerateTreeListWithSelfJoin method
+	 *
+	 * @return void
+	 */
 	public function testAliasesWithScopeInTwoTreeAssociations() {
 		extract($this->settings);
 		$this->Tree = new $modelClass();
-		$this->Tree->order = null;
+		$this->Tree->order = NULL;
 		$this->Tree->initialize(2, 2);
 
 		$this->TreeTwo = new NumberTreeTwo();
-		$this->TreeTwo->order = null;
+		$this->TreeTwo->order = NULL;
 
 		$record = $this->Tree->find('first');
 
 		$this->Tree->bindModel(array(
-			'hasMany' => array(
-				'SecondTree' => array(
-					'className' => 'NumberTreeTwo',
-					'foreignKey' => 'number_tree_id'
+				'hasMany' => array(
+						'SecondTree' => array(
+								'className' => 'NumberTreeTwo',
+								'foreignKey' => 'number_tree_id'
+						)
 				)
-			)
 		));
 		$this->TreeTwo->bindModel(array(
-			'belongsTo' => array(
-				'FirstTree' => array(
-					'className' => $modelClass,
-					'foreignKey' => 'number_tree_id'
+				'belongsTo' => array(
+						'FirstTree' => array(
+								'className' => $modelClass,
+								'foreignKey' => 'number_tree_id'
+						)
 				)
-			)
 		));
 		$this->TreeTwo->Behaviors->load('Tree', array(
-			'scope' => 'FirstTree'
+				'scope' => 'FirstTree'
 		));
 
 		$data = array(
-			'NumberTreeTwo' => array(
-				'name' => 'First',
-				'number_tree_id' => $record['FlagTree']['id']
-			)
+				'NumberTreeTwo' => array(
+						'name' => 'First',
+						'number_tree_id' => $record['FlagTree']['id']
+				)
 		);
 		$this->TreeTwo->create();
 		$result = $this->TreeTwo->save($data);
@@ -354,25 +354,25 @@ class TreeBehaviorScopedTest extends CakeTestCase {
 
 		$result = $this->TreeTwo->find('first');
 		$expected = array('NumberTreeTwo' => array(
-			'id' => 1,
-			'name' => 'First',
-			'number_tree_id' => $record['FlagTree']['id'],
-			'parent_id' => null,
-			'lft' => 1,
-			'rght' => 2
+				'id' => 1,
+				'name' => 'First',
+				'number_tree_id' => $record['FlagTree']['id'],
+				'parent_id' => NULL,
+				'lft' => 1,
+				'rght' => 2
 		));
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * testGenerateTreeListWithScope method
- *
- * @return void
- */
+	/**
+	 * testGenerateTreeListWithScope method
+	 *
+	 * @return void
+	 */
 	public function testGenerateTreeListWithScope() {
 		extract($this->settings);
 		$this->Tree = new $modelClass();
-		$this->Tree->order = null;
+		$this->Tree->order = NULL;
 		$this->Tree->initialize(2, 3);
 
 		$this->Tree->id = 1;
@@ -384,8 +384,8 @@ class TreeBehaviorScopedTest extends CakeTestCase {
 
 		$result = $this->Tree->generateTreeList();
 		$expected = array(
-			1 => '1. Root',
-			2 => '_1.1'
+				1 => '1. Root',
+				2 => '_1.1'
 		);
 		$this->assertEquals($expected, $result);
 
@@ -398,27 +398,27 @@ class TreeBehaviorScopedTest extends CakeTestCase {
 		// Merging conditions.
 		$result = $this->Tree->generateTreeList(array('FlagTree.id >' => 1));
 		$expected = array(
-			2 => '1.1'
+				2 => '1.1'
 		);
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * testRecoverUsingParentMode method
- *
- * @return void
- */
+	/**
+	 * testRecoverUsingParentMode method
+	 *
+	 * @return void
+	 */
 	public function testRecoverUsingParentMode() {
 		extract($this->settings);
 		$this->Tree = new $modelClass();
-		$this->Tree->order = null;
+		$this->Tree->order = NULL;
 		$this->Tree->initialize(2, 3);
 
 		$this->Tree->Behaviors->load('Tree', array('scope' => 'FlagTree.flag = 1'));
 		$this->Tree->Behaviors->disable('Tree');
 
 		$this->Tree->create();
-		$this->Tree->save(array('name' => 'Main', $parentField => null, $leftField => 0, $rightField => 0, 'flag' => 1));
+		$this->Tree->save(array('name' => 'Main', $parentField => NULL, $leftField => 0, $rightField => 0, 'flag' => 1));
 		$node1 = $this->Tree->id;
 
 		$this->Tree->create();
@@ -438,7 +438,7 @@ class TreeBehaviorScopedTest extends CakeTestCase {
 		$this->Tree->Behaviors->enable('Tree');
 
 		$result = $this->Tree->verify();
-		$this->assertNotSame(true, $result);
+		$this->assertNotSame(TRUE, $result);
 
 		$result = $this->Tree->recover();
 		$this->assertTrue($result);
@@ -447,31 +447,31 @@ class TreeBehaviorScopedTest extends CakeTestCase {
 		$this->assertTrue($result);
 
 		$result = $this->Tree->find('first', array(
-			'fields' => array('name', $parentField, $leftField, $rightField, 'flag'),
-			'conditions' => array('name' => 'Main'),
-			'recursive' => -1
+				'fields' => array('name', $parentField, $leftField, $rightField, 'flag'),
+				'conditions' => array('name' => 'Main'),
+				'recursive' => -1
 		));
 		$expected = array(
-			$modelClass => array(
-				'name' => 'Main',
-				$parentField => null,
-				$leftField => 1,
-				$rightField => 10,
-				'flag' => 1
-			)
+				$modelClass => array(
+						'name' => 'Main',
+						$parentField => NULL,
+						$leftField => 1,
+						$rightField => 10,
+						'flag' => 1
+				)
 		);
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * testRecoverFromMissingParent method
- *
- * @return void
- */
+	/**
+	 * testRecoverFromMissingParent method
+	 *
+	 * @return void
+	 */
 	public function testRecoverFromMissingParent() {
 		extract($this->settings);
 		$this->Tree = new $modelClass();
-		$this->Tree->order = null;
+		$this->Tree->order = NULL;
 		$this->Tree->initialize(2, 2);
 
 		$this->Tree->id = 1;
@@ -485,7 +485,7 @@ class TreeBehaviorScopedTest extends CakeTestCase {
 		$this->Tree->updateAll(array($parentField => 999999), array('id' => $result[$modelClass]['id']));
 
 		$result = $this->Tree->verify();
-		$this->assertNotSame(true, $result);
+		$this->assertNotSame(TRUE, $result);
 
 		$result = $this->Tree->recover();
 		$this->assertTrue($result);
@@ -494,15 +494,15 @@ class TreeBehaviorScopedTest extends CakeTestCase {
 		$this->assertTrue($result);
 	}
 
-/**
- * testDetectInvalidParents method
- *
- * @return void
- */
+	/**
+	 * testDetectInvalidParents method
+	 *
+	 * @return void
+	 */
 	public function testDetectInvalidParents() {
 		extract($this->settings);
 		$this->Tree = new $modelClass();
-		$this->Tree->order = null;
+		$this->Tree->order = NULL;
 		$this->Tree->initialize(2, 2);
 
 		$this->Tree->id = 1;
@@ -512,10 +512,10 @@ class TreeBehaviorScopedTest extends CakeTestCase {
 
 		$this->Tree->Behaviors->load('Tree', array('scope' => array('FlagTree.flag' => 1)));
 
-		$this->Tree->updateAll(array($parentField => null));
+		$this->Tree->updateAll(array($parentField => NULL));
 
 		$result = $this->Tree->verify();
-		$this->assertNotSame(true, $result);
+		$this->assertNotSame(TRUE, $result);
 
 		$result = $this->Tree->recover();
 		$this->assertTrue($result);
@@ -524,15 +524,15 @@ class TreeBehaviorScopedTest extends CakeTestCase {
 		$this->assertTrue($result);
 	}
 
-/**
- * testDetectInvalidLftsRghts method
- *
- * @return void
- */
+	/**
+	 * testDetectInvalidLftsRghts method
+	 *
+	 * @return void
+	 */
 	public function testDetectInvalidLftsRghts() {
 		extract($this->settings);
 		$this->Tree = new $modelClass();
-		$this->Tree->order = null;
+		$this->Tree->order = NULL;
 		$this->Tree->initialize(2, 2);
 
 		$this->Tree->id = 1;
@@ -545,7 +545,7 @@ class TreeBehaviorScopedTest extends CakeTestCase {
 		$this->Tree->updateAll(array($leftField => 0, $rightField => 0));
 
 		$result = $this->Tree->verify();
-		$this->assertNotSame(true, $result);
+		$this->assertNotSame(TRUE, $result);
 
 		$this->Tree->recover();
 
@@ -553,15 +553,15 @@ class TreeBehaviorScopedTest extends CakeTestCase {
 		$this->assertTrue($result);
 	}
 
-/**
- * Reproduces a situation where a single node has lft= rght, and all other lft and rght fields follow sequentially
- *
- * @return void
- */
+	/**
+	 * Reproduces a situation where a single node has lft= rght, and all other lft and rght fields follow sequentially
+	 *
+	 * @return void
+	 */
 	public function testDetectEqualLftsRghts() {
 		extract($this->settings);
 		$this->Tree = new $modelClass();
-		$this->Tree->order = null;
+		$this->Tree->order = NULL;
 		$this->Tree->initialize(1, 3);
 
 		$this->Tree->id = 1;
@@ -574,12 +574,12 @@ class TreeBehaviorScopedTest extends CakeTestCase {
 		$result = $this->Tree->findByName('1.1');
 		$this->Tree->updateAll(array($rightField => $result[$modelClass][$leftField]), array('id' => $result[$modelClass]['id']));
 		$this->Tree->updateAll(array($leftField => $this->Tree->escapeField($leftField) . ' -1'),
-			array($leftField . ' >' => $result[$modelClass][$leftField]));
+				array($leftField . ' >' => $result[$modelClass][$leftField]));
 		$this->Tree->updateAll(array($rightField => $this->Tree->escapeField($rightField) . ' -1'),
-			array($rightField . ' >' => $result[$modelClass][$leftField]));
+				array($rightField . ' >' => $result[$modelClass][$leftField]));
 
 		$result = $this->Tree->verify();
-		$this->assertNotSame(true, $result);
+		$this->assertNotSame(TRUE, $result);
 
 		$result = $this->Tree->recover();
 		$this->assertTrue($result);

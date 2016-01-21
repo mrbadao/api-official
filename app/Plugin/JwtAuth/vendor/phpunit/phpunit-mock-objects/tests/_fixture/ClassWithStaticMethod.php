@@ -1,6 +1,6 @@
 <?php
 
-	class ClassWithStaticMethod {
-		public static function staticMethod() {
-		}
+class ClassWithStaticMethod {
+	public static function staticMethod() {
 	}
+}

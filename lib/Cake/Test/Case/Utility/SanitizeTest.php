@@ -25,11 +25,11 @@ App::uses('Sanitize', 'Utility');
  */
 class SanitizeDataTest extends CakeTestModel {
 
-/**
- * useTable property
- *
- * @var string
- */
+	/**
+	 * useTable property
+	 *
+	 * @var string
+	 */
 	public $useTable = 'data_tests';
 }
 
@@ -40,11 +40,11 @@ class SanitizeDataTest extends CakeTestModel {
  */
 class SanitizeArticle extends CakeTestModel {
 
-/**
- * useTable property
- *
- * @var string
- */
+	/**
+	 * useTable property
+	 *
+	 * @var string
+	 */
 	public $useTable = 'articles';
 }
 
@@ -55,25 +55,25 @@ class SanitizeArticle extends CakeTestModel {
  */
 class SanitizeTest extends CakeTestCase {
 
-/**
- * autoFixtures property
- *
- * @var bool
- */
-	public $autoFixtures = false;
+	/**
+	 * autoFixtures property
+	 *
+	 * @var bool
+	 */
+	public $autoFixtures = FALSE;
 
-/**
- * fixtures property
- *
- * @var array
- */
+	/**
+	 * fixtures property
+	 *
+	 * @var array
+	 */
 	public $fixtures = array('core.data_test', 'core.article');
 
-/**
- * testEscapeAlphaNumeric method
- *
- * @return void
- */
+	/**
+	 * testEscapeAlphaNumeric method
+	 *
+	 * @return void
+	 */
 	public function testEscapeAlphaNumeric() {
 		$resultAlpha = Sanitize::escape('abc', 'test');
 		$this->assertEquals('abc', $resultAlpha);
@@ -90,21 +90,21 @@ class SanitizeTest extends CakeTestCase {
 		$resultNumeric = Sanitize::escape('#1234.23', 'test');
 		$this->assertEquals('#1234.23', $resultNumeric);
 
-		$resultNull = Sanitize::escape(null, 'test');
-		$this->assertEquals(null, $resultNull);
+		$resultNull = Sanitize::escape(NULL, 'test');
+		$this->assertEquals(NULL, $resultNull);
 
-		$resultNull = Sanitize::escape(false, 'test');
-		$this->assertEquals(false, $resultNull);
+		$resultNull = Sanitize::escape(FALSE, 'test');
+		$this->assertEquals(FALSE, $resultNull);
 
-		$resultNull = Sanitize::escape(true, 'test');
-		$this->assertEquals(true, $resultNull);
+		$resultNull = Sanitize::escape(TRUE, 'test');
+		$this->assertEquals(TRUE, $resultNull);
 	}
 
-/**
- * testClean method
- *
- * @return void
- */
+	/**
+	 * testClean method
+	 *
+	 * @return void
+	 */
 	public function testClean() {
 		$string = 'test & "quote" \'other\' ;.$ symbol.' . "\r" . 'another line';
 		$expected = 'test &amp; &quot;quote&quot; &#039;other&#039; ;.$ symbol.another line';
@@ -113,22 +113,22 @@ class SanitizeTest extends CakeTestCase {
 
 		$string = 'test & "quote" \'other\' ;.$ symbol.' . "\r" . 'another line';
 		$expected = 'test & ' . Sanitize::escape('"quote"', 'test') . ' ' . Sanitize::escape('\'other\'', 'test') . ' ;.$ symbol.another line';
-		$result = Sanitize::clean($string, array('encode' => false, 'connection' => 'test'));
+		$result = Sanitize::clean($string, array('encode' => FALSE, 'connection' => 'test'));
 		$this->assertEquals($expected, $result);
 
 		$string = 'test & "quote" \'other\' ;.$ \\$ symbol.' . "\r" . 'another line';
 		$expected = 'test & "quote" \'other\' ;.$ $ symbol.another line';
-		$result = Sanitize::clean($string, array('encode' => false, 'escape' => false, 'connection' => 'test'));
+		$result = Sanitize::clean($string, array('encode' => FALSE, 'escape' => FALSE, 'connection' => 'test'));
 		$this->assertEquals($expected, $result);
 
 		$string = 'test & "quote" \'other\' ;.$ \\$ symbol.' . "\r" . 'another line';
 		$expected = 'test & "quote" \'other\' ;.$ \\$ symbol.another line';
-		$result = Sanitize::clean($string, array('encode' => false, 'escape' => false, 'dollar' => false, 'connection' => 'test'));
+		$result = Sanitize::clean($string, array('encode' => FALSE, 'escape' => FALSE, 'dollar' => FALSE, 'connection' => 'test'));
 		$this->assertEquals($expected, $result);
 
 		$string = 'test & "quote" \'other\' ;.$ symbol.' . "\r" . 'another line';
 		$expected = 'test & "quote" \'other\' ;.$ symbol.' . "\r" . 'another line';
-		$result = Sanitize::clean($string, array('encode' => false, 'escape' => false, 'carriage' => false, 'connection' => 'test'));
+		$result = Sanitize::clean($string, array('encode' => FALSE, 'escape' => FALSE, 'carriage' => FALSE, 'connection' => 'test'));
 		$this->assertEquals($expected, $result);
 
 		$array = array(array('test & "quote" \'other\' ;.$ symbol.' . "\r" . 'another line'));
@@ -138,17 +138,17 @@ class SanitizeTest extends CakeTestCase {
 
 		$array = array(array('test & "quote" \'other\' ;.$ \\$ symbol.' . "\r" . 'another line'));
 		$expected = array(array('test & "quote" \'other\' ;.$ $ symbol.another line'));
-		$result = Sanitize::clean($array, array('encode' => false, 'escape' => false, 'connection' => 'test'));
+		$result = Sanitize::clean($array, array('encode' => FALSE, 'escape' => FALSE, 'connection' => 'test'));
 		$this->assertEquals($expected, $result);
 
 		$array = array(array('test odd Ä spacesé'));
 		$expected = array(array('test odd &Auml; spaces&eacute;'));
-		$result = Sanitize::clean($array, array('odd_spaces' => false, 'escape' => false, 'connection' => 'test'));
+		$result = Sanitize::clean($array, array('odd_spaces' => FALSE, 'escape' => FALSE, 'connection' => 'test'));
 		$this->assertEquals($expected, $result);
 
 		$array = array(array('\\$', array('key' => 'test & "quote" \'other\' ;.$ \\$ symbol.' . "\r" . 'another line')));
 		$expected = array(array('$', array('key' => 'test & "quote" \'other\' ;.$ $ symbol.another line')));
-		$result = Sanitize::clean($array, array('encode' => false, 'escape' => false, 'connection' => 'test'));
+		$result = Sanitize::clean($array, array('encode' => FALSE, 'escape' => FALSE, 'connection' => 'test'));
 		$this->assertEquals($expected, $result);
 
 		$string = '';
@@ -157,38 +157,38 @@ class SanitizeTest extends CakeTestCase {
 		$this->assertEquals($expected, $result);
 
 		$data = array(
-			'Grant' => array(
-				'title' => '2 o clock grant',
-				'grant_peer_review_id' => 3,
-				'institution_id' => 5,
-				'created_by' => 1,
-				'modified_by' => 1,
-				'created' => '2010-07-15 14:11:00',
-				'modified' => '2010-07-19 10:45:41'
-			),
-			'GrantsMember' => array(
-				0 => array(
-					'id' => 68,
-					'grant_id' => 120,
-					'member_id' => 16,
-					'program_id' => 29,
-					'pi_percent_commitment' => 1
+				'Grant' => array(
+						'title' => '2 o clock grant',
+						'grant_peer_review_id' => 3,
+						'institution_id' => 5,
+						'created_by' => 1,
+						'modified_by' => 1,
+						'created' => '2010-07-15 14:11:00',
+						'modified' => '2010-07-19 10:45:41'
+				),
+				'GrantsMember' => array(
+						0 => array(
+								'id' => 68,
+								'grant_id' => 120,
+								'member_id' => 16,
+								'program_id' => 29,
+								'pi_percent_commitment' => 1
+						)
 				)
-			)
 		);
 		$result = Sanitize::clean($data, array('connection' => 'test'));
 		$this->assertEquals($data, $result);
 	}
 
-/**
- * testHtml method
- *
- * @return void
- */
+	/**
+	 * testHtml method
+	 *
+	 * @return void
+	 */
 	public function testHtml() {
 		$string = '<p>This is a <em>test string</em> & so is this</p>';
 		$expected = 'This is a test string &amp; so is this';
-		$result = Sanitize::html($string, array('remove' => true));
+		$result = Sanitize::html($string, array('remove' => TRUE));
 		$this->assertEquals($expected, $result);
 
 		$string = 'The "lazy" dog \'jumped\' & flew over the moon. If (1+1) = 2 <em>is</em> true, (2-1) = 1 is also true';
@@ -217,15 +217,15 @@ class SanitizeTest extends CakeTestCase {
 
 		$string = 'The "lazy" dog & his friend Apple&reg; conquered the world';
 		$expected = 'The &quot;lazy&quot; dog &amp; his friend Apple&reg; conquered the world';
-		$result = Sanitize::html($string, array('double' => false));
+		$result = Sanitize::html($string, array('double' => FALSE));
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * testStripWhitespace method
- *
- * @return void
- */
+	/**
+	 * testStripWhitespace method
+	 *
+	 * @return void
+	 */
 	public function testStripWhitespace() {
 		$string = "This     sentence \t\t\t has lots of \n\n white\nspace \rthat \r\n needs to be    \t    \n trimmed.";
 		$expected = "This sentence has lots of whitespace that needs to be trimmed.";
@@ -238,11 +238,11 @@ class SanitizeTest extends CakeTestCase {
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * testParanoid method
- *
- * @return void
- */
+	/**
+	 * testParanoid method
+	 *
+	 * @return void
+	 */
 	public function testParanoid() {
 		$string = 'I would like to !%@#% & dance & sing ^$&*()-+';
 		$expected = 'Iwouldliketodancesing';
@@ -250,11 +250,11 @@ class SanitizeTest extends CakeTestCase {
 		$this->assertEquals($expected, $result);
 
 		$string = array('This |s th% s0ng that never ends it g*es',
-						'on and on my friends, b^ca#use it is the',
-						'so&g th===t never ends.');
+				'on and on my friends, b^ca#use it is the',
+				'so&g th===t never ends.');
 		$expected = array('This s th% s0ng that never ends it g*es',
-						'on and on my friends bcause it is the',
-						'sog tht never ends.');
+				'on and on my friends bcause it is the',
+				'sog tht never ends.');
 		$result = Sanitize::paranoid($string, array('%', '*', '.', ' '));
 		$this->assertEquals($expected, $result);
 
@@ -279,11 +279,11 @@ class SanitizeTest extends CakeTestCase {
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * testStripImages method
- *
- * @return void
- */
+	/**
+	 * testStripImages method
+	 *
+	 * @return void
+	 */
 	public function testStripImages() {
 		$string = '<img src="/img/test.jpg" alt="my image" />';
 		$expected = 'my image<br />';
@@ -306,11 +306,11 @@ class SanitizeTest extends CakeTestCase {
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * testStripScripts method
- *
- * @return void
- */
+	/**
+	 * testStripScripts method
+	 *
+	 * @return void
+	 */
 	public function testStripScripts() {
 		$string = '<link href="/css/styles.css" media="screen" rel="stylesheet" />';
 		$expected = '';
@@ -318,12 +318,12 @@ class SanitizeTest extends CakeTestCase {
 		$this->assertEquals($expected, $result);
 
 		$string = '<link href="/css/styles.css" media="screen" rel="stylesheet" />' . "\n" .
-			'<link rel="icon" href="/favicon.ico" type="image/x-icon" />' . "\n" .
-			'<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />' . "\n" .
-			'<link rel="alternate" href="/feed.xml" title="RSS Feed" type="application/rss+xml" />';
+				'<link rel="icon" href="/favicon.ico" type="image/x-icon" />' . "\n" .
+				'<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />' . "\n" .
+				'<link rel="alternate" href="/feed.xml" title="RSS Feed" type="application/rss+xml" />';
 		$expected = "\n" . '<link rel="icon" href="/favicon.ico" type="image/x-icon" />' . "\n" .
-			'<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />' . "\n" .
-			'<link rel="alternate" href="/feed.xml" title="RSS Feed" type="application/rss+xml" />';
+				'<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />' . "\n" .
+				'<link rel="alternate" href="/feed.xml" title="RSS Feed" type="application/rss+xml" />';
 		$result = Sanitize::stripScripts($string);
 		$this->assertEquals($expected, $result);
 
@@ -374,11 +374,11 @@ HTML;
 		$this->assertTextEquals($expected, $result);
 	}
 
-/**
- * testStripAll method
- *
- * @return void
- */
+	/**
+	 * testStripAll method
+	 *
+	 * @return void
+	 */
 	public function testStripAll() {
 		$string = '<img """><script>alert("xss")</script>"/>';
 		$expected = '"/>';
@@ -396,19 +396,19 @@ HTML;
 		$this->assertEquals($expected, $result);
 
 		$string = '<img src="http://google.com/images/logo.gif" onload="window.location=\'http://sam.com/\'" />' . "\n" .
-			"<p>This is ok      \t\n   text</p>\n" .
-			'<link rel="stylesheet" href="/css/master.css" type="text/css" media="screen" title="my sheet" charset="utf-8">' . "\n" .
-			'<script src="xss.js" type="text/javascript" charset="utf-8"></script>';
+				"<p>This is ok      \t\n   text</p>\n" .
+				'<link rel="stylesheet" href="/css/master.css" type="text/css" media="screen" title="my sheet" charset="utf-8">' . "\n" .
+				'<script src="xss.js" type="text/javascript" charset="utf-8"></script>';
 		$expected = '<p>This is ok text</p>';
 		$result = Sanitize::stripAll($string);
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * testStripTags method
- *
- * @return void
- */
+	/**
+	 * testStripTags method
+	 *
+	 * @return void
+	 */
 	public function testStripTags() {
 		$string = '<h2>Headline</h2><p><a href="http://example.com">My Link</a> could go to a bad site</p>';
 		$expected = 'Headline<p>My Link could go to a bad site</p>';

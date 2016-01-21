@@ -27,96 +27,96 @@ App::uses('Router', 'Routing');
  */
 class RedirectRouteTest extends CakeTestCase {
 
-/**
- * setUp method
- *
- * @return void
- */
+	/**
+	 * setUp method
+	 *
+	 * @return void
+	 */
 	public function setUp() {
 		parent::setUp();
-		Configure::write('Routing', array('admin' => null, 'prefixes' => array()));
+		Configure::write('Routing', array('admin' => NULL, 'prefixes' => array()));
 		Router::reload();
 	}
 
-/**
- * test the parsing of routes.
- *
- * @return void
- */
+	/**
+	 * test the parsing of routes.
+	 *
+	 * @return void
+	 */
 	public function testParsing() {
 		$route = new RedirectRoute('/home', array('controller' => 'posts'));
-		$route->stop = false;
+		$route->stop = FALSE;
 		$route->response = $this->getMock('CakeResponse', array('_sendHeader'));
 		$route->parse('/home');
 		$header = $route->response->header();
-		$this->assertEquals(Router::url('/posts', true), $header['Location']);
+		$this->assertEquals(Router::url('/posts', TRUE), $header['Location']);
 
 		$route = new RedirectRoute('/home', array('controller' => 'posts', 'action' => 'index'));
-		$route->stop = false;
+		$route->stop = FALSE;
 		$route->response = $this->getMock('CakeResponse', array('_sendHeader'));
 		$route->parse('/home');
 		$header = $route->response->header();
-		$this->assertEquals(Router::url('/posts', true), $header['Location']);
+		$this->assertEquals(Router::url('/posts', TRUE), $header['Location']);
 		$this->assertEquals(301, $route->response->statusCode());
 
 		$route = new RedirectRoute('/google', 'http://google.com');
-		$route->stop = false;
+		$route->stop = FALSE;
 		$route->response = $this->getMock('CakeResponse', array('_sendHeader'));
 		$route->parse('/google');
 		$header = $route->response->header();
 		$this->assertEquals('http://google.com', $header['Location']);
 
 		$route = new RedirectRoute('/posts/*', array('controller' => 'posts', 'action' => 'view'), array('status' => 302));
-		$route->stop = false;
+		$route->stop = FALSE;
 		$route->response = $this->getMock('CakeResponse', array('_sendHeader'));
 		$route->parse('/posts/2');
 		$header = $route->response->header();
-		$this->assertEquals(Router::url('/posts/view', true), $header['Location']);
+		$this->assertEquals(Router::url('/posts/view', TRUE), $header['Location']);
 		$this->assertEquals(302, $route->response->statusCode());
 
-		$route = new RedirectRoute('/posts/*', array('controller' => 'posts', 'action' => 'view'), array('persist' => true));
-		$route->stop = false;
+		$route = new RedirectRoute('/posts/*', array('controller' => 'posts', 'action' => 'view'), array('persist' => TRUE));
+		$route->stop = FALSE;
 		$route->response = $this->getMock('CakeResponse', array('_sendHeader'));
 		$route->parse('/posts/2');
 		$header = $route->response->header();
-		$this->assertEquals(Router::url('/posts/view/2', true), $header['Location']);
+		$this->assertEquals(Router::url('/posts/view/2', TRUE), $header['Location']);
 
-		$route = new RedirectRoute('/posts/*', '/test', array('persist' => true));
-		$route->stop = false;
+		$route = new RedirectRoute('/posts/*', '/test', array('persist' => TRUE));
+		$route->stop = FALSE;
 		$route->response = $this->getMock('CakeResponse', array('_sendHeader'));
 		$route->parse('/posts/2');
 		$header = $route->response->header();
-		$this->assertEquals(Router::url('/test', true), $header['Location']);
+		$this->assertEquals(Router::url('/test', TRUE), $header['Location']);
 
-		$route = new RedirectRoute('/my_controllers/:action/*', array('controller' => 'tags', 'action' => 'add'), array('persist' => true));
-		$route->stop = false;
+		$route = new RedirectRoute('/my_controllers/:action/*', array('controller' => 'tags', 'action' => 'add'), array('persist' => TRUE));
+		$route->stop = FALSE;
 		$route->response = $this->getMock('CakeResponse', array('_sendHeader'));
 		$route->parse('/my_controllers/do_something/passme/named:param');
 		$header = $route->response->header();
-		$this->assertEquals(Router::url('/tags/add/passme/named:param', true), $header['Location']);
+		$this->assertEquals(Router::url('/tags/add/passme/named:param', TRUE), $header['Location']);
 
 		$route = new RedirectRoute('/my_controllers/:action/*', array('controller' => 'tags', 'action' => 'add'));
-		$route->stop = false;
+		$route->stop = FALSE;
 		$route->response = $this->getMock('CakeResponse', array('_sendHeader'));
 		$route->parse('/my_controllers/do_something/passme/named:param');
 		$header = $route->response->header();
-		$this->assertEquals(Router::url('/tags/add', true), $header['Location']);
+		$this->assertEquals(Router::url('/tags/add', TRUE), $header['Location']);
 
 		$route = new RedirectRoute('/:lang/my_controllers', array('controller' => 'tags', 'action' => 'add'), array('lang' => '(nl|en)', 'persist' => array('lang')));
-		$route->stop = false;
+		$route->stop = FALSE;
 		$route->response = $this->getMock('CakeResponse', array('_sendHeader'));
 		$route->parse('/nl/my_controllers/');
 		$header = $route->response->header();
-		$this->assertEquals(Router::url('/tags/add/lang:nl', true), $header['Location']);
+		$this->assertEquals(Router::url('/tags/add/lang:nl', TRUE), $header['Location']);
 
 		Router::$routes = array(); // reset default routes
 		Router::connect('/:lang/preferred_controllers', array('controller' => 'tags', 'action' => 'add'), array('lang' => '(nl|en)', 'persist' => array('lang')));
 		$route = new RedirectRoute('/:lang/my_controllers', array('controller' => 'tags', 'action' => 'add'), array('lang' => '(nl|en)', 'persist' => array('lang')));
-		$route->stop = false;
+		$route->stop = FALSE;
 		$route->response = $this->getMock('CakeResponse', array('_sendHeader'));
 		$route->parse('/nl/my_controllers/');
 		$header = $route->response->header();
-		$this->assertEquals(Router::url('/nl/preferred_controllers', true), $header['Location']);
+		$this->assertEquals(Router::url('/nl/preferred_controllers', TRUE), $header['Location']);
 	}
 
 }

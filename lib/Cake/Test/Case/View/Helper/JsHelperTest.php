@@ -48,30 +48,32 @@ class JsEncodingObject {
 class OptionEngineHelper extends JsBaseEngineHelper {
 
 	protected $_optionMap = array(
-		'request' => array(
-			'complete' => 'success',
-			'request' => 'beforeSend',
-			'type' => 'dataType'
-		)
+			'request' => array(
+					'complete' => 'success',
+					'request' => 'beforeSend',
+					'type' => 'dataType'
+			)
 	);
 
-/**
- * test method for testing option mapping
- *
- * @param array $options
- * @return array
- */
+	/**
+	 * test method for testing option mapping
+	 *
+	 * @param array $options
+	 *
+	 * @return array
+	 */
 	public function testMap($options = array()) {
 		return $this->_mapOptions('request', $options);
 	}
 
-/**
- * test method for option parsing
- *
- * @param $options
- * @param array $safe
- * @return void
- */
+	/**
+	 * test method for option parsing
+	 *
+	 * @param       $options
+	 * @param array $safe
+	 *
+	 * @return void
+	 */
 	public function testParseOptions($options, $safe = array()) {
 		return $this->_parseOptions($options, $safe);
 	}
@@ -118,34 +120,34 @@ class OptionEngineHelper extends JsBaseEngineHelper {
  */
 class JsHelperTest extends CakeTestCase {
 
-/**
- * Regexp for CDATA start block
- *
- * @var string
- */
+	/**
+	 * Regexp for CDATA start block
+	 *
+	 * @var string
+	 */
 	public $cDataStart = 'preg:/^\/\/<!\[CDATA\[[\n\r]*/';
 
-/**
- * Regexp for CDATA end block
- *
- * @var string
- */
+	/**
+	 * Regexp for CDATA end block
+	 *
+	 * @var string
+	 */
 	public $cDataEnd = 'preg:/[^\]]*\]\]\>[\s\r\n]*/';
 
-/**
- * setUp method
- *
- * @return void
- */
+	/**
+	 * setUp method
+	 *
+	 * @return void
+	 */
 	public function setUp() {
 		parent::setUp();
 
-		Configure::write('Asset.timestamp', false);
+		Configure::write('Asset.timestamp', FALSE);
 
-		$controller = null;
+		$controller = NULL;
 		$this->View = $this->getMock('View', array('append'), array(&$controller));
 		$this->Js = new JsHelper($this->View, 'Option');
-		$request = new CakeRequest(null, false);
+		$request = new CakeRequest(NULL, FALSE);
 		$this->Js->request = $request;
 		$this->Js->Html = new HtmlHelper($this->View);
 		$this->Js->Html->request = $request;
@@ -156,39 +158,21 @@ class JsHelperTest extends CakeTestCase {
 		$this->Js->OptionEngine = new OptionEngineHelper($this->View);
 	}
 
-/**
- * tearDown method
- *
- * @return void
- */
+	/**
+	 * tearDown method
+	 *
+	 * @return void
+	 */
 	public function tearDown() {
 		parent::tearDown();
 		unset($this->Js);
 	}
 
-/**
- * Switches $this->Js to a mocked engine.
- *
- * @return void
- */
-	protected function _useMock() {
-		$request = new CakeRequest(null, false);
-
-		$this->Js = new JsHelper($this->View, array('TestJs'));
-		$this->Js->TestJsEngine = $this->getMock('JsBaseEngineHelper', array(), array($this->View));
-		$this->Js->request = $request;
-		$this->Js->Html = new HtmlHelper($this->View);
-		$this->Js->Html->request = $request;
-		$this->Js->Form = new FormHelper($this->View);
-		$this->Js->Form->request = $request;
-		$this->Js->Form->Html = new HtmlHelper($this->View);
-	}
-
-/**
- * test object construction
- *
- * @return void
- */
+	/**
+	 * test object construction
+	 *
+	 * @return void
+	 */
 	public function testConstruction() {
 		$js = new JsHelper($this->View);
 		$this->assertEquals(array('Html', 'Form', 'JqueryEngine'), $js->helpers);
@@ -203,19 +187,19 @@ class JsHelperTest extends CakeTestCase {
 		$this->assertEquals(array('Html', 'Form', 'MyPlugin.DojoEngine'), $js->helpers);
 	}
 
-/**
- * test that methods dispatch internally and to the engine class
- *
- * @expectedException PHPUnit_Framework_Error_Warning
- * @return void
- */
+	/**
+	 * test that methods dispatch internally and to the engine class
+	 *
+	 * @expectedException PHPUnit_Framework_Error_Warning
+	 * @return void
+	 */
 	public function testMethodDispatching() {
 		$this->_useMock();
 
 		$this->Js->TestJsEngine
-			->expects($this->once())
-			->method('event')
-			->with('click', 'callback');
+				->expects($this->once())
+				->method('event')
+				->with('click', 'callback');
 
 		$this->Js->event('click', 'callback');
 
@@ -223,122 +207,140 @@ class JsHelperTest extends CakeTestCase {
 		$this->Js->someMethodThatSurelyDoesntExist();
 	}
 
-/**
- * Test that method dispatching for events respects buffer parameters and bufferedMethods Lists.
- *
- * @return void
- */
+	/**
+	 * Switches $this->Js to a mocked engine.
+	 *
+	 * @return void
+	 */
+	protected function _useMock() {
+		$request = new CakeRequest(NULL, FALSE);
+
+		$this->Js = new JsHelper($this->View, array('TestJs'));
+		$this->Js->TestJsEngine = $this->getMock('JsBaseEngineHelper', array(), array($this->View));
+		$this->Js->request = $request;
+		$this->Js->Html = new HtmlHelper($this->View);
+		$this->Js->Html->request = $request;
+		$this->Js->Form = new FormHelper($this->View);
+		$this->Js->Form->request = $request;
+		$this->Js->Form->Html = new HtmlHelper($this->View);
+	}
+
+	/**
+	 * Test that method dispatching for events respects buffer parameters and bufferedMethods Lists.
+	 *
+	 * @return void
+	 */
 	public function testEventDispatchWithBuffering() {
 		$this->_useMock();
 
 		$this->Js->TestJsEngine->bufferedMethods = array('event', 'sortables');
 		$this->Js->TestJsEngine->expects($this->exactly(3))
-			->method('event')
-			->will($this->returnValue('This is an event call'));
+				->method('event')
+				->will($this->returnValue('This is an event call'));
 
 		$this->Js->event('click', 'foo');
 		$result = $this->Js->getBuffer();
 		$this->assertEquals(1, count($result));
 		$this->assertEquals('This is an event call', $result[0]);
 
-		$result = $this->Js->event('click', 'foo', array('buffer' => false));
+		$result = $this->Js->event('click', 'foo', array('buffer' => FALSE));
 		$buffer = $this->Js->getBuffer();
 		$this->assertTrue(empty($buffer));
 		$this->assertEquals('This is an event call', $result);
 
-		$result = $this->Js->event('click', 'foo', false);
+		$result = $this->Js->event('click', 'foo', FALSE);
 		$buffer = $this->Js->getBuffer();
 		$this->assertTrue(empty($buffer));
 		$this->assertEquals('This is an event call', $result);
 	}
 
-/**
- * Test that method dispatching for effects respects buffer parameters and bufferedMethods Lists.
- *
- * @return void
- */
+	/**
+	 * Test that method dispatching for effects respects buffer parameters and bufferedMethods Lists.
+	 *
+	 * @return void
+	 */
 	public function testEffectDispatchWithBuffering() {
 		$this->_useMock();
 		$this->Js->TestJsEngine->expects($this->exactly(4))
-			->method('effect')
-			->will($this->returnValue('I am not buffered.'));
+				->method('effect')
+				->will($this->returnValue('I am not buffered.'));
 
 		$result = $this->Js->effect('slideIn');
 		$buffer = $this->Js->getBuffer();
 		$this->assertTrue(empty($buffer));
 		$this->assertEquals('I am not buffered.', $result);
 
-		$result = $this->Js->effect('slideIn', true);
+		$result = $this->Js->effect('slideIn', TRUE);
 		$buffer = $this->Js->getBuffer();
 		$this->assertNull($result);
 		$this->assertEquals(1, count($buffer));
 		$this->assertEquals('I am not buffered.', $buffer[0]);
 
-		$result = $this->Js->effect('slideIn', array('speed' => 'slow'), true);
+		$result = $this->Js->effect('slideIn', array('speed' => 'slow'), TRUE);
 		$buffer = $this->Js->getBuffer();
 		$this->assertNull($result);
 		$this->assertEquals(1, count($buffer));
 		$this->assertEquals('I am not buffered.', $buffer[0]);
 
-		$result = $this->Js->effect('slideIn', array('speed' => 'slow', 'buffer' => true));
+		$result = $this->Js->effect('slideIn', array('speed' => 'slow', 'buffer' => TRUE));
 		$buffer = $this->Js->getBuffer();
 		$this->assertNull($result);
 		$this->assertEquals(1, count($buffer));
 		$this->assertEquals('I am not buffered.', $buffer[0]);
 	}
 
-/**
- * test that writeScripts generates scripts inline.
- *
- * @return void
- */
+	/**
+	 * test that writeScripts generates scripts inline.
+	 *
+	 * @return void
+	 */
 	public function testWriteScriptsNoFile() {
 		$this->_useMock();
 		$this->Js->buffer('one = 1;');
 		$this->Js->buffer('two = 2;');
-		$result = $this->Js->writeBuffer(array('onDomReady' => false, 'cache' => false, 'clear' => false));
+		$result = $this->Js->writeBuffer(array('onDomReady' => FALSE, 'cache' => FALSE, 'clear' => FALSE));
 		$expected = array(
-			'script' => array('type' => 'text/javascript'),
-			$this->cDataStart,
-			"one = 1;\ntwo = 2;",
-			$this->cDataEnd,
-			'/script',
+				'script' => array('type' => 'text/javascript'),
+				$this->cDataStart,
+				"one = 1;\ntwo = 2;",
+				$this->cDataEnd,
+				'/script',
 		);
 		$this->assertTags($result, $expected);
 
 		$this->Js->TestJsEngine->expects($this->atLeastOnce())->method('domReady');
-		$result = $this->Js->writeBuffer(array('onDomReady' => true, 'cache' => false, 'clear' => false));
+		$result = $this->Js->writeBuffer(array('onDomReady' => TRUE, 'cache' => FALSE, 'clear' => FALSE));
 
 		$this->View->expects($this->once())
-			->method('append')
-			->with('script', $this->matchesRegularExpression('/one\s\=\s1;\ntwo\s\=\s2;/'));
-		$result = $this->Js->writeBuffer(array('onDomReady' => false, 'inline' => false, 'cache' => false));
+				->method('append')
+				->with('script', $this->matchesRegularExpression('/one\s\=\s1;\ntwo\s\=\s2;/'));
+		$result = $this->Js->writeBuffer(array('onDomReady' => FALSE, 'inline' => FALSE, 'cache' => FALSE));
 	}
 
-/**
- * test that writing the buffer with inline = false includes a script tag.
- *
- * @return void
- */
+	/**
+	 * test that writing the buffer with inline = false includes a script tag.
+	 *
+	 * @return void
+	 */
 	public function testWriteBufferNotInline() {
 		$this->Js->set('foo', 1);
 
 		$this->View->expects($this->once())
-			->method('append')
-			->with('script', $this->matchesRegularExpression('#<script type="text\/javascript">window.app \= \{"foo"\:1\}\;<\/script>#'));
+				->method('append')
+				->with('script', $this->matchesRegularExpression('#<script type="text\/javascript">window.app \= \{"foo"\:1\}\;<\/script>#'));
 
-		$this->Js->writeBuffer(array('onDomReady' => false, 'inline' => false, 'safe' => false));
+		$this->Js->writeBuffer(array('onDomReady' => FALSE, 'inline' => FALSE, 'safe' => FALSE));
 	}
 
-/**
- * test that writeBuffer() sets domReady = false when the request is done by XHR.
- * Including a domReady() when in XHR can cause issues as events aren't triggered by some libraries
- *
- * @return void
- */
+	/**
+	 * test that writeBuffer() sets domReady = false when the request is done by XHR.
+	 * Including a domReady() when in XHR can cause issues as events aren't triggered by some libraries
+	 *
+	 * @return void
+	 */
 	public function testWriteBufferAndXhr() {
 		$this->_useMock();
-		$requestWith = null;
+		$requestWith = NULL;
 		if (isset($_SERVER['HTTP_X_REQUESTED_WITH'])) {
 			$requestWith = $_SERVER['HTTP_X_REQUESTED_WITH'];
 		}
@@ -349,27 +351,27 @@ class JsHelperTest extends CakeTestCase {
 		$this->Js->writeBuffer();
 
 		unset($_SERVER['HTTP_X_REQUESTED_WITH']);
-		if ($requestWith !== null) {
+		if ($requestWith !== NULL) {
 			$_SERVER['HTTP_X_REQUESTED_WITH'] = $requestWith;
 		}
 	}
 
-/**
- * test that writeScripts makes files, and puts the events into them.
- *
- * @return void
- */
+	/**
+	 * test that writeScripts makes files, and puts the events into them.
+	 *
+	 * @return void
+	 */
 	public function testWriteScriptsInFile() {
 		$this->skipIf(!is_writable(WWW_ROOT . 'js'), 'webroot/js is not Writable, script caching test has been skipped.');
 
-		Configure::write('Cache.disable', false);
+		Configure::write('Cache.disable', FALSE);
 		$this->Js->request->webroot = '/';
 		$this->Js->JsBaseEngine = $this->getMock('JsBaseEngineHelper', array(), array($this->View));
 		$this->Js->buffer('one = 1;');
 		$this->Js->buffer('two = 2;');
-		$result = $this->Js->writeBuffer(array('onDomReady' => false, 'cache' => true));
+		$result = $this->Js->writeBuffer(array('onDomReady' => FALSE, 'cache' => TRUE));
 		$expected = array(
-			'script' => array('type' => 'text/javascript', 'src' => 'preg:/(.)*\.js/'),
+				'script' => array('type' => 'text/javascript', 'src' => 'preg:/(.)*\.js/'),
 		);
 		$this->assertTags($result, $expected);
 		preg_match('/src="(.*\.js)"/', $result, $filename);
@@ -380,337 +382,337 @@ class JsHelperTest extends CakeTestCase {
 			unlink(WWW_ROOT . $filename[1]);
 		}
 
-		Configure::write('Cache.disable', true);
+		Configure::write('Cache.disable', TRUE);
 		$this->Js->buffer('one = 1;');
 		$this->Js->buffer('two = 2;');
-		$result = $this->Js->writeBuffer(array('onDomReady' => false, 'cache' => true));
+		$result = $this->Js->writeBuffer(array('onDomReady' => FALSE, 'cache' => TRUE));
 		$this->assertRegExp('/one\s=\s1;\ntwo\s=\s2;/', $result);
 		$this->assertFalse(file_exists(WWW_ROOT . $filename[1]));
 	}
 
-/**
- * test link()
- *
- * @return void
- */
+	/**
+	 * test link()
+	 *
+	 * @return void
+	 */
 	public function testLinkWithMock() {
 		$this->_useMock();
 
 		$options = array('update' => '#content');
 
 		$this->Js->TestJsEngine->expects($this->at(0))
-			->method('get');
+				->method('get');
 
 		$this->Js->TestJsEngine->expects($this->at(1))
-			->method('request')
-			->with('/posts/view/1', $options)
-			->will($this->returnValue('--ajax code--'));
+				->method('request')
+				->with('/posts/view/1', $options)
+				->will($this->returnValue('--ajax code--'));
 
 		$this->Js->TestJsEngine->expects($this->at(2))
-			->method('event')
-			->with('click', '--ajax code--', $options + array('buffer' => null));
+				->method('event')
+				->with('click', '--ajax code--', $options + array('buffer' => NULL));
 
 		$result = $this->Js->link('test link', '/posts/view/1', $options);
 		$expected = array(
-			'a' => array('id' => 'preg:/link-\d+/', 'href' => '/posts/view/1'),
-			'test link',
-			'/a'
+				'a' => array('id' => 'preg:/link-\d+/', 'href' => '/posts/view/1'),
+				'test link',
+				'/a'
 		);
 		$this->assertTags($result, $expected);
 	}
 
-/**
- * test link with a mock and confirmation
- *
- * @return void
- */
+	/**
+	 * test link with a mock and confirmation
+	 *
+	 * @return void
+	 */
 	public function testLinkWithMockAndConfirm() {
 		$this->_useMock();
 
 		$options = array(
-			'confirm' => 'Are you sure?',
-			'update' => '#content',
-			'class' => 'my-class',
-			'id' => 'custom-id',
-			'escape' => false
+				'confirm' => 'Are you sure?',
+				'update' => '#content',
+				'class' => 'my-class',
+				'id' => 'custom-id',
+				'escape' => FALSE
 		);
 		$this->Js->TestJsEngine->expects($this->once())
-			->method('confirmReturn')
-			->with($options['confirm'])
-			->will($this->returnValue('--confirm script--'));
+				->method('confirmReturn')
+				->with($options['confirm'])
+				->will($this->returnValue('--confirm script--'));
 
 		$this->Js->TestJsEngine->expects($this->once())
-			->method('request')
-			->with('/posts/view/1');
+				->method('request')
+				->with('/posts/view/1');
 
 		$this->Js->TestJsEngine->expects($this->once())
-			->method('event')
-			->with('click', '--confirm script--');
+				->method('event')
+				->with('click', '--confirm script--');
 
 		$result = $this->Js->link('test link »', '/posts/view/1', $options);
 		$expected = array(
-			'a' => array('id' => $options['id'], 'class' => $options['class'], 'href' => '/posts/view/1'),
-			'test link »',
-			'/a'
+				'a' => array('id' => $options['id'], 'class' => $options['class'], 'href' => '/posts/view/1'),
+				'test link »',
+				'/a'
 		);
 		$this->assertTags($result, $expected);
 	}
 
-/**
- * test link passing on htmlAttributes
- *
- * @return void
- */
+	/**
+	 * test link passing on htmlAttributes
+	 *
+	 * @return void
+	 */
 	public function testLinkWithAribtraryAttributes() {
 		$this->_useMock();
 
 		$options = array('id' => 'something', 'htmlAttributes' => array('arbitrary' => 'value', 'batman' => 'robin'));
 		$result = $this->Js->link('test link', '/posts/view/1', $options);
 		$expected = array(
-			'a' => array('id' => $options['id'], 'href' => '/posts/view/1', 'arbitrary' => 'value',
-				'batman' => 'robin'),
-			'test link',
-			'/a'
+				'a' => array('id' => $options['id'], 'href' => '/posts/view/1', 'arbitrary' => 'value',
+						'batman' => 'robin'),
+				'test link',
+				'/a'
 		);
 		$this->assertTags($result, $expected);
 	}
 
-/**
- * test that link() and no buffering returns an <a> and <script> tags.
- *
- * @return void
- */
+	/**
+	 * test that link() and no buffering returns an <a> and <script> tags.
+	 *
+	 * @return void
+	 */
 	public function testLinkWithNoBuffering() {
 		$this->_useMock();
 
 		$this->Js->TestJsEngine->expects($this->at(1))
-			->method('request')
-			->with('/posts/view/1', array('update' => '#content'))
-			->will($this->returnValue('ajax code'));
+				->method('request')
+				->with('/posts/view/1', array('update' => '#content'))
+				->will($this->returnValue('ajax code'));
 
 		$this->Js->TestJsEngine->expects($this->at(2))
-			->method('event')
-			->will($this->returnValue('-event handler-'));
+				->method('event')
+				->will($this->returnValue('-event handler-'));
 
-		$options = array('update' => '#content', 'buffer' => false);
+		$options = array('update' => '#content', 'buffer' => FALSE);
 		$result = $this->Js->link('test link', '/posts/view/1', $options);
 		$expected = array(
-			'a' => array('id' => 'preg:/link-\d+/', 'href' => '/posts/view/1'),
-			'test link',
-			'/a',
-			'script' => array('type' => 'text/javascript'),
-			$this->cDataStart,
-			'-event handler-',
-			$this->cDataEnd,
-			'/script'
+				'a' => array('id' => 'preg:/link-\d+/', 'href' => '/posts/view/1'),
+				'test link',
+				'/a',
+				'script' => array('type' => 'text/javascript'),
+				$this->cDataStart,
+				'-event handler-',
+				$this->cDataEnd,
+				'/script'
 		);
 		$this->assertTags($result, $expected);
 	}
 
-/**
- * test link with buffering off and safe on.
- *
- * @return void
- */
+	/**
+	 * test link with buffering off and safe on.
+	 *
+	 * @return void
+	 */
 	public function testLinkWithNoBufferingAndSafe() {
 		$this->_useMock();
 
 		$this->Js->TestJsEngine->expects($this->at(1))
-			->method('request')
-			->with('/posts/view/1', array('update' => '#content'))
-			->will($this->returnValue('ajax code'));
+				->method('request')
+				->with('/posts/view/1', array('update' => '#content'))
+				->will($this->returnValue('ajax code'));
 
 		$this->Js->TestJsEngine->expects($this->at(2))
-			->method('event')
-			->will($this->returnValue('-event handler-'));
+				->method('event')
+				->will($this->returnValue('-event handler-'));
 
-		$options = array('update' => '#content', 'buffer' => false, 'safe' => false);
+		$options = array('update' => '#content', 'buffer' => FALSE, 'safe' => FALSE);
 		$result = $this->Js->link('test link', '/posts/view/1', $options);
 
 		$expected = array(
-			'a' => array('id' => 'preg:/link-\d+/', 'href' => '/posts/view/1'),
-			'test link',
-			'/a',
-			'script' => array('type' => 'text/javascript'),
-			'-event handler-',
-			'/script'
+				'a' => array('id' => 'preg:/link-\d+/', 'href' => '/posts/view/1'),
+				'test link',
+				'/a',
+				'script' => array('type' => 'text/javascript'),
+				'-event handler-',
+				'/script'
 		);
 		$this->assertTags($result, $expected);
 	}
 
-/**
- * test submit() with a Mock to check Engine method calls
- *
- * @return void
- */
+	/**
+	 * test submit() with a Mock to check Engine method calls
+	 *
+	 * @return void
+	 */
 	public function testSubmitWithMock() {
 		$this->_useMock();
 
 		$options = array('update' => '#content', 'id' => 'test-submit', 'style' => 'margin: 0');
 
 		$this->Js->TestJsEngine->expects($this->at(0))
-			->method('get');
+				->method('get');
 
 		$this->Js->TestJsEngine->expects($this->at(1))
-			->method('serializeForm')
-			->will($this->returnValue('serialize-code'));
+				->method('serializeForm')
+				->will($this->returnValue('serialize-code'));
 
 		$this->Js->TestJsEngine->expects($this->at(2))
-			->method('request')
-			->will($this->returnValue('ajax-code'));
+				->method('request')
+				->will($this->returnValue('ajax-code'));
 
 		$params = array(
-			'update' => $options['update'], 'data' => 'serialize-code',
-			'method' => 'post', 'dataExpression' => true, 'buffer' => null
+				'update' => $options['update'], 'data' => 'serialize-code',
+				'method' => 'post', 'dataExpression' => TRUE, 'buffer' => NULL
 		);
 
 		$this->Js->TestJsEngine->expects($this->at(3))
-			->method('event')
-			->with('click', "ajax-code", $params);
+				->method('event')
+				->with('click', "ajax-code", $params);
 
 		$result = $this->Js->submit('Save', $options);
 		$expected = array(
-			'div' => array('class' => 'submit'),
-			'input' => array('type' => 'submit', 'id' => $options['id'], 'value' => 'Save', 'style' => 'margin: 0'),
-			'/div'
+				'div' => array('class' => 'submit'),
+				'input' => array('type' => 'submit', 'id' => $options['id'], 'value' => 'Save', 'style' => 'margin: 0'),
+				'/div'
 		);
 		$this->assertTags($result, $expected);
 	}
 
-/**
- * test submit() with a mock
- *
- * @return void
- */
+	/**
+	 * test submit() with a mock
+	 *
+	 * @return void
+	 */
 	public function testSubmitWithMockRequestParams() {
 		$this->_useMock();
 
 		$this->Js->TestJsEngine->expects($this->at(0))
-			->method('get');
+				->method('get');
 
 		$this->Js->TestJsEngine->expects($this->at(1))
-			->method('serializeForm')
-			->will($this->returnValue('serialize-code'));
+				->method('serializeForm')
+				->will($this->returnValue('serialize-code'));
 
 		$requestParams = array(
-			'update' => '#content',
-			'data' => 'serialize-code',
-			'method' => 'post',
-			'dataExpression' => true
+				'update' => '#content',
+				'data' => 'serialize-code',
+				'method' => 'post',
+				'dataExpression' => TRUE
 		);
 
 		$this->Js->TestJsEngine->expects($this->at(2))
-			->method('request')
-			->with('/custom/url', $requestParams)
-			->will($this->returnValue('ajax-code'));
+				->method('request')
+				->with('/custom/url', $requestParams)
+				->will($this->returnValue('ajax-code'));
 
 		$params = array(
-			'update' => '#content', 'data' => 'serialize-code',
-			'method' => 'post', 'dataExpression' => true, 'buffer' => null
+				'update' => '#content', 'data' => 'serialize-code',
+				'method' => 'post', 'dataExpression' => TRUE, 'buffer' => NULL
 		);
 
 		$this->Js->TestJsEngine->expects($this->at(3))
-			->method('event')
-			->with('click', "ajax-code", $params);
+				->method('event')
+				->with('click', "ajax-code", $params);
 
 		$options = array('update' => '#content', 'id' => 'test-submit', 'url' => '/custom/url');
 		$result = $this->Js->submit('Save', $options);
 		$expected = array(
-			'div' => array('class' => 'submit'),
-			'input' => array('type' => 'submit', 'id' => $options['id'], 'value' => 'Save'),
-			'/div'
+				'div' => array('class' => 'submit'),
+				'input' => array('type' => 'submit', 'id' => $options['id'], 'value' => 'Save'),
+				'/div'
 		);
 		$this->assertTags($result, $expected);
 	}
 
-/**
- * test that no buffer works with submit() and that parameters are leaking into the script tag.
- *
- * @return void
- */
+	/**
+	 * test that no buffer works with submit() and that parameters are leaking into the script tag.
+	 *
+	 * @return void
+	 */
 	public function testSubmitWithNoBuffer() {
 		$this->_useMock();
-		$options = array('update' => '#content', 'id' => 'test-submit', 'buffer' => false, 'safe' => false);
+		$options = array('update' => '#content', 'id' => 'test-submit', 'buffer' => FALSE, 'safe' => FALSE);
 
 		$this->Js->TestJsEngine->expects($this->at(0))
-			->method('get');
+				->method('get');
 
 		$this->Js->TestJsEngine->expects($this->at(1))
-			->method('serializeForm')
-			->will($this->returnValue('serialize-code'));
+				->method('serializeForm')
+				->will($this->returnValue('serialize-code'));
 
 		$this->Js->TestJsEngine->expects($this->at(2))
-			->method('request')
-			->will($this->returnValue('ajax-code'));
+				->method('request')
+				->will($this->returnValue('ajax-code'));
 
 		$this->Js->TestJsEngine->expects($this->at(3))
-			->method('event')
-			->will($this->returnValue('event-handler'));
+				->method('event')
+				->will($this->returnValue('event-handler'));
 
 		$params = array(
-			'update' => $options['update'], 'data' => 'serialize-code',
-			'method' => 'post', 'dataExpression' => true, 'buffer' => false
+				'update' => $options['update'], 'data' => 'serialize-code',
+				'method' => 'post', 'dataExpression' => TRUE, 'buffer' => FALSE
 		);
 
 		$this->Js->TestJsEngine->expects($this->at(3))
-			->method('event')
-			->with('click', "ajax-code", $params);
+				->method('event')
+				->with('click', "ajax-code", $params);
 
 		$result = $this->Js->submit('Save', $options);
 		$expected = array(
-			'div' => array('class' => 'submit'),
-			'input' => array('type' => 'submit', 'id' => $options['id'], 'value' => 'Save'),
-			'/div',
-			'script' => array('type' => 'text/javascript'),
-			'event-handler',
-			'/script'
+				'div' => array('class' => 'submit'),
+				'input' => array('type' => 'submit', 'id' => $options['id'], 'value' => 'Save'),
+				'/div',
+				'script' => array('type' => 'text/javascript'),
+				'event-handler',
+				'/script'
 		);
 		$this->assertTags($result, $expected);
 	}
 
-/**
- * Test that Object::Object() is not breaking json output in JsHelper
- *
- * @return void
- */
+	/**
+	 * Test that Object::Object() is not breaking json output in JsHelper
+	 *
+	 * @return void
+	 */
 	public function testObjectPassThrough() {
 		$result = $this->Js->object(array('one' => 'first', 'two' => 'second'));
 		$expected = '{"one":"first","two":"second"}';
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * Test that inherited Helper::value() is overwritten in JsHelper::value()
- * and calls JsBaseEngineHelper::value().
- *
- * @return void
- */
+	/**
+	 * Test that inherited Helper::value() is overwritten in JsHelper::value()
+	 * and calls JsBaseEngineHelper::value().
+	 *
+	 * @return void
+	 */
 	public function testValuePassThrough() {
-		$result = $this->Js->value('string "quote"', true);
+		$result = $this->Js->value('string "quote"', TRUE);
 		$expected = '"string \"quote\""';
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * test set()'ing variables to the JavaScript buffer and controlling the output var name.
- *
- * @return void
- */
+	/**
+	 * test set()'ing variables to the JavaScript buffer and controlling the output var name.
+	 *
+	 * @return void
+	 */
 	public function testSet() {
-		$this->Js->set('loggedIn', true);
+		$this->Js->set('loggedIn', TRUE);
 		$this->Js->set(array('height' => 'tall', 'color' => 'purple'));
 		$result = $this->Js->getBuffer();
 		$expected = 'window.app = {"loggedIn":true,"height":"tall","color":"purple"};';
 		$this->assertEquals($expected, $result[0]);
 
-		$this->Js->set('loggedIn', true);
+		$this->Js->set('loggedIn', TRUE);
 		$this->Js->set(array('height' => 'tall', 'color' => 'purple'));
 		$this->Js->setVariable = 'WICKED';
 		$result = $this->Js->getBuffer();
 		$expected = 'window.WICKED = {"loggedIn":true,"height":"tall","color":"purple"};';
 		$this->assertEquals($expected, $result[0]);
 
-		$this->Js->set('loggedIn', true);
+		$this->Js->set('loggedIn', TRUE);
 		$this->Js->set(array('height' => 'tall', 'color' => 'purple'));
 		$this->Js->setVariable = 'Application.variables';
 		$result = $this->Js->getBuffer();
@@ -718,16 +720,16 @@ class JsHelperTest extends CakeTestCase {
 		$this->assertEquals($expected, $result[0]);
 	}
 
-/**
- * test that vars set with Js->set() go to the top of the buffered scripts list.
- *
- * @return void
- */
+	/**
+	 * test that vars set with Js->set() go to the top of the buffered scripts list.
+	 *
+	 * @return void
+	 */
 	public function testSetVarsAtTopOfBufferedScripts() {
 		$this->Js->set(array('height' => 'tall', 'color' => 'purple'));
-		$this->Js->alert('hey you!', array('buffer' => true));
-		$this->Js->confirm('Are you sure?', array('buffer' => true));
-		$result = $this->Js->getBuffer(false);
+		$this->Js->alert('hey you!', array('buffer' => TRUE));
+		$this->Js->confirm('Are you sure?', array('buffer' => TRUE));
+		$result = $this->Js->getBuffer(FALSE);
 
 		$expected = 'window.app = {"height":"tall","color":"purple"};';
 		$this->assertEquals($expected, $result[0]);
@@ -744,33 +746,33 @@ class JsHelperTest extends CakeTestCase {
  */
 class JsBaseEngineTest extends CakeTestCase {
 
-/**
- * setUp method
- *
- * @return void
- */
+	/**
+	 * setUp method
+	 *
+	 * @return void
+	 */
 	public function setUp() {
 		parent::setUp();
-		$controller = null;
+		$controller = NULL;
 		$this->View = $this->getMock('View', array('append'), array(&$controller));
 		$this->JsEngine = new OptionEngineHelper($this->View);
 	}
 
-/**
- * tearDown method
- *
- * @return void
- */
+	/**
+	 * tearDown method
+	 *
+	 * @return void
+	 */
 	public function tearDown() {
 		parent::tearDown();
 		unset($this->JsEngine);
 	}
 
-/**
- * test escape string skills
- *
- * @return void
- */
+	/**
+	 * test escape string skills
+	 *
+	 * @return void
+	 */
 	public function testEscaping() {
 		$result = $this->JsEngine->escape('');
 		$expected = '';
@@ -797,11 +799,11 @@ class JsBaseEngineTest extends CakeTestCase {
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * test prompt() creation
- *
- * @return void
- */
+	/**
+	 * test prompt() creation
+	 *
+	 * @return void
+	 */
 	public function testPrompt() {
 		$result = $this->JsEngine->prompt('Hey, hey you', 'hi!');
 		$expected = 'prompt("Hey, hey you", "hi!");';
@@ -812,11 +814,11 @@ class JsBaseEngineTest extends CakeTestCase {
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * test alert generation
- *
- * @return void
- */
+	/**
+	 * test alert generation
+	 *
+	 * @return void
+	 */
 	public function testAlert() {
 		$result = $this->JsEngine->alert('Hey there');
 		$expected = 'alert("Hey there");';
@@ -827,11 +829,11 @@ class JsBaseEngineTest extends CakeTestCase {
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * test confirm generation
- *
- * @return void
- */
+	/**
+	 * test confirm generation
+	 *
+	 * @return void
+	 */
 	public function testConfirm() {
 		$result = $this->JsEngine->confirm('Are you sure?');
 		$expected = 'confirm("Are you sure?");';
@@ -842,22 +844,22 @@ class JsBaseEngineTest extends CakeTestCase {
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * test Redirect
- *
- * @return void
- */
+	/**
+	 * test Redirect
+	 *
+	 * @return void
+	 */
 	public function testRedirect() {
 		$result = $this->JsEngine->redirect(array('controller' => 'posts', 'action' => 'view', 1));
 		$expected = 'window.location = "/posts/view/1";';
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * testObject encoding with non-native methods.
- *
- * @return void
- */
+	/**
+	 * testObject encoding with non-native methods.
+	 *
+	 * @return void
+	 */
 	public function testObject() {
 		$object = array('title' => 'New thing', 'indexes' => array(5, 6, 7, 8));
 		$result = $this->JsEngine->object($object);
@@ -875,27 +877,27 @@ class JsBaseEngineTest extends CakeTestCase {
 		$this->assertEquals($expected, $result);
 
 		$result = $this->JsEngine->object(array(
-			'2007' => array(
-				'Spring' => array(
-					'1' => array('id' => 1, 'name' => 'Josh'), '2' => array('id' => 2, 'name' => 'Becky')
+				'2007' => array(
+						'Spring' => array(
+								'1' => array('id' => 1, 'name' => 'Josh'), '2' => array('id' => 2, 'name' => 'Becky')
+						),
+						'Fall' => array(
+								'1' => array('id' => 1, 'name' => 'Josh'), '2' => array('id' => 2, 'name' => 'Becky')
+						)
 				),
-				'Fall' => array(
-					'1' => array('id' => 1, 'name' => 'Josh'), '2' => array('id' => 2, 'name' => 'Becky')
+				'2006' => array(
+						'Spring' => array(
+								'1' => array('id' => 1, 'name' => 'Josh'), '2' => array('id' => 2, 'name' => 'Becky')
+						),
+						'Fall' => array(
+								'1' => array('id' => 1, 'name' => 'Josh'), '2' => array('id' => 2, 'name' => 'Becky')
+						)
 				)
-			),
-			'2006' => array(
-				'Spring' => array(
-					'1' => array('id' => 1, 'name' => 'Josh'), '2' => array('id' => 2, 'name' => 'Becky')
-				),
-				'Fall' => array(
-					'1' => array('id' => 1, 'name' => 'Josh'), '2' => array('id' => 2, 'name' => 'Becky')
-				)
-			)
 		));
 		$expected = '{"2007":{"Spring":{"1":{"id":1,"name":"Josh"},"2":{"id":2,"name":"Becky"}},"Fall":{"1":{"id":1,"name":"Josh"},"2":{"id":2,"name":"Becky"}}},"2006":{"Spring":{"1":{"id":1,"name":"Josh"},"2":{"id":2,"name":"Becky"}},"Fall":{"1":{"id":1,"name":"Josh"},"2":{"id":2,"name":"Becky"}}}}';
 		$this->assertEquals($expected, $result);
 
-		foreach (array('true' => true, 'false' => false, 'null' => null) as $expected => $data) {
+		foreach (array('true' => TRUE, 'false' => FALSE, 'null' => NULL) as $expected => $data) {
 			$result = $this->JsEngine->object($data);
 			$this->assertEquals($expected, $result);
 		}
@@ -908,11 +910,11 @@ class JsBaseEngineTest extends CakeTestCase {
 		$this->assertNotRegExp('/.POSTFIX./', $result);
 	}
 
-/**
- * test Mapping of options.
- *
- * @return void
- */
+	/**
+	 * test Mapping of options.
+	 *
+	 * @return void
+	 */
 	public function testOptionMapping() {
 		$JsEngine = new OptionEngineHelper($this->View);
 		$result = $JsEngine->testMap();
@@ -928,11 +930,11 @@ class JsBaseEngineTest extends CakeTestCase {
 		$this->assertEquals(array('success' => 'myFunc', 'dataType' => 'json', 'update' => '#element'), $result);
 	}
 
-/**
- * test that option parsing escapes strings and saves what is supposed to be saved.
- *
- * @return void
- */
+	/**
+	 * test that option parsing escapes strings and saves what is supposed to be saved.
+	 *
+	 * @return void
+	 */
 	public function testOptionParsing() {
 		$JsEngine = new OptionEngineHelper($this->View);
 

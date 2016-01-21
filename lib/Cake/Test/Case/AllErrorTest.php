@@ -25,17 +25,18 @@
  */
 class AllErrorTest extends PHPUnit_Framework_TestSuite {
 
-/**
- * suite method, defines tests for this suite.
- *
- * @return void
- */
+	/**
+	 * suite method, defines tests for this suite.
+	 *
+	 * @return void
+	 */
 	public static function suite() {
 		$suite = new CakeTestSuite('All Error handling tests');
 
 		$libs = CORE_TEST_CASES . DS;
 
 		$suite->addTestDirectory($libs . 'Error');
+
 		return $suite;
 	}
 }

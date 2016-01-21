@@ -31,95 +31,95 @@ require_once CAKE . 'Test' . DS . 'Case' . DS . 'Model' . DS . 'models.php';
  */
 class BasicAuthenticateTest extends CakeTestCase {
 
-/**
- * Fixtures
- *
- * @var array
- */
+	/**
+	 * Fixtures
+	 *
+	 * @var array
+	 */
 	public $fixtures = array('core.user', 'core.auth_user', 'core.article');
 
-/**
- * setup
- *
- * @return void
- */
+	/**
+	 * setup
+	 *
+	 * @return void
+	 */
 	public function setUp() {
 		parent::setUp();
 		$this->Collection = $this->getMock('ComponentCollection');
 		$this->auth = new BasicAuthenticate($this->Collection, array(
-			'fields' => array('username' => 'user', 'password' => 'password'),
-			'userModel' => 'User',
-			'realm' => 'localhost',
-			'recursive' => 0
+				'fields' => array('username' => 'user', 'password' => 'password'),
+				'userModel' => 'User',
+				'realm' => 'localhost',
+				'recursive' => 0
 		));
 
-		$password = Security::hash('password', null, true);
+		$password = Security::hash('password', NULL, TRUE);
 		$User = ClassRegistry::init('User');
 		$User->updateAll(array('password' => $User->getDataSource()->value($password)));
 		$this->response = $this->getMock('CakeResponse');
 	}
 
-/**
- * test applying settings in the constructor
- *
- * @return void
- */
+	/**
+	 * test applying settings in the constructor
+	 *
+	 * @return void
+	 */
 	public function testConstructor() {
 		$object = new BasicAuthenticate($this->Collection, array(
-			'userModel' => 'AuthUser',
-			'fields' => array('username' => 'user', 'password' => 'password')
+				'userModel' => 'AuthUser',
+				'fields' => array('username' => 'user', 'password' => 'password')
 		));
 		$this->assertEquals('AuthUser', $object->settings['userModel']);
 		$this->assertEquals(array('username' => 'user', 'password' => 'password'), $object->settings['fields']);
 		$this->assertEquals(env('SERVER_NAME'), $object->settings['realm']);
 	}
 
-/**
- * test the authenticate method
- *
- * @return void
- */
+	/**
+	 * test the authenticate method
+	 *
+	 * @return void
+	 */
 	public function testAuthenticateNoData() {
-		$request = new CakeRequest('posts/index', false);
+		$request = new CakeRequest('posts/index', FALSE);
 
 		$this->response->expects($this->never())
-			->method('header');
+				->method('header');
 
 		$this->assertFalse($this->auth->getUser($request));
 	}
 
-/**
- * test the authenticate method
- *
- * @return void
- */
+	/**
+	 * test the authenticate method
+	 *
+	 * @return void
+	 */
 	public function testAuthenticateNoUsername() {
-		$request = new CakeRequest('posts/index', false);
+		$request = new CakeRequest('posts/index', FALSE);
 		$_SERVER['PHP_AUTH_PW'] = 'foobar';
 
 		$this->assertFalse($this->auth->authenticate($request, $this->response));
 	}
 
-/**
- * test the authenticate method
- *
- * @return void
- */
+	/**
+	 * test the authenticate method
+	 *
+	 * @return void
+	 */
 	public function testAuthenticateNoPassword() {
-		$request = new CakeRequest('posts/index', false);
+		$request = new CakeRequest('posts/index', FALSE);
 		$_SERVER['PHP_AUTH_USER'] = 'mariano';
-		$_SERVER['PHP_AUTH_PW'] = null;
+		$_SERVER['PHP_AUTH_PW'] = NULL;
 
 		$this->assertFalse($this->auth->authenticate($request, $this->response));
 	}
 
-/**
- * test the authenticate method
- *
- * @return void
- */
+	/**
+	 * test the authenticate method
+	 *
+	 * @return void
+	 */
 	public function testAuthenticateInjection() {
-		$request = new CakeRequest('posts/index', false);
+		$request = new CakeRequest('posts/index', FALSE);
 		$request->addParams(array('pass' => array(), 'named' => array()));
 
 		$_SERVER['PHP_AUTH_USER'] = '> 1';
@@ -129,39 +129,39 @@ class BasicAuthenticateTest extends CakeTestCase {
 		$this->assertFalse($this->auth->authenticate($request, $this->response));
 	}
 
-/**
- * Test that username of 0 works.
- *
- * @return void
- */
+	/**
+	 * Test that username of 0 works.
+	 *
+	 * @return void
+	 */
 	public function testAuthenticateUsernameZero() {
 		$User = ClassRegistry::init('User');
 		$User->updateAll(array('user' => $User->getDataSource()->value('0')), array('user' => 'mariano'));
 
-		$request = new CakeRequest('posts/index', false);
+		$request = new CakeRequest('posts/index', FALSE);
 		$request->data = array('User' => array(
-			'user' => '0',
-			'password' => 'password'
+				'user' => '0',
+				'password' => 'password'
 		));
 		$_SERVER['PHP_AUTH_USER'] = '0';
 		$_SERVER['PHP_AUTH_PW'] = 'password';
 
 		$expected = array(
-			'id' => 1,
-			'user' => '0',
-			'created' => '2007-03-17 01:16:23',
-			'updated' => '2007-03-17 01:18:31'
+				'id' => 1,
+				'user' => '0',
+				'created' => '2007-03-17 01:16:23',
+				'updated' => '2007-03-17 01:18:31'
 		);
 		$this->assertEquals($expected, $this->auth->authenticate($request, $this->response));
 	}
 
-/**
- * test that challenge headers are sent when no credentials are found.
- *
- * @return void
- */
+	/**
+	 * test that challenge headers are sent when no credentials are found.
+	 *
+	 * @return void
+	 */
 	public function testAuthenticateChallenge() {
-		$request = new CakeRequest('posts/index', false);
+		$request = new CakeRequest('posts/index', FALSE);
 		$request->addParams(array('pass' => array(), 'named' => array()));
 
 		try {
@@ -175,13 +175,13 @@ class BasicAuthenticateTest extends CakeTestCase {
 		$this->assertEquals($expected, $e->responseHeader());
 	}
 
-/**
- * test authenticate success
- *
- * @return void
- */
+	/**
+	 * test authenticate success
+	 *
+	 * @return void
+	 */
 	public function testAuthenticateSuccess() {
-		$request = new CakeRequest('posts/index', false);
+		$request = new CakeRequest('posts/index', FALSE);
 		$request->addParams(array('pass' => array(), 'named' => array()));
 
 		$_SERVER['PHP_AUTH_USER'] = 'mariano';
@@ -189,25 +189,25 @@ class BasicAuthenticateTest extends CakeTestCase {
 
 		$result = $this->auth->authenticate($request, $this->response);
 		$expected = array(
-			'id' => 1,
-			'user' => 'mariano',
-			'created' => '2007-03-17 01:16:23',
-			'updated' => '2007-03-17 01:18:31'
+				'id' => 1,
+				'user' => 'mariano',
+				'created' => '2007-03-17 01:16:23',
+				'updated' => '2007-03-17 01:18:31'
 		);
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * test contain success
- *
- * @return void
- */
+	/**
+	 * test contain success
+	 *
+	 * @return void
+	 */
 	public function testAuthenticateContainSuccess() {
 		$User = ClassRegistry::init('User');
 		$User->bindModel(array('hasMany' => array('Article')));
 		$User->Behaviors->load('Containable');
 		$this->auth->settings['contain'] = 'Article';
-		$request = new CakeRequest('posts/index', false);
+		$request = new CakeRequest('posts/index', FALSE);
 		$request->addParams(array('pass' => array(), 'named' => array()));
 
 		$_SERVER['PHP_AUTH_USER'] = 'mariano';
@@ -215,25 +215,25 @@ class BasicAuthenticateTest extends CakeTestCase {
 
 		$result = $this->auth->authenticate($request, $this->response);
 		$expected = array(
-			'id' => 1,
-			'user_id' => 1,
-			'title' => 'First Article',
-			'body' => 'First Article Body',
-			'published' => 'Y',
-			'created' => '2007-03-18 10:39:23',
-			'updated' => '2007-03-18 10:41:31'
+				'id' => 1,
+				'user_id' => 1,
+				'title' => 'First Article',
+				'body' => 'First Article Body',
+				'published' => 'Y',
+				'created' => '2007-03-18 10:39:23',
+				'updated' => '2007-03-18 10:41:31'
 		);
 		$this->assertEquals($expected, $result['Article'][0]);
 	}
 
-/**
- * test userFields success
- *
- * @return void
- */
+	/**
+	 * test userFields success
+	 *
+	 * @return void
+	 */
 	public function testAuthenticateUserFieldsSuccess() {
 		$this->auth->settings['userFields'] = array('id', 'user');
-		$request = new CakeRequest('posts/index', false);
+		$request = new CakeRequest('posts/index', FALSE);
 		$request->addParams(array('pass' => array(), 'named' => array()));
 
 		$_SERVER['PHP_AUTH_USER'] = 'mariano';
@@ -241,27 +241,27 @@ class BasicAuthenticateTest extends CakeTestCase {
 
 		$result = $this->auth->authenticate($request, $this->response);
 		$expected = array(
-			'id' => 1,
-			'user' => 'mariano',
+				'id' => 1,
+				'user' => 'mariano',
 		);
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * test userFields and related models success
- *
- * @return void
- */
+	/**
+	 * test userFields and related models success
+	 *
+	 * @return void
+	 */
 	public function testAuthenticateUserFieldsRelatedModelsSuccess() {
 		$User = ClassRegistry::init('User');
 		$User->bindModel(array('hasOne' => array(
-			'Article' => array(
-				'order' => 'Article.id ASC'
-			)
+				'Article' => array(
+						'order' => 'Article.id ASC'
+				)
 		)));
 		$this->auth->settings['recursive'] = 0;
 		$this->auth->settings['userFields'] = array('Article.id', 'Article.title');
-		$request = new CakeRequest('posts/index', false);
+		$request = new CakeRequest('posts/index', FALSE);
 		$request->addParams(array('pass' => array(), 'named' => array()));
 
 		$_SERVER['PHP_AUTH_USER'] = 'mariano';
@@ -269,22 +269,22 @@ class BasicAuthenticateTest extends CakeTestCase {
 
 		$result = $this->auth->authenticate($request, $this->response);
 		$expected = array(
-			'id' => 1,
-			'title' => 'First Article',
+				'id' => 1,
+				'title' => 'First Article',
 		);
 		$this->assertEquals($expected, $result['Article']);
 	}
 
-/**
- * test scope failure.
- *
- * @expectedException UnauthorizedException
- * @expectedExceptionCode 401
- * @return void
- */
+	/**
+	 * test scope failure.
+	 *
+	 * @expectedException UnauthorizedException
+	 * @expectedExceptionCode 401
+	 * @return void
+	 */
 	public function testAuthenticateFailReChallenge() {
 		$this->auth->settings['scope'] = array('user' => 'nate');
-		$request = new CakeRequest('posts/index', false);
+		$request = new CakeRequest('posts/index', FALSE);
 		$request->addParams(array('pass' => array(), 'named' => array()));
 
 		$_SERVER['PHP_AUTH_USER'] = 'mariano';
@@ -293,16 +293,16 @@ class BasicAuthenticateTest extends CakeTestCase {
 		$this->auth->unauthenticated($request, $this->response);
 	}
 
-/**
- * testAuthenticateWithBlowfish
- *
- * @return void
- */
+	/**
+	 * testAuthenticateWithBlowfish
+	 *
+	 * @return void
+	 */
 	public function testAuthenticateWithBlowfish() {
 		$hash = Security::hash('password', 'blowfish');
-		$this->skipIf(strpos($hash, '$2a$') === false, 'Skipping blowfish tests as hashing is not working');
+		$this->skipIf(strpos($hash, '$2a$') === FALSE, 'Skipping blowfish tests as hashing is not working');
 
-		$request = new CakeRequest('posts/index', false);
+		$request = new CakeRequest('posts/index', FALSE);
 		$request->addParams(array('pass' => array(), 'named' => array()));
 
 		$_SERVER['PHP_AUTH_USER'] = 'mariano';
@@ -310,18 +310,18 @@ class BasicAuthenticateTest extends CakeTestCase {
 
 		$User = ClassRegistry::init('User');
 		$User->updateAll(
-			array('password' => $User->getDataSource()->value($hash)),
-			array('User.user' => 'mariano')
+				array('password' => $User->getDataSource()->value($hash)),
+				array('User.user' => 'mariano')
 		);
 
 		$this->auth->settings['passwordHasher'] = 'Blowfish';
 
 		$result = $this->auth->authenticate($request, $this->response);
 		$expected = array(
-			'id' => 1,
-			'user' => 'mariano',
-			'created' => '2007-03-17 01:16:23',
-			'updated' => '2007-03-17 01:18:31'
+				'id' => 1,
+				'user' => 'mariano',
+				'created' => '2007-03-17 01:16:23',
+				'updated' => '2007-03-17 01:18:31'
 		);
 		$this->assertEquals($expected, $result);
 	}

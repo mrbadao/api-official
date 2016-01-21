@@ -27,33 +27,33 @@ App::uses('View', 'View');
  */
 class JqueryEngineHelperTest extends CakeTestCase {
 
-/**
- * setUp
- *
- * @return void
- */
+	/**
+	 * setUp
+	 *
+	 * @return void
+	 */
 	public function setUp() {
 		parent::setUp();
-		$controller = null;
+		$controller = NULL;
 		$this->View = $this->getMock('View', array('addScript'), array(&$controller));
 		$this->Jquery = new JqueryEngineHelper($this->View);
 	}
 
-/**
- * tearDown
- *
- * @return void
- */
+	/**
+	 * tearDown
+	 *
+	 * @return void
+	 */
 	public function tearDown() {
 		parent::tearDown();
 		unset($this->Jquery);
 	}
 
-/**
- * test selector method
- *
- * @return void
- */
+	/**
+	 * test selector method
+	 *
+	 * @return void
+	 */
 	public function testSelector() {
 		$result = $this->Jquery->get('#content');
 		$this->assertEquals($this->Jquery, $result);
@@ -72,18 +72,18 @@ class JqueryEngineHelperTest extends CakeTestCase {
 		$this->assertEquals($this->Jquery->selection, '$("ul")');
 	}
 
-/**
- * test event binding
- *
- * @return void
- */
+	/**
+	 * test event binding
+	 *
+	 * @return void
+	 */
 	public function testEvent() {
 		$this->Jquery->get('#myLink');
-		$result = $this->Jquery->event('click', 'doClick', array('wrap' => false));
+		$result = $this->Jquery->event('click', 'doClick', array('wrap' => FALSE));
 		$expected = '$("#myLink").bind("click", doClick);';
 		$this->assertEquals($expected, $result);
 
-		$result = $this->Jquery->event('click', '$(this).show();', array('stop' => false));
+		$result = $this->Jquery->event('click', '$(this).show();', array('stop' => FALSE));
 		$expected = '$("#myLink").bind("click", function (event) {$(this).show();});';
 		$this->assertEquals($expected, $result);
 
@@ -92,22 +92,22 @@ class JqueryEngineHelperTest extends CakeTestCase {
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * test dom ready event creation
- *
- * @return void
- */
+	/**
+	 * test dom ready event creation
+	 *
+	 * @return void
+	 */
 	public function testDomReady() {
 		$result = $this->Jquery->domReady('foo.name = "bar";');
 		$expected = '$(document).ready(function () {foo.name = "bar";});';
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * test Each method
- *
- * @return void
- */
+	/**
+	 * test Each method
+	 *
+	 * @return void
+	 */
 	public function testEach() {
 		$this->Jquery->get('#foo');
 		$result = $this->Jquery->each('$(this).hide();');
@@ -115,11 +115,11 @@ class JqueryEngineHelperTest extends CakeTestCase {
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * test Effect generation
- *
- * @return void
- */
+	/**
+	 * test Effect generation
+	 *
+	 * @return void
+	 */
 	public function testEffect() {
 		$this->Jquery->get('#foo');
 		$result = $this->Jquery->effect('show');
@@ -159,82 +159,82 @@ class JqueryEngineHelperTest extends CakeTestCase {
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * Test Request Generation
- *
- * @return void
- */
+	/**
+	 * Test Request Generation
+	 *
+	 * @return void
+	 */
 	public function testRequest() {
 		$result = $this->Jquery->request(array('controller' => 'posts', 'action' => 'view', 1));
 		$expected = '$.ajax({url:"\\/posts\\/view\\/1"});';
 		$this->assertEquals($expected, $result);
 
 		$result = $this->Jquery->request(array('controller' => 'posts', 'action' => 'view', 1), array(
-			'update' => '#content'
+				'update' => '#content'
 		));
 		$expected = '$.ajax({dataType:"html", success:function (data, textStatus) {$("#content").html(data);}, url:"\/posts\/view\/1"});';
 		$this->assertEquals($expected, $result);
 
 		$result = $this->Jquery->request('/people/edit/1', array(
-			'method' => 'post',
-			'before' => 'doBefore',
-			'complete' => 'doComplete',
-			'success' => 'doSuccess',
-			'error' => 'handleError',
-			'type' => 'json',
-			'data' => array('name' => 'jim', 'height' => '185cm'),
-			'wrapCallbacks' => false
+				'method' => 'post',
+				'before' => 'doBefore',
+				'complete' => 'doComplete',
+				'success' => 'doSuccess',
+				'error' => 'handleError',
+				'type' => 'json',
+				'data' => array('name' => 'jim', 'height' => '185cm'),
+				'wrapCallbacks' => FALSE
 		));
 		$expected = '$.ajax({beforeSend:doBefore, complete:doComplete, data:"name=jim&height=185cm", dataType:"json", error:handleError, success:doSuccess, type:"post", url:"\\/people\\/edit\\/1"});';
 		$this->assertEquals($expected, $result);
 
 		$result = $this->Jquery->request('/people/edit/1', array(
-			'update' => '#updated',
-			'success' => 'doFoo',
-			'method' => 'post',
-			'wrapCallbacks' => false
+				'update' => '#updated',
+				'success' => 'doFoo',
+				'method' => 'post',
+				'wrapCallbacks' => FALSE
 		));
 		$expected = '$.ajax({dataType:"html", success:function (data, textStatus) {doFoo$("#updated").html(data);}, type:"post", url:"\\/people\\/edit\\/1"});';
 		$this->assertEquals($expected, $result);
 
 		$result = $this->Jquery->request('/people/edit/1', array(
-			'update' => '#updated',
-			'success' => 'doFoo',
-			'method' => 'post',
-			'dataExpression' => true,
-			'data' => '$("#someId").serialize()',
-			'wrapCallbacks' => false
+				'update' => '#updated',
+				'success' => 'doFoo',
+				'method' => 'post',
+				'dataExpression' => TRUE,
+				'data' => '$("#someId").serialize()',
+				'wrapCallbacks' => FALSE
 		));
 		$expected = '$.ajax({data:$("#someId").serialize(), dataType:"html", success:function (data, textStatus) {doFoo$("#updated").html(data);}, type:"post", url:"\\/people\\/edit\\/1"});';
 		$this->assertEquals($expected, $result);
 
 		$result = $this->Jquery->request('/people/edit/1', array(
-			'success' => 'doFoo',
-			'before' => 'doBefore',
-			'method' => 'post',
-			'dataExpression' => true,
-			'data' => '$("#someId").serialize()',
+				'success' => 'doFoo',
+				'before' => 'doBefore',
+				'method' => 'post',
+				'dataExpression' => TRUE,
+				'data' => '$("#someId").serialize()',
 		));
 		$expected = '$.ajax({beforeSend:function (XMLHttpRequest) {doBefore}, data:$("#someId").serialize(), success:function (data, textStatus) {doFoo}, type:"post", url:"\\/people\\/edit\\/1"});';
 		$this->assertEquals($expected, $result);
 
 		$result = $this->Jquery->request('/people/edit/1', array(
-			'success' => 'doFoo',
-			'xhr' => 'return jQuery.ajaxSettings.xhr();',
-			'async' => true,
-			'method' => 'post',
-			'dataExpression' => true,
-			'data' => '$("#someId").serialize()',
+				'success' => 'doFoo',
+				'xhr' => 'return jQuery.ajaxSettings.xhr();',
+				'async' => TRUE,
+				'method' => 'post',
+				'dataExpression' => TRUE,
+				'data' => '$("#someId").serialize()',
 		));
 		$expected = '$.ajax({async:true, data:$("#someId").serialize(), success:function (data, textStatus) {doFoo}, type:"post", url:"\/people\/edit\/1", xhr:function () {return jQuery.ajaxSettings.xhr();}});';
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * Test that querystring arguments are not double escaped.
- *
- * @return void
- */
+	/**
+	 * Test that querystring arguments are not double escaped.
+	 *
+	 * @return void
+	 */
 	public function testRequestWithQueryStringArguments() {
 		$url = '/users/search/sort:User.name/direction:desc?nome=&cpm=&audience=public';
 		$result = $this->Jquery->request($url);
@@ -242,158 +242,158 @@ class JqueryEngineHelperTest extends CakeTestCase {
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * test that alternate jQuery object values work for request()
- *
- * @return void
- */
+	/**
+	 * test that alternate jQuery object values work for request()
+	 *
+	 * @return void
+	 */
 	public function testRequestWithAlternateJqueryObject() {
 		$this->Jquery->jQueryObject = '$j';
 
 		$result = $this->Jquery->request('/people/edit/1', array(
-			'update' => '#updated',
-			'success' => 'doFoo',
-			'method' => 'post',
-			'dataExpression' => true,
-			'data' => '$j("#someId").serialize()',
-			'wrapCallbacks' => false
+				'update' => '#updated',
+				'success' => 'doFoo',
+				'method' => 'post',
+				'dataExpression' => TRUE,
+				'data' => '$j("#someId").serialize()',
+				'wrapCallbacks' => FALSE
 		));
 		$expected = '$j.ajax({data:$j("#someId").serialize(), dataType:"html", success:function (data, textStatus) {doFoo$j("#updated").html(data);}, type:"post", url:"\\/people\\/edit\\/1"});';
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * test sortable list generation
- *
- * @return void
- */
+	/**
+	 * test sortable list generation
+	 *
+	 * @return void
+	 */
 	public function testSortable() {
 		$this->Jquery->get('#myList');
 		$result = $this->Jquery->sortable(array(
-			'distance' => 5,
-			'containment' => 'parent',
-			'start' => 'onStart',
-			'complete' => 'onStop',
-			'sort' => 'onSort',
-			'wrapCallbacks' => false
+				'distance' => 5,
+				'containment' => 'parent',
+				'start' => 'onStart',
+				'complete' => 'onStop',
+				'sort' => 'onSort',
+				'wrapCallbacks' => FALSE
 		));
 		$expected = '$("#myList").sortable({containment:"parent", distance:5, sort:onSort, start:onStart, stop:onStop});';
 		$this->assertEquals($expected, $result);
 
 		$result = $this->Jquery->sortable(array(
-			'distance' => 5,
-			'containment' => 'parent',
-			'start' => 'onStart',
-			'complete' => 'onStop',
-			'sort' => 'onSort',
+				'distance' => 5,
+				'containment' => 'parent',
+				'start' => 'onStart',
+				'complete' => 'onStop',
+				'sort' => 'onSort',
 		));
 		$expected = '$("#myList").sortable({containment:"parent", distance:5, sort:function (event, ui) {onSort}, start:function (event, ui) {onStart}, stop:function (event, ui) {onStop}});';
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * test drag() method
- *
- * @return void
- */
+	/**
+	 * test drag() method
+	 *
+	 * @return void
+	 */
 	public function testDrag() {
 		$this->Jquery->get('#element');
 		$result = $this->Jquery->drag(array(
-			'container' => '#content',
-			'start' => 'onStart',
-			'drag' => 'onDrag',
-			'stop' => 'onStop',
-			'snapGrid' => array(10, 10),
-			'wrapCallbacks' => false
+				'container' => '#content',
+				'start' => 'onStart',
+				'drag' => 'onDrag',
+				'stop' => 'onStop',
+				'snapGrid' => array(10, 10),
+				'wrapCallbacks' => FALSE
 		));
 		$expected = '$("#element").draggable({containment:"#content", drag:onDrag, grid:[10,10], start:onStart, stop:onStop});';
 		$this->assertEquals($expected, $result);
 
 		$result = $this->Jquery->drag(array(
-			'container' => '#content',
-			'start' => 'onStart',
-			'drag' => 'onDrag',
-			'stop' => 'onStop',
-			'snapGrid' => array(10, 10),
+				'container' => '#content',
+				'start' => 'onStart',
+				'drag' => 'onDrag',
+				'stop' => 'onStop',
+				'snapGrid' => array(10, 10),
 		));
 		$expected = '$("#element").draggable({containment:"#content", drag:function (event, ui) {onDrag}, grid:[10,10], start:function (event, ui) {onStart}, stop:function (event, ui) {onStop}});';
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * test drop() method
- *
- * @return void
- */
+	/**
+	 * test drop() method
+	 *
+	 * @return void
+	 */
 	public function testDrop() {
 		$this->Jquery->get('#element');
 		$result = $this->Jquery->drop(array(
-			'accept' => '.items',
-			'hover' => 'onHover',
-			'leave' => 'onExit',
-			'drop' => 'onDrop',
-			'wrapCallbacks' => false
+				'accept' => '.items',
+				'hover' => 'onHover',
+				'leave' => 'onExit',
+				'drop' => 'onDrop',
+				'wrapCallbacks' => FALSE
 		));
 		$expected = '$("#element").droppable({accept:".items", drop:onDrop, out:onExit, over:onHover});';
 		$this->assertEquals($expected, $result);
 
 		$result = $this->Jquery->drop(array(
-			'accept' => '.items',
-			'hover' => 'onHover',
-			'leave' => 'onExit',
-			'drop' => 'onDrop',
+				'accept' => '.items',
+				'hover' => 'onHover',
+				'leave' => 'onExit',
+				'drop' => 'onDrop',
 		));
 		$expected = '$("#element").droppable({accept:".items", drop:function (event, ui) {onDrop}, out:function (event, ui) {onExit}, over:function (event, ui) {onHover}});';
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * test slider generation
- *
- * @return void
- */
+	/**
+	 * test slider generation
+	 *
+	 * @return void
+	 */
 	public function testSlider() {
 		$this->Jquery->get('#element');
 		$result = $this->Jquery->slider(array(
-			'complete' => 'onComplete',
-			'change' => 'onChange',
-			'min' => 0,
-			'max' => 10,
-			'value' => 2,
-			'direction' => 'vertical',
-			'wrapCallbacks' => false
+				'complete' => 'onComplete',
+				'change' => 'onChange',
+				'min' => 0,
+				'max' => 10,
+				'value' => 2,
+				'direction' => 'vertical',
+				'wrapCallbacks' => FALSE
 		));
 		$expected = '$("#element").slider({change:onChange, max:10, min:0, orientation:"vertical", stop:onComplete, value:2});';
 		$this->assertEquals($expected, $result);
 
 		$result = $this->Jquery->slider(array(
-			'complete' => 'onComplete',
-			'change' => 'onChange',
-			'min' => 0,
-			'max' => 10,
-			'value' => 2,
-			'direction' => 'vertical',
+				'complete' => 'onComplete',
+				'change' => 'onChange',
+				'min' => 0,
+				'max' => 10,
+				'value' => 2,
+				'direction' => 'vertical',
 		));
 		$expected = '$("#element").slider({change:function (event, ui) {onChange}, max:10, min:0, orientation:"vertical", stop:function (event, ui) {onComplete}, value:2});';
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * test the serializeForm method
- *
- * @return void
- */
+	/**
+	 * test the serializeForm method
+	 *
+	 * @return void
+	 */
 	public function testSerializeForm() {
 		$this->Jquery->get('#element');
-		$result = $this->Jquery->serializeForm(array('isForm' => false));
+		$result = $this->Jquery->serializeForm(array('isForm' => FALSE));
 		$expected = '$("#element").closest("form").serialize();';
 		$this->assertEquals($expected, $result);
 
-		$result = $this->Jquery->serializeForm(array('isForm' => true));
+		$result = $this->Jquery->serializeForm(array('isForm' => TRUE));
 		$expected = '$("#element").serialize();';
 		$this->assertEquals($expected, $result);
 
-		$result = $this->Jquery->serializeForm(array('isForm' => false, 'inline' => true));
+		$result = $this->Jquery->serializeForm(array('isForm' => FALSE, 'inline' => TRUE));
 		$expected = '$("#element").closest("form").serialize()';
 		$this->assertEquals($expected, $result);
 	}

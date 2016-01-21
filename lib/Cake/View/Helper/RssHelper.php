@@ -26,83 +26,84 @@ App::uses('Xml', 'Utility');
  *
  * @package       Cake.View.Helper
  * @property      TimeHelper $Time
- * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/rss.html
+ * @link          http://book.cakephp.org/2.0/en/core-libraries/helpers/rss.html
  */
 class RssHelper extends AppHelper {
 
-/**
- * Helpers used by RSS Helper
- *
- * @var array
- */
+	/**
+	 * Helpers used by RSS Helper
+	 *
+	 * @var array
+	 */
 	public $helpers = array('Time');
 
-/**
- * Base URL
- *
- * @var string
- */
-	public $base = null;
+	/**
+	 * Base URL
+	 *
+	 * @var string
+	 */
+	public $base = NULL;
 
-/**
- * URL to current action.
- *
- * @var string
- */
-	public $here = null;
+	/**
+	 * URL to current action.
+	 *
+	 * @var string
+	 */
+	public $here = NULL;
 
-/**
- * Parameter array.
- *
- * @var array
- */
+	/**
+	 * Parameter array.
+	 *
+	 * @var array
+	 */
 	public $params = array();
 
-/**
- * Current action.
- *
- * @var string
- */
-	public $action = null;
+	/**
+	 * Current action.
+	 *
+	 * @var string
+	 */
+	public $action = NULL;
 
-/**
- * POSTed model data
- *
- * @var array
- */
-	public $data = null;
+	/**
+	 * POSTed model data
+	 *
+	 * @var array
+	 */
+	public $data = NULL;
 
-/**
- * Name of the current model
- *
- * @var string
- */
-	public $model = null;
+	/**
+	 * Name of the current model
+	 *
+	 * @var string
+	 */
+	public $model = NULL;
 
-/**
- * Name of the current field
- *
- * @var string
- */
-	public $field = null;
+	/**
+	 * Name of the current field
+	 *
+	 * @var string
+	 */
+	public $field = NULL;
 
-/**
- * Default spec version of generated RSS
- *
- * @var string
- */
+	/**
+	 * Default spec version of generated RSS
+	 *
+	 * @var string
+	 */
 	public $version = '2.0';
 
-/**
- * Returns an RSS document wrapped in `<rss />` tags
- *
- * @param array $attrib `<rss />` tag attributes
- * @param string $content Tag content.
- * @return string An RSS document
- * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/rss.html#RssHelper::document
- */
-	public function document($attrib = array(), $content = null) {
-		if ($content === null) {
+	/**
+	 * Returns an RSS document wrapped in `<rss />` tags
+	 *
+	 * @param array  $attrib  `<rss />` tag attributes
+	 * @param string $content Tag content.
+	 *
+	 * @return string An RSS document
+	 * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/rss.html#RssHelper::document
+	 */
+	public function document($attrib = array(), $content = NULL) {
+		if ($content === NULL) {
 			$content = $attrib;
 			$attrib = array();
 		}
@@ -113,16 +114,88 @@ class RssHelper extends AppHelper {
 		return $this->elem('rss', $attrib, $content);
 	}
 
-/**
- * Returns an RSS `<channel />` element
- *
- * @param array $attrib `<channel />` tag attributes
- * @param array $elements Named array elements which are converted to tags
- * @param string $content Content (`<item />`'s belonging to this channel
- * @return string An RSS `<channel />`
- * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/rss.html#RssHelper::channel
- */
-	public function channel($attrib = array(), $elements = array(), $content = null) {
+	/**
+	 * Generates an XML element
+	 *
+	 * @param string       $name    The name of the XML element
+	 * @param array        $attrib  The attributes of the XML element
+	 * @param string|array $content XML element content
+	 * @param bool         $endTag  Whether the end tag of the element should be printed
+	 *
+	 * @return string XML
+	 * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/rss.html#RssHelper::elem
+	 */
+	public function elem($name, $attrib = array(), $content = NULL, $endTag = TRUE) {
+		$namespace = NULL;
+		if (isset($attrib['namespace'])) {
+			$namespace = $attrib['namespace'];
+			unset($attrib['namespace']);
+		}
+		$cdata = FALSE;
+		if (is_array($content) && isset($content['cdata'])) {
+			$cdata = TRUE;
+			unset($content['cdata']);
+		}
+		if (is_array($content) && array_key_exists('value', $content)) {
+			$content = $content['value'];
+		}
+		$children = array();
+		if (is_array($content)) {
+			$children = $content;
+			$content = NULL;
+		}
+
+		$xml = '<' . $name;
+		if (!empty($namespace)) {
+			$xml .= ' xmlns';
+			if (is_array($namespace)) {
+				$xml .= ':' . $namespace['prefix'];
+				$namespace = $namespace['url'];
+			}
+			$xml .= '="' . $namespace . '"';
+		}
+		$bareName = $name;
+		if (strpos($name, ':') !== FALSE) {
+			list($prefix, $bareName) = explode(':', $name, 2);
+			switch ($prefix) {
+				case 'atom':
+					$xml .= ' xmlns:atom="http://www.w3.org/2005/Atom"';
+					break;
+			}
+		}
+		if ($cdata && !empty($content)) {
+			$content = '<![CDATA[' . $content . ']]>';
+		}
+		$xml .= '>' . $content . '</' . $name . '>';
+		$elem = Xml::build($xml, array('return' => 'domdocument'));
+		$nodes = $elem->getElementsByTagName($bareName);
+		if ($attrib) {
+			foreach ($attrib as $key => $value) {
+				$nodes->item(0)->setAttribute($key, $value);
+			}
+		}
+		foreach ($children as $child) {
+			$child = $elem->createElement($name, $child);
+			$nodes->item(0)->appendChild($child);
+		}
+
+		$xml = $elem->saveXml();
+		$xml = trim(substr($xml, strpos($xml, '?>') + 2));
+
+		return $xml;
+	}
+
+	/**
+	 * Returns an RSS `<channel />` element
+	 *
+	 * @param array  $attrib   `<channel />` tag attributes
+	 * @param array  $elements Named array elements which are converted to tags
+	 * @param string $content  Content (`<item />`'s belonging to this channel
+	 *
+	 * @return string An RSS `<channel />`
+	 * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/rss.html#RssHelper::channel
+	 */
+	public function channel($attrib = array(), $elements = array(), $content = NULL) {
 		if (!isset($elements['link'])) {
 			$elements['link'] = '/';
 		}
@@ -132,7 +205,7 @@ class RssHelper extends AppHelper {
 		if (!isset($elements['description'])) {
 			$elements['description'] = '';
 		}
-		$elements['link'] = $this->url($elements['link'], true);
+		$elements['link'] = $this->url($elements['link'], TRUE);
 
 		$elems = '';
 		foreach ($elements as $elem => $data) {
@@ -154,20 +227,22 @@ class RssHelper extends AppHelper {
 			}
 			$elems .= $this->elem($elem, $attributes, $data);
 		}
-		return $this->elem('channel', $attrib, $elems . $content, !($content === null));
+
+		return $this->elem('channel', $attrib, $elems . $content, !($content === NULL));
 	}
 
-/**
- * Transforms an array of data using an optional callback, and maps it to a set
- * of `<item />` tags
- *
- * @param array $items The list of items to be mapped
- * @param string|array $callback A string function name, or array containing an object
- *     and a string method name
- * @return string A set of RSS `<item />` elements
- * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/rss.html#RssHelper::items
- */
-	public function items($items, $callback = null) {
+	/**
+	 * Transforms an array of data using an optional callback, and maps it to a set
+	 * of `<item />` tags
+	 *
+	 * @param array        $items    The list of items to be mapped
+	 * @param string|array $callback A string function name, or array containing an object
+	 *                               and a string method name
+	 *
+	 * @return string A set of RSS `<item />` elements
+	 * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/rss.html#RssHelper::items
+	 */
+	public function items($items, $callback = NULL) {
 		if ($callback) {
 			$items = array_map($callback, $items);
 		}
@@ -178,19 +253,21 @@ class RssHelper extends AppHelper {
 		for ($i = 0; $i < $c; $i++) {
 			$out .= $this->item(array(), $items[$i]);
 		}
+
 		return $out;
 	}
 
-/**
- * Converts an array into an `<item />` element and its contents
- *
- * @param array $att The attributes of the `<item />` element
- * @param array $elements The list of elements contained in this `<item />`
- * @return string An RSS `<item />` element
- * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/rss.html#RssHelper::item
- */
+	/**
+	 * Converts an array into an `<item />` element and its contents
+	 *
+	 * @param array $att      The attributes of the `<item />` element
+	 * @param array $elements The list of elements contained in this `<item />`
+	 *
+	 * @return string An RSS `<item />` element
+	 * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/rss.html#RssHelper::item
+	 */
 	public function item($att = array(), $elements = array()) {
-		$content = null;
+		$content = NULL;
 
 		if (isset($elements['link']) && !isset($elements['guid'])) {
 			$elements['guid'] = $elements['link'];
@@ -199,7 +276,7 @@ class RssHelper extends AppHelper {
 		foreach ($elements as $key => $val) {
 			$attrib = array();
 
-			$escape = true;
+			$escape = TRUE;
 			if (is_array($val) && isset($val['convertEntities'])) {
 				$escape = $val['convertEntities'];
 				unset($val['convertEntities']);
@@ -233,34 +310,34 @@ class RssHelper extends AppHelper {
 						unset($attrib['url']);
 						$val = $val['url'];
 					}
-					$val = $this->url($val, true);
+					$val = $this->url($val, TRUE);
 					break;
 				case 'source':
 					if (is_array($val) && isset($val['url'])) {
-						$attrib['url'] = $this->url($val['url'], true);
+						$attrib['url'] = $this->url($val['url'], TRUE);
 						$val = $val['title'];
 					} elseif (is_array($val)) {
-						$attrib['url'] = $this->url($val[0], true);
+						$attrib['url'] = $this->url($val[0], TRUE);
 						$val = $val[1];
 					}
 					break;
 				case 'enclosure':
 					if (is_string($val['url']) && is_file(WWW_ROOT . $val['url']) && file_exists(WWW_ROOT . $val['url'])) {
-						if (!isset($val['length']) && strpos($val['url'], '://') === false) {
+						if (!isset($val['length']) && strpos($val['url'], '://') === FALSE) {
 							$val['length'] = sprintf("%u", filesize(WWW_ROOT . $val['url']));
 						}
 						if (!isset($val['type']) && function_exists('mime_content_type')) {
 							$val['type'] = mime_content_type(WWW_ROOT . $val['url']);
 						}
 					}
-					$val['url'] = $this->url($val['url'], true);
+					$val['url'] = $this->url($val['url'], TRUE);
 					$attrib = $val;
-					$val = null;
+					$val = NULL;
 					break;
 				default:
 					$attrib = $att;
 			}
-			if ($val !== null && $escape) {
+			if ($val !== NULL && $escape) {
 				$val = h($val);
 			}
 			$elements[$key] = $this->elem($key, $attrib, $val);
@@ -268,88 +345,21 @@ class RssHelper extends AppHelper {
 		if (!empty($elements)) {
 			$content = implode('', $elements);
 		}
-		return $this->elem('item', (array)$att, $content, !($content === null));
+
+		return $this->elem('item', (array)$att, $content, !($content === NULL));
 	}
 
-/**
- * Converts a time in any format to an RSS time
- *
- * @param int|string|DateTime $time UNIX timestamp or valid time string or DateTime object.
- * @return string An RSS-formatted timestamp
- * @see TimeHelper::toRSS
- * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/rss.html#RssHelper::time
- */
+	/**
+	 * Converts a time in any format to an RSS time
+	 *
+	 * @param int|string|DateTime $time UNIX timestamp or valid time string or DateTime object.
+	 *
+	 * @return string An RSS-formatted timestamp
+	 * @see  TimeHelper::toRSS
+	 * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/rss.html#RssHelper::time
+	 */
 	public function time($time) {
 		return $this->Time->toRSS($time);
-	}
-
-/**
- * Generates an XML element
- *
- * @param string $name The name of the XML element
- * @param array $attrib The attributes of the XML element
- * @param string|array $content XML element content
- * @param bool $endTag Whether the end tag of the element should be printed
- * @return string XML
- * @link http://book.cakephp.org/2.0/en/core-libraries/helpers/rss.html#RssHelper::elem
- */
-	public function elem($name, $attrib = array(), $content = null, $endTag = true) {
-		$namespace = null;
-		if (isset($attrib['namespace'])) {
-			$namespace = $attrib['namespace'];
-			unset($attrib['namespace']);
-		}
-		$cdata = false;
-		if (is_array($content) && isset($content['cdata'])) {
-			$cdata = true;
-			unset($content['cdata']);
-		}
-		if (is_array($content) && array_key_exists('value', $content)) {
-			$content = $content['value'];
-		}
-		$children = array();
-		if (is_array($content)) {
-			$children = $content;
-			$content = null;
-		}
-
-		$xml = '<' . $name;
-		if (!empty($namespace)) {
-			$xml .= ' xmlns';
-			if (is_array($namespace)) {
-				$xml .= ':' . $namespace['prefix'];
-				$namespace = $namespace['url'];
-			}
-			$xml .= '="' . $namespace . '"';
-		}
-		$bareName = $name;
-		if (strpos($name, ':') !== false) {
-			list($prefix, $bareName) = explode(':', $name, 2);
-			switch ($prefix) {
-				case 'atom':
-					$xml .= ' xmlns:atom="http://www.w3.org/2005/Atom"';
-					break;
-			}
-		}
-		if ($cdata && !empty($content)) {
-			$content = '<![CDATA[' . $content . ']]>';
-		}
-		$xml .= '>' . $content . '</' . $name . '>';
-		$elem = Xml::build($xml, array('return' => 'domdocument'));
-		$nodes = $elem->getElementsByTagName($bareName);
-		if ($attrib) {
-			foreach ($attrib as $key => $value) {
-				$nodes->item(0)->setAttribute($key, $value);
-			}
-		}
-		foreach ($children as $child) {
-			$child = $elem->createElement($name, $child);
-			$nodes->item(0)->appendChild($child);
-		}
-
-		$xml = $elem->saveXml();
-		$xml = trim(substr($xml, strpos($xml, '?>') + 2));
-		return $xml;
 	}
 
 }

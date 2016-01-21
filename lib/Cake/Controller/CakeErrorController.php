@@ -29,24 +29,24 @@ App::uses('AppController', 'Controller');
  */
 class CakeErrorController extends AppController {
 
-/**
- * Uses Property
- *
- * @var array
- */
+	/**
+	 * Uses Property
+	 *
+	 * @var array
+	 */
 	public $uses = array();
 
-/**
- * Constructor
- *
- * @param CakeRequest $request Request instance.
- * @param CakeResponse $response Response instance.
- */
-	public function __construct($request = null, $response = null) {
+	/**
+	 * Constructor
+	 *
+	 * @param CakeRequest  $request  Request instance.
+	 * @param CakeResponse $response Response instance.
+	 */
+	public function __construct($request = NULL, $response = NULL) {
 		parent::__construct($request, $response);
 		$this->constructClasses();
 		if (count(Router::extensions()) &&
-			!$this->Components->attached('RequestHandler')
+				!$this->Components->attached('RequestHandler')
 		) {
 			$this->RequestHandler = $this->Components->load('RequestHandler');
 		}
@@ -56,7 +56,7 @@ class CakeErrorController extends AppController {
 		if ($this->Components->enabled('Security')) {
 			$this->Components->disable('Security');
 		}
-		$this->_set(array('cacheAction' => false, 'viewPath' => 'Errors'));
+		$this->_set(array('cacheAction' => FALSE, 'viewPath' => 'Errors'));
 	}
 
 }

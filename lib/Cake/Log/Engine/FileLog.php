@@ -28,74 +28,75 @@ App::uses('CakeNumber', 'Utility');
  */
 class FileLog extends BaseLog {
 
-/**
- * Default configuration values
- *
- * @var array
- * @see FileLog::__construct()
- */
+	/**
+	 * Default configuration values
+	 *
+	 * @var array
+	 * @see FileLog::__construct()
+	 */
 	protected $_defaults = array(
-		'path' => LOGS,
-		'file' => null,
-		'types' => null,
-		'scopes' => array(),
-		'rotate' => 10,
-		'size' => 10485760, // 10MB
-		'mask' => null,
+			'path' => LOGS,
+			'file' => NULL,
+			'types' => NULL,
+			'scopes' => array(),
+			'rotate' => 10,
+			'size' => 10485760, // 10MB
+			'mask' => NULL,
 	);
 
-/**
- * Path to save log files on.
- *
- * @var string
- */
-	protected $_path = null;
+	/**
+	 * Path to save log files on.
+	 *
+	 * @var string
+	 */
+	protected $_path = NULL;
 
-/**
- * Log file name
- *
- * @var string
- */
-	protected $_file = null;
+	/**
+	 * Log file name
+	 *
+	 * @var string
+	 */
+	protected $_file = NULL;
 
-/**
- * Max file size, used for log file rotation.
- *
- * @var int
- */
-	protected $_size = null;
+	/**
+	 * Max file size, used for log file rotation.
+	 *
+	 * @var int
+	 */
+	protected $_size = NULL;
 
-/**
- * Constructs a new File Logger.
- *
- * Config
- *
- * - `types` string or array, levels the engine is interested in
- * - `scopes` string or array, scopes the engine is interested in
- * - `file` Log file name
- * - `path` The path to save logs on.
- * - `size` Used to implement basic log file rotation. If log file size
- *   reaches specified size the existing file is renamed by appending timestamp
- *   to filename and new log file is created. Can be integer bytes value or
- *   human reabable string values like '10MB', '100KB' etc.
- * - `rotate` Log files are rotated specified times before being removed.
- *   If value is 0, old versions are removed rather then rotated.
- * - `mask` A mask is applied when log files are created. Left empty no chmod
- *   is made.
- *
- * @param array $config Options for the FileLog, see above.
- */
+	/**
+	 * Constructs a new File Logger.
+	 *
+	 * Config
+	 *
+	 * - `types` string or array, levels the engine is interested in
+	 * - `scopes` string or array, scopes the engine is interested in
+	 * - `file` Log file name
+	 * - `path` The path to save logs on.
+	 * - `size` Used to implement basic log file rotation. If log file size
+	 *   reaches specified size the existing file is renamed by appending timestamp
+	 *   to filename and new log file is created. Can be integer bytes value or
+	 *   human reabable string values like '10MB', '100KB' etc.
+	 * - `rotate` Log files are rotated specified times before being removed.
+	 *   If value is 0, old versions are removed rather then rotated.
+	 * - `mask` A mask is applied when log files are created. Left empty no chmod
+	 *   is made.
+	 *
+	 * @param array $config Options for the FileLog, see above.
+	 */
 	public function __construct($config = array()) {
 		$config = Hash::merge($this->_defaults, $config);
 		parent::__construct($config);
 	}
 
-/**
- * Sets protected properties based on config provided
- *
- * @param array $config Engine configuration
- * @return array
- */
+	/**
+	 * Sets protected properties based on config provided
+	 *
+	 * @param array $config Engine configuration
+	 *
+	 * @return array
+	 */
 	public function config($config = array()) {
 		parent::config($config);
 
@@ -103,7 +104,7 @@ class FileLog extends BaseLog {
 			$this->_path = $config['path'];
 		}
 		if (Configure::read('debug') && !is_dir($this->_path)) {
-			mkdir($this->_path, 0775, true);
+			mkdir($this->_path, 0775, TRUE);
 		}
 
 		if (!empty($config['file'])) {
@@ -123,13 +124,14 @@ class FileLog extends BaseLog {
 		return $this->_config;
 	}
 
-/**
- * Implements writing to log files.
- *
- * @param string $type The type of log you are making.
- * @param string $message The message you want to log.
- * @return bool success of write.
- */
+	/**
+	 * Implements writing to log files.
+	 *
+	 * @param string $type    The type of log you are making.
+	 * @param string $message The message you want to log.
+	 *
+	 * @return bool success of write.
+	 */
 	public function write($type, $message) {
 		$output = date('Y-m-d H:i:s') . ' ' . ucfirst($type) . ': ' . $message . "\n";
 		$filename = $this->_getFilename($type);
@@ -144,23 +146,25 @@ class FileLog extends BaseLog {
 
 		$exists = file_exists($pathname);
 		$result = file_put_contents($pathname, $output, FILE_APPEND);
-		static $selfError = false;
+		static $selfError = FALSE;
 		if (!$selfError && !$exists && !chmod($pathname, (int)$this->_config['mask'])) {
-			$selfError = true;
+			$selfError = TRUE;
 			trigger_error(__d(
-				'cake_dev', 'Could not apply permission mask "%s" on log file "%s"',
-				array($this->_config['mask'], $pathname)), E_USER_WARNING);
-			$selfError = false;
+					'cake_dev', 'Could not apply permission mask "%s" on log file "%s"',
+					array($this->_config['mask'], $pathname)), E_USER_WARNING);
+			$selfError = FALSE;
 		}
+
 		return $result;
 	}
 
-/**
- * Get filename
- *
- * @param string $type The type of log.
- * @return string File name
- */
+	/**
+	 * Get filename
+	 *
+	 * @param string $type The type of log.
+	 *
+	 * @return string File name
+	 */
 	protected function _getFilename($type) {
 		$debugTypes = array('notice', 'info', 'debug');
 
@@ -177,26 +181,27 @@ class FileLog extends BaseLog {
 		return $filename;
 	}
 
-/**
- * Rotate log file if size specified in config is reached.
- * Also if `rotate` count is reached oldest file is removed.
- *
- * @param string $filename Log file name
- * @return mixed True if rotated successfully or false in case of error, otherwise null.
- *   Void if file doesn't need to be rotated.
- */
+	/**
+	 * Rotate log file if size specified in config is reached.
+	 * Also if `rotate` count is reached oldest file is removed.
+	 *
+	 * @param string $filename Log file name
+	 *
+	 * @return mixed True if rotated successfully or false in case of error, otherwise null.
+	 *   Void if file doesn't need to be rotated.
+	 */
 	protected function _rotateFile($filename) {
 		$filepath = $this->_path . $filename;
 		if (version_compare(PHP_VERSION, '5.3.0') >= 0) {
-			clearstatcache(true, $filepath);
+			clearstatcache(TRUE, $filepath);
 		} else {
 			clearstatcache();
 		}
 
 		if (!file_exists($filepath) ||
-			filesize($filepath) < $this->_size
+				filesize($filepath) < $this->_size
 		) {
-			return null;
+			return NULL;
 		}
 
 		if ($this->_config['rotate'] === 0) {

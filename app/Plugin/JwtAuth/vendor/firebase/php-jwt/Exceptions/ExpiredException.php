@@ -1,5 +1,5 @@
 <?php
 
-	class ExpiredException extends UnexpectedValueException {
+class ExpiredException extends UnexpectedValueException {
 
-	}
+}

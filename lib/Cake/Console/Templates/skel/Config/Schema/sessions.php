@@ -24,42 +24,43 @@
  */
 class SessionsSchema extends CakeSchema {
 
-/**
- * Name property
- *
- * @var string
- */
+	/**
+	 * Name property
+	 *
+	 * @var string
+	 */
 	public $name = 'Sessions';
+	/**
+	 * The cake_sessions table definition
+	 *
+	 * @var array
+	 */
+	public $cake_sessions = array(
+			'id' => array('type' => 'string', 'null' => FALSE, 'key' => 'primary'),
+			'data' => array('type' => 'text', 'null' => TRUE, 'default' => NULL),
+			'expires' => array('type' => 'integer', 'null' => TRUE, 'default' => NULL),
+			'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1))
+	);
 
-/**
- * Before callback.
- *
- * @param array $event Schema object properties
- * @return bool Should process continue
- */
+	/**
+	 * Before callback.
+	 *
+	 * @param array $event Schema object properties
+	 *
+	 * @return bool Should process continue
+	 */
 	public function before($event = array()) {
-		return true;
+		return TRUE;
 	}
 
-/**
- * After callback.
- *
- * @param array $event Schema object properties
- * @return void
- */
+	/**
+	 * After callback.
+	 *
+	 * @param array $event Schema object properties
+	 *
+	 * @return void
+	 */
 	public function after($event = array()) {
 	}
-
-/**
- * The cake_sessions table definition
- *
- * @var array
- */
-	public $cake_sessions = array(
-		'id' => array('type' => 'string', 'null' => false, 'key' => 'primary'),
-		'data' => array('type' => 'text', 'null' => true, 'default' => null),
-		'expires' => array('type' => 'integer', 'null' => true, 'default' => null),
-		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1))
-	);
 
 }

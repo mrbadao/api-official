@@ -1,4 +1,4 @@
 <?php
 
-	class NoTestCaseClass {
-	}
+class NoTestCaseClass {
+}

@@ -32,40 +32,41 @@ App::uses('CakeRequest', 'Network');
  * - `download` Set to true to set a `Content-Disposition` header. This is ideal for file downloads.
  * - `path` The absolute path, including the trailing / on the server's filesystem to `id`.
  * - `mimeType` The mime type of the file if CakeResponse doesn't know about it.
- * 	Must be an associative array with extension as key and mime type as value eg. array('ini' => 'text/plain')
+ *    Must be an associative array with extension as key and mime type as value eg. array('ini' => 'text/plain')
  *
  * ### Usage
  *
  * ```
  * class ExampleController extends AppController {
- *		public function download() {
- *			$this->viewClass = 'Medias';
- *			$params = array(
- *				'id' => 'example.zip',
- *				'name' => 'example',
- *				'download' => true,
- *				'extension' => 'zip',
- *				'path' => APP . 'files' . DS
- *			);
- *			$this->set($params);
- *		}
+ *        public function download() {
+ *            $this->viewClass = 'Medias';
+ *            $params = array(
+ *                'id' => 'example.zip',
+ *                'name' => 'example',
+ *                'download' => true,
+ *                'extension' => 'zip',
+ *                'path' => APP . 'files' . DS
+ *            );
+ *            $this->set($params);
+ *        }
  * }
  * ```
  *
  * @package       Cake.View
- * @deprecated 3.0.0 Deprecated since version 2.3, use CakeResponse::file() instead
+ * @deprecated    3.0.0 Deprecated since version 2.3, use CakeResponse::file() instead
  */
 class MediaView extends View {
 
-/**
- * Display or download the given file
- *
- * @param string $view Not used
- * @param string $layout Not used
- * @return void
- */
-	public function render($view = null, $layout = null) {
-		$name = $extension = $download = $id = $modified = $path = $cache = $mimeType = $compress = null;
+	/**
+	 * Display or download the given file
+	 *
+	 * @param string $view   Not used
+	 * @param string $layout Not used
+	 *
+	 * @return void
+	 */
+	public function render($view = NULL, $layout = NULL) {
+		$name = $extension = $download = $id = $modified = $path = $cache = $mimeType = $compress = NULL;
 		extract($this->viewVars, EXTR_OVERWRITE);
 
 		$path = $path . $id;
@@ -85,7 +86,7 @@ class MediaView extends View {
 			$this->response->disableCache();
 		}
 
-		if ($name !== null) {
+		if ($name !== NULL) {
 			if (empty($extension)) {
 				$extension = pathinfo($id, PATHINFO_EXTENSION);
 			}

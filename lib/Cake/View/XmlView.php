@@ -53,19 +53,19 @@ App::uses('Hash', 'Utility');
  */
 class XmlView extends View {
 
-/**
- * The subdirectory. XML views are always in xml.
- *
- * @var string
- */
+	/**
+	 * The subdirectory. XML views are always in xml.
+	 *
+	 * @var string
+	 */
 	public $subDir = 'xml';
 
-/**
- * Constructor
- *
- * @param Controller $controller Controller instance.
- */
-	public function __construct(Controller $controller = null) {
+	/**
+	 * Constructor
+	 *
+	 * @param Controller $controller Controller instance.
+	 */
+	public function __construct(Controller $controller = NULL) {
 		parent::__construct($controller);
 
 		if (isset($controller->response) && $controller->response instanceof CakeResponse) {
@@ -73,11 +73,11 @@ class XmlView extends View {
 		}
 	}
 
-/**
- * Skip loading helpers if this is a _serialize based view.
- *
- * @return void
- */
+	/**
+	 * Skip loading helpers if this is a _serialize based view.
+	 *
+	 * @return void
+	 */
 	public function loadHelpers() {
 		if (isset($this->viewVars['_serialize'])) {
 			return;
@@ -85,37 +85,39 @@ class XmlView extends View {
 		parent::loadHelpers();
 	}
 
-/**
- * Render a XML view.
- *
- * Uses the special '_serialize' parameter to convert a set of
- * view variables into a XML response. Makes generating simple
- * XML responses very easy. You can omit the '_serialize' parameter,
- * and use a normal view + layout as well.
- *
- * @param string $view The view being rendered.
- * @param string $layout The layout being rendered.
- * @return string The rendered view.
- */
-	public function render($view = null, $layout = null) {
+	/**
+	 * Render a XML view.
+	 *
+	 * Uses the special '_serialize' parameter to convert a set of
+	 * view variables into a XML response. Makes generating simple
+	 * XML responses very easy. You can omit the '_serialize' parameter,
+	 * and use a normal view + layout as well.
+	 *
+	 * @param string $view   The view being rendered.
+	 * @param string $layout The layout being rendered.
+	 *
+	 * @return string The rendered view.
+	 */
+	public function render($view = NULL, $layout = NULL) {
 		if (isset($this->viewVars['_serialize'])) {
 			return $this->_serialize($this->viewVars['_serialize']);
 		}
-		if ($view !== false && $this->_getViewFileName($view)) {
-			return parent::render($view, false);
+		if ($view !== FALSE && $this->_getViewFileName($view)) {
+			return parent::render($view, FALSE);
 		}
 	}
 
-/**
- * Serialize view vars.
- *
- * ### Special parameters
- * `_xmlOptions` You can set an array of custom options for Xml::fromArray() this way, e.g.
- *   'format' as 'attributes' instead of 'tags'.
- *
- * @param array $serialize The viewVars that need to be serialized.
- * @return string The serialized data
- */
+	/**
+	 * Serialize view vars.
+	 *
+	 * ### Special parameters
+	 * `_xmlOptions` You can set an array of custom options for Xml::fromArray() this way, e.g.
+	 *   'format' as 'attributes' instead of 'tags'.
+	 *
+	 * @param array $serialize The viewVars that need to be serialized.
+	 *
+	 * @return string The serialized data
+	 */
 	protected function _serialize($serialize) {
 		$rootNode = isset($this->viewVars['_rootNode']) ? $this->viewVars['_rootNode'] : 'response';
 
@@ -128,7 +130,7 @@ class XmlView extends View {
 				$data[$rootNode][$alias] = $this->viewVars[$key];
 			}
 		} else {
-			$data = isset($this->viewVars[$serialize]) ? $this->viewVars[$serialize] : null;
+			$data = isset($this->viewVars[$serialize]) ? $this->viewVars[$serialize] : NULL;
 			if (is_array($data) && Hash::numeric(array_keys($data))) {
 				$data = array($rootNode => array($serialize => $data));
 			}
@@ -139,7 +141,7 @@ class XmlView extends View {
 			$options = $this->viewVars['_xmlOptions'];
 		}
 		if (Configure::read('debug')) {
-			$options['pretty'] = true;
+			$options['pretty'] = TRUE;
 		}
 
 		return Xml::fromArray($data, $options)->asXML();

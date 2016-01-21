@@ -7,11 +7,11 @@
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright	  Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link		  http://cakephp.org CakePHP(tm) Project
- * @package		  Cake.Routing
- * @since		  CakePHP(tm) v 2.2
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @copyright        Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @link             http://cakephp.org CakePHP(tm) Project
+ * @package          Cake.Routing
+ * @since            CakePHP(tm) v 2.2
+ * @license          http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
 App::uses('DispatcherFilter', 'Routing');
@@ -24,35 +24,37 @@ App::uses('DispatcherFilter', 'Routing');
  */
 class AssetDispatcher extends DispatcherFilter {
 
-/**
- * Default priority for all methods in this filter
- * This filter should run before the request gets parsed by router
- *
- * @var int
- */
+	/**
+	 * Default priority for all methods in this filter
+	 * This filter should run before the request gets parsed by router
+	 *
+	 * @var int
+	 */
 	public $priority = 9;
 
-/**
- * Checks if a requested asset exists and sends it to the browser
- *
- * @param CakeEvent $event containing the request and response object
- * @return mixed The resulting response.
- * @throws NotFoundException When asset not found
- */
+	/**
+	 * Checks if a requested asset exists and sends it to the browser
+	 *
+	 * @param CakeEvent $event containing the request and response object
+	 *
+	 * @return mixed The resulting response.
+	 * @throws NotFoundException When asset not found
+	 */
 	public function beforeDispatch(CakeEvent $event) {
 		$url = urldecode($event->data['request']->url);
-		if (strpos($url, '..') !== false || strpos($url, '.') === false) {
-			return null;
+		if (strpos($url, '..') !== FALSE || strpos($url, '.') === FALSE) {
+			return NULL;
 		}
 
 		if ($result = $this->_filterAsset($event)) {
 			$event->stopPropagation();
+
 			return $result;
 		}
 
 		$assetFile = $this->_getAssetFile($url);
-		if ($assetFile === null || !file_exists($assetFile)) {
-			return null;
+		if ($assetFile === NULL || !file_exists($assetFile)) {
+			return NULL;
 		}
 		$response = $event->data['response'];
 		$event->stopPropagation();
@@ -66,51 +68,57 @@ class AssetDispatcher extends DispatcherFilter {
 		$ext = array_pop($pathSegments);
 
 		$this->_deliverAsset($response, $assetFile, $ext);
+
 		return $response;
 	}
 
-/**
- * Checks if the client is requesting a filtered asset and runs the corresponding
- * filter if any is configured
- *
- * @param CakeEvent $event containing the request and response object
- * @return CakeResponse if the client is requesting a recognized asset, null otherwise
- */
+	/**
+	 * Checks if the client is requesting a filtered asset and runs the corresponding
+	 * filter if any is configured
+	 *
+	 * @param CakeEvent $event containing the request and response object
+	 *
+	 * @return CakeResponse if the client is requesting a recognized asset, null otherwise
+	 */
 	protected function _filterAsset(CakeEvent $event) {
 		$url = $event->data['request']->url;
 		$response = $event->data['response'];
 		$filters = Configure::read('Asset.filter');
 		$isCss = (
-			strpos($url, 'ccss/') === 0 ||
-			preg_match('#^(theme/([^/]+)/ccss/)|(([^/]+)(?<!css)/ccss)/#i', $url)
+				strpos($url, 'ccss/') === 0 ||
+				preg_match('#^(theme/([^/]+)/ccss/)|(([^/]+)(?<!css)/ccss)/#i', $url)
 		);
 		$isJs = (
-			strpos($url, 'cjs/') === 0 ||
-			preg_match('#^/((theme/[^/]+)/cjs/)|(([^/]+)(?<!js)/cjs)/#i', $url)
+				strpos($url, 'cjs/') === 0 ||
+				preg_match('#^/((theme/[^/]+)/cjs/)|(([^/]+)(?<!js)/cjs)/#i', $url)
 		);
 
 		if (($isCss && empty($filters['css'])) || ($isJs && empty($filters['js']))) {
 			$response->statusCode(404);
+
 			return $response;
 		}
 
 		if ($isCss) {
 			include WWW_ROOT . DS . $filters['css'];
+
 			return $response;
 		}
 
 		if ($isJs) {
 			include WWW_ROOT . DS . $filters['js'];
+
 			return $response;
 		}
 	}
 
-/**
- * Builds asset file path based off url
- *
- * @param string $url URL
- * @return string Absolute path for asset file
- */
+	/**
+	 * Builds asset file path based off url
+	 *
+	 * @param string $url URL
+	 *
+	 * @return string Absolute path for asset file
+	 */
 	protected function _getAssetFile($url) {
 		$parts = explode('/', $url);
 		if ($parts[0] === 'theme') {
@@ -118,6 +126,7 @@ class AssetDispatcher extends DispatcherFilter {
 			unset($parts[0], $parts[1]);
 			$fileFragment = implode(DS, $parts);
 			$path = App::themePath($themeName) . 'webroot' . DS;
+
 			return $path . $fileFragment;
 		}
 
@@ -126,18 +135,20 @@ class AssetDispatcher extends DispatcherFilter {
 			unset($parts[0]);
 			$fileFragment = implode(DS, $parts);
 			$pluginWebroot = CakePlugin::path($plugin) . 'webroot' . DS;
+
 			return $pluginWebroot . $fileFragment;
 		}
 	}
 
-/**
- * Sends an asset file to the client
- *
- * @param CakeResponse $response The response object to use.
- * @param string $assetFile Path to the asset file in the file system
- * @param string $ext The extension of the file to determine its mime type
- * @return void
- */
+	/**
+	 * Sends an asset file to the client
+	 *
+	 * @param CakeResponse $response  The response object to use.
+	 * @param string       $assetFile Path to the asset file in the file system
+	 * @param string       $ext       The extension of the file to determine its mime type
+	 *
+	 * @return void
+	 */
 	protected function _deliverAsset(CakeResponse $response, $assetFile, $ext) {
 		ob_start();
 		$compressionEnabled = Configure::read('Asset.compress') && $response->compress();
@@ -149,7 +160,7 @@ class AssetDispatcher extends DispatcherFilter {
 			}
 			$response->type($contentType);
 		}
-		$response->length(false);
+		$response->length(FALSE);
 		$response->cache(filemtime($assetFile));
 		$response->send();
 		ob_clean();

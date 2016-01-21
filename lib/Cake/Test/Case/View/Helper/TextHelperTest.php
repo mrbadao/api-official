@@ -51,36 +51,110 @@ class CakeTextMock {
  */
 class TextHelperTest extends CakeTestCase {
 
-/**
- * setUp method
- *
- * @return void
- */
+	/**
+	 * Data provider for autoLinking
+	 *
+	 * @return array
+	 */
+	public static function autoLinkProvider() {
+		return array(
+				array(
+						'This is a test text',
+						'This is a test text',
+				),
+				array(
+						'This is a test that includes (www.cakephp.org)',
+						'This is a test that includes (<a href="http://www.cakephp.org">www.cakephp.org</a>)',
+				),
+				array(
+						'This is a test that includes www.cakephp.org:8080',
+						'This is a test that includes <a href="http://www.cakephp.org:8080">www.cakephp.org:8080</a>',
+				),
+				array(
+						'This is a test that includes http://de.wikipedia.org/wiki/Kanton_(Schweiz)#fragment',
+						'This is a test that includes <a href="http://de.wikipedia.org/wiki/Kanton_(Schweiz)#fragment">http://de.wikipedia.org/wiki/Kanton_(Schweiz)#fragment</a>',
+				),
+				array(
+						'This is a test that includes www.wikipedia.org/wiki/Kanton_(Schweiz)#fragment',
+						'This is a test that includes <a href="http://www.wikipedia.org/wiki/Kanton_(Schweiz)#fragment">www.wikipedia.org/wiki/Kanton_(Schweiz)#fragment</a>',
+				),
+				array(
+						'This is a test that includes http://example.com/test.php?foo=bar text',
+						'This is a test that includes <a href="http://example.com/test.php?foo=bar">http://example.com/test.php?foo=bar</a> text',
+				),
+				array(
+						'This is a test that includes www.example.com/test.php?foo=bar text',
+						'This is a test that includes <a href="http://www.example.com/test.php?foo=bar">www.example.com/test.php?foo=bar</a> text',
+				),
+				array(
+						'Text with a partial www.cakephp.org URL',
+						'Text with a partial <a href="http://www.cakephp.org">www.cakephp.org</a> URL',
+				),
+				array(
+						'Text with a partial WWW.cakephp.org URL',
+						'Text with a partial <a href="http://WWW.cakephp.org">WWW.cakephp.org</a> URL',
+				),
+				array(
+						'Text with a partial WWW.cakephp.org &copy, URL',
+						'Text with a partial <a href="http://WWW.cakephp.org">WWW.cakephp.org</a> &amp;copy, URL',
+				),
+				array(
+						'Text with a url www.cot.ag/cuIb2Q and more',
+						'Text with a url <a href="http://www.cot.ag/cuIb2Q">www.cot.ag/cuIb2Q</a> and more',
+				),
+				array(
+						'Text with a url http://www.does--not--work.com and more',
+						'Text with a url <a href="http://www.does--not--work.com">http://www.does--not--work.com</a> and more',
+				),
+				array(
+						'Text with a url http://www.not--work.com and more',
+						'Text with a url <a href="http://www.not--work.com">http://www.not--work.com</a> and more',
+				),
+				array(
+						'Text with a url http://www.sub_domain.domain.pl and more',
+						'Text with a url <a href="http://www.sub_domain.domain.pl">http://www.sub_domain.domain.pl</a> and more',
+				),
+				array(
+						'Text with a partial www.küchenschöhn-not-working.de URL',
+						'Text with a partial <a href="http://www.küchenschöhn-not-working.de">www.küchenschöhn-not-working.de</a> URL'
+				),
+				array(
+						'Text with a partial http://www.küchenschöhn-not-working.de URL',
+						'Text with a partial <a href="http://www.küchenschöhn-not-working.de">http://www.küchenschöhn-not-working.de</a> URL'
+				),
+		);
+	}
+
+	/**
+	 * setUp method
+	 *
+	 * @return void
+	 */
 	public function setUp() {
 		parent::setUp();
-		$this->View = new View(null);
+		$this->View = new View(NULL);
 		$this->Text = new TextHelper($this->View);
 	}
 
-/**
- * tearDown method
- *
- * @return void
- */
+	/**
+	 * tearDown method
+	 *
+	 * @return void
+	 */
 	public function tearDown() {
 		unset($this->View);
 		parent::tearDown();
 	}
 
-/**
- * test String class methods are called correctly
- *
- * @return void
- */
+	/**
+	 * test String class methods are called correctly
+	 *
+	 * @return void
+	 */
 	public function testTextHelperProxyMethodCalls() {
 		$methods = array(
-			'highlight', 'stripLinks', 'truncate', 'tail', 'excerpt', 'toList',
-			);
+				'highlight', 'stripLinks', 'truncate', 'tail', 'excerpt', 'toList',
+		);
 		$CakeText = $this->getMock('CakeTextMock', $methods);
 		$Text = new TextHelperTestObject($this->View, array('engine' => 'CakeTextMock'));
 		$Text->attach($CakeText);
@@ -90,20 +164,20 @@ class TextHelperTest extends CakeTestCase {
 		}
 	}
 
-/**
- * test engine override
- *
- * @return void
- */
+	/**
+	 * test engine override
+	 *
+	 * @return void
+	 */
 	public function testEngineOverride() {
 		App::build(array(
-			'Utility' => array(CAKE . 'Test' . DS . 'test_app' . DS . 'Utility' . DS)
+				'Utility' => array(CAKE . 'Test' . DS . 'test_app' . DS . 'Utility' . DS)
 		), App::REGISTER);
 		$Text = new TextHelperTestObject($this->View, array('engine' => 'TestAppEngine'));
 		$this->assertInstanceOf('TestAppEngine', $Text->engine());
 
 		App::build(array(
-			'Plugin' => array(CAKE . 'Test' . DS . 'test_app' . DS . 'Plugin' . DS)
+				'Plugin' => array(CAKE . 'Test' . DS . 'test_app' . DS . 'Plugin' . DS)
 		));
 		CakePlugin::load('TestPlugin');
 		$Text = new TextHelperTestObject($this->View, array('engine' => 'TestPlugin.TestPluginEngine'));
@@ -111,11 +185,11 @@ class TextHelperTest extends CakeTestCase {
 		CakePlugin::unload('TestPlugin');
 	}
 
-/**
- * testAutoLink method
- *
- * @return void
- */
+	/**
+	 * testAutoLink method
+	 *
+	 * @return void
+	 */
 	public function testAutoLink() {
 		$text = 'The AWWWARD show happened today';
 		$result = $this->Text->autoLink($text);
@@ -132,7 +206,7 @@ class TextHelperTest extends CakeTestCase {
 		$this->assertRegExp('#^' . $expected . '$#', $result);
 
 		$text = 'Text with a partial <a href="//www.cakephp.org">link</a> link';
-		$result = $this->Text->autoLink($text, array('escape' => false));
+		$result = $this->Text->autoLink($text, array('escape' => FALSE));
 		$this->assertEquals($text, $result);
 
 		$text = 'This is a test text with URL http://www.cakephp.org';
@@ -181,24 +255,24 @@ class TextHelperTest extends CakeTestCase {
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * Test mixing URLs and Email addresses in one confusing string.
- *
- * @return void
- */
+	/**
+	 * Test mixing URLs and Email addresses in one confusing string.
+	 *
+	 * @return void
+	 */
 	public function testAutoLinkMixed() {
 		$text = 'Text with a url/email http://example.com/store?email=mark@example.com and email.';
 		$expected = 'Text with a url/email <a href="http://example.com/store?email=mark@example.com">' .
-			'http://example.com/store?email=mark@example.com</a> and email.';
+				'http://example.com/store?email=mark@example.com</a> and email.';
 		$result = $this->Text->autoLink($text);
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * test autoLink() and options.
- *
- * @return void
- */
+	/**
+	 * test autoLink() and options.
+	 *
+	 * @return void
+	 */
 	public function testAutoLinkOptions() {
 		$text = 'This is a test text with URL http://www.cakephp.org';
 		$expected = 'This is a test text with URL <a href="http://www.cakephp.org" class="link">http://www.cakephp.org</a>';
@@ -211,11 +285,11 @@ class TextHelperTest extends CakeTestCase {
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * Test escaping for autoLink
- *
- * @return void
- */
+	/**
+	 * Test escaping for autoLink
+	 *
+	 * @return void
+	 */
 	public function testAutoLinkEscape() {
 		$text = 'This is a <b>test</b> text with URL http://www.cakephp.org';
 		$expected = 'This is a &lt;b&gt;test&lt;/b&gt; text with URL <a href="http://www.cakephp.org">http://www.cakephp.org</a>';
@@ -224,7 +298,7 @@ class TextHelperTest extends CakeTestCase {
 
 		$text = 'This is a <b>test</b> text with URL http://www.cakephp.org';
 		$expected = 'This is a <b>test</b> text with URL <a href="http://www.cakephp.org">http://www.cakephp.org</a>';
-		$result = $this->Text->autoLink($text, array('escape' => false));
+		$result = $this->Text->autoLink($text, array('escape' => FALSE));
 		$this->assertEquals($expected, $result);
 
 		$text = 'test <ul>
@@ -235,100 +309,26 @@ class TextHelperTest extends CakeTestCase {
 		<li>lorem: <a href="http://example.org?some">http://example.org?some</a></li>
 		<li>ipsum: <a href="http://othersite.com/abc">http://othersite.com/abc</a></li>
 		</ul> test';
-		$result = $this->Text->autoLink($text, array('escape' => false));
+		$result = $this->Text->autoLink($text, array('escape' => FALSE));
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * Data provider for autoLinking
- *
- * @return array
- */
-	public static function autoLinkProvider() {
-		return array(
-			array(
-				'This is a test text',
-				'This is a test text',
-			),
-			array(
-				'This is a test that includes (www.cakephp.org)',
-				'This is a test that includes (<a href="http://www.cakephp.org">www.cakephp.org</a>)',
-			),
-			array(
-				'This is a test that includes www.cakephp.org:8080',
-				'This is a test that includes <a href="http://www.cakephp.org:8080">www.cakephp.org:8080</a>',
-			),
-			array(
-				'This is a test that includes http://de.wikipedia.org/wiki/Kanton_(Schweiz)#fragment',
-				'This is a test that includes <a href="http://de.wikipedia.org/wiki/Kanton_(Schweiz)#fragment">http://de.wikipedia.org/wiki/Kanton_(Schweiz)#fragment</a>',
-			),
-			array(
-				'This is a test that includes www.wikipedia.org/wiki/Kanton_(Schweiz)#fragment',
-				'This is a test that includes <a href="http://www.wikipedia.org/wiki/Kanton_(Schweiz)#fragment">www.wikipedia.org/wiki/Kanton_(Schweiz)#fragment</a>',
-			),
-			array(
-				'This is a test that includes http://example.com/test.php?foo=bar text',
-				'This is a test that includes <a href="http://example.com/test.php?foo=bar">http://example.com/test.php?foo=bar</a> text',
-			),
-			array(
-				'This is a test that includes www.example.com/test.php?foo=bar text',
-				'This is a test that includes <a href="http://www.example.com/test.php?foo=bar">www.example.com/test.php?foo=bar</a> text',
-			),
-			array(
-				'Text with a partial www.cakephp.org URL',
-				'Text with a partial <a href="http://www.cakephp.org">www.cakephp.org</a> URL',
-			),
-			array(
-				'Text with a partial WWW.cakephp.org URL',
-				'Text with a partial <a href="http://WWW.cakephp.org">WWW.cakephp.org</a> URL',
-			),
-			array(
-				'Text with a partial WWW.cakephp.org &copy, URL',
-				'Text with a partial <a href="http://WWW.cakephp.org">WWW.cakephp.org</a> &amp;copy, URL',
-			),
-			array(
-				'Text with a url www.cot.ag/cuIb2Q and more',
-				'Text with a url <a href="http://www.cot.ag/cuIb2Q">www.cot.ag/cuIb2Q</a> and more',
-			),
-			array(
-				'Text with a url http://www.does--not--work.com and more',
-				'Text with a url <a href="http://www.does--not--work.com">http://www.does--not--work.com</a> and more',
-			),
-			array(
-				'Text with a url http://www.not--work.com and more',
-				'Text with a url <a href="http://www.not--work.com">http://www.not--work.com</a> and more',
-			),
-			array(
-				'Text with a url http://www.sub_domain.domain.pl and more',
-				'Text with a url <a href="http://www.sub_domain.domain.pl">http://www.sub_domain.domain.pl</a> and more',
-			),
-			array(
-				'Text with a partial www.küchenschöhn-not-working.de URL',
-				'Text with a partial <a href="http://www.küchenschöhn-not-working.de">www.küchenschöhn-not-working.de</a> URL'
-			),
-			array(
-				'Text with a partial http://www.küchenschöhn-not-working.de URL',
-				'Text with a partial <a href="http://www.küchenschöhn-not-working.de">http://www.küchenschöhn-not-working.de</a> URL'
-			),
-		);
-	}
-
-/**
- * testAutoLinkUrls method
- *
- * @dataProvider autoLinkProvider
- * @return void
- */
+	/**
+	 * testAutoLinkUrls method
+	 *
+	 * @dataProvider autoLinkProvider
+	 * @return void
+	 */
 	public function testAutoLinkUrls($text, $expected) {
 		$result = $this->Text->autoLinkUrls($text);
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * Test the options for autoLinkUrls
- *
- * @return void
- */
+	/**
+	 * Test the options for autoLinkUrls
+	 *
+	 * @return void
+	 */
 	public function testAutoLinkUrlsOptions() {
 		$text = 'Text with a partial www.cakephp.org URL';
 		$expected = 'Text with a partial <a href="http://www.cakephp.org" \s*class="link">www.cakephp.org</a> URL';
@@ -337,67 +337,67 @@ class TextHelperTest extends CakeTestCase {
 
 		$text = 'Text with a partial WWW.cakephp.org &copy; URL';
 		$expected = 'Text with a partial <a href="http://WWW.cakephp.org"\s*>WWW.cakephp.org</a> &copy; URL';
-		$result = $this->Text->autoLinkUrls($text, array('escape' => false));
+		$result = $this->Text->autoLinkUrls($text, array('escape' => FALSE));
 		$this->assertRegExp('#^' . $expected . '$#', $result);
 	}
 
-/**
- * Test autoLinkUrls with the escape option.
- *
- * @return void
- */
+	/**
+	 * Test autoLinkUrls with the escape option.
+	 *
+	 * @return void
+	 */
 	public function testAutoLinkUrlsEscape() {
 		$text = 'Text with a partial <a href="http://www.example.com">http://www.example.com</a> link';
 		$expected = 'Text with a partial <a href="http://www.example.com">http://www.example.com</a> link';
-		$result = $this->Text->autoLinkUrls($text, array('escape' => false));
+		$result = $this->Text->autoLinkUrls($text, array('escape' => FALSE));
 		$this->assertEquals($expected, $result);
 
 		$text = 'Text with a partial <a href="http://www.example.com">www.example.com</a> link';
 		$expected = 'Text with a partial <a href="http://www.example.com">www.example.com</a> link';
-		$result = $this->Text->autoLinkUrls($text, array('escape' => false));
+		$result = $this->Text->autoLinkUrls($text, array('escape' => FALSE));
 		$this->assertEquals($expected, $result);
 
 		$text = 'Text with a partial <a href="http://www.cakephp.org">link</a> link';
 		$expected = 'Text with a partial <a href="http://www.cakephp.org">link</a> link';
-		$result = $this->Text->autoLinkUrls($text, array('escape' => false));
+		$result = $this->Text->autoLinkUrls($text, array('escape' => FALSE));
 		$this->assertEquals($expected, $result);
 
 		$text = 'Text with a partial <iframe src="http://www.cakephp.org" /> link';
 		$expected = 'Text with a partial <iframe src="http://www.cakephp.org" /> link';
-		$result = $this->Text->autoLinkUrls($text, array('escape' => false));
+		$result = $this->Text->autoLinkUrls($text, array('escape' => FALSE));
 		$this->assertEquals($expected, $result);
 
 		$text = 'Text with a partial <iframe src="http://www.cakephp.org" /> link';
 		$expected = 'Text with a partial &lt;iframe src=&quot;http://www.cakephp.org&quot; /&gt; link';
-		$result = $this->Text->autoLinkUrls($text, array('escape' => true));
+		$result = $this->Text->autoLinkUrls($text, array('escape' => TRUE));
 		$this->assertEquals($expected, $result);
 
 		$text = 'Text with a url <a href="http://www.not-working-www.com">www.not-working-www.com</a> and more';
 		$expected = 'Text with a url &lt;a href=&quot;http://www.not-working-www.com&quot;&gt;www.not-working-www.com&lt;/a&gt; and more';
-		$result = $this->Text->autoLinkUrls($text, array('escape' => true));
+		$result = $this->Text->autoLinkUrls($text, array('escape' => TRUE));
 		$this->assertEquals($expected, $result);
 
 		$text = 'Text with a url www.not-working-www.com and more';
 		$expected = 'Text with a url <a href="http://www.not-working-www.com">www.not-working-www.com</a> and more';
-		$result = $this->Text->autoLinkUrls($text, array('escape' => false));
+		$result = $this->Text->autoLinkUrls($text, array('escape' => FALSE));
 		$this->assertEquals($expected, $result);
 
 		$text = 'Text with a url http://www.not-working-www.com and more';
 		$expected = 'Text with a url <a href="http://www.not-working-www.com">http://www.not-working-www.com</a> and more';
-		$result = $this->Text->autoLinkUrls($text, array('escape' => false));
+		$result = $this->Text->autoLinkUrls($text, array('escape' => FALSE));
 		$this->assertEquals($expected, $result);
 
 		$text = 'Text with a url http://www.www.not-working-www.com and more';
 		$expected = 'Text with a url <a href="http://www.www.not-working-www.com">http://www.www.not-working-www.com</a> and more';
-		$result = $this->Text->autoLinkUrls($text, array('escape' => false));
+		$result = $this->Text->autoLinkUrls($text, array('escape' => FALSE));
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * Test autoLinkUrls with query strings.
- *
- * @return void
- */
+	/**
+	 * Test autoLinkUrls with query strings.
+	 *
+	 * @return void
+	 */
 	public function testAutoLinkUrlsQueryString() {
 		$text = 'Text with a partial http://www.cakephp.org?product_id=123&foo=bar link';
 		$expected = 'Text with a partial <a href="http://www.cakephp.org?product_id=123&amp;foo=bar">http://www.cakephp.org?product_id=123&amp;foo=bar</a> link';
@@ -405,102 +405,103 @@ class TextHelperTest extends CakeTestCase {
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * Data provider for autoLinkEmail.
- *
- * @return void
- */
+	/**
+	 * Data provider for autoLinkEmail.
+	 *
+	 * @return void
+	 */
 	public function autoLinkEmailProvider() {
 		return array(
-			array(
-				'This is a test text',
-				'This is a test text',
-			),
+				array(
+						'This is a test text',
+						'This is a test text',
+				),
 
-			array(
-				'email@example.com address',
-				'<a href="mailto:email@example.com">email@example.com</a> address',
-			),
+				array(
+						'email@example.com address',
+						'<a href="mailto:email@example.com">email@example.com</a> address',
+				),
 
-			array(
-				'email@example.com address',
-				'<a href="mailto:email@example.com">email@example.com</a> address',
-			),
+				array(
+						'email@example.com address',
+						'<a href="mailto:email@example.com">email@example.com</a> address',
+				),
 
-			array(
-				'(email@example.com) address',
-				'(<a href="mailto:email@example.com">email@example.com</a>) address',
-			),
+				array(
+						'(email@example.com) address',
+						'(<a href="mailto:email@example.com">email@example.com</a>) address',
+				),
 
-			array(
-				'Text with email@example.com address',
-				'Text with <a href="mailto:email@example.com">email@example.com</a> address',
-			),
+				array(
+						'Text with email@example.com address',
+						'Text with <a href="mailto:email@example.com">email@example.com</a> address',
+				),
 
-			array(
-				"Text with o'hare._-bob@example.com address",
-				'Text with <a href="mailto:o&#039;hare._-bob@example.com">o&#039;hare._-bob@example.com</a> address',
-			),
+				array(
+						"Text with o'hare._-bob@example.com address",
+						'Text with <a href="mailto:o&#039;hare._-bob@example.com">o&#039;hare._-bob@example.com</a> address',
+				),
 
-			array(
-				'Text with düsentrieb@küchenschöhn-not-working.de address',
-				'Text with <a href="mailto:düsentrieb@küchenschöhn-not-working.de">düsentrieb@küchenschöhn-not-working.de</a> address',
-			),
+				array(
+						'Text with düsentrieb@küchenschöhn-not-working.de address',
+						'Text with <a href="mailto:düsentrieb@küchenschöhn-not-working.de">düsentrieb@küchenschöhn-not-working.de</a> address',
+				),
 
-			array(
-				'Text with me@subdomain.küchenschöhn.de address',
-				'Text with <a href="mailto:me@subdomain.küchenschöhn.de">me@subdomain.küchenschöhn.de</a> address',
-			),
+				array(
+						'Text with me@subdomain.küchenschöhn.de address',
+						'Text with <a href="mailto:me@subdomain.küchenschöhn.de">me@subdomain.küchenschöhn.de</a> address',
+				),
 
-			array(
-				'Text with email@example.com address',
-				'Text with <a href="mailto:email@example.com" class="link">email@example.com</a> address',
-				array('class' => 'link'),
-			),
+				array(
+						'Text with email@example.com address',
+						'Text with <a href="mailto:email@example.com" class="link">email@example.com</a> address',
+						array('class' => 'link'),
+				),
 
-			array(
-				'<p>mark@example.com</p>',
-				'<p><a href="mailto:mark@example.com">mark@example.com</a></p>',
-				array('escape' => false)
-			),
+				array(
+						'<p>mark@example.com</p>',
+						'<p><a href="mailto:mark@example.com">mark@example.com</a></p>',
+						array('escape' => FALSE)
+				),
 
-			array(
-				'Some&nbsp;mark@example.com&nbsp;Text',
-				'Some&nbsp;<a href="mailto:mark@example.com">mark@example.com</a>&nbsp;Text',
-				array('escape' => false)
-			),
+				array(
+						'Some&nbsp;mark@example.com&nbsp;Text',
+						'Some&nbsp;<a href="mailto:mark@example.com">mark@example.com</a>&nbsp;Text',
+						array('escape' => FALSE)
+				),
 		);
 	}
 
-/**
- * testAutoLinkEmails method
- *
- * @param string $text The text to link
- * @param string $expected The expected results.
- * @dataProvider autoLinkEmailProvider
- * @return void
- */
+	/**
+	 * testAutoLinkEmails method
+	 *
+	 * @param string $text     The text to link
+	 * @param string $expected The expected results.
+	 *
+	 * @dataProvider autoLinkEmailProvider
+	 * @return void
+	 */
 	public function testAutoLinkEmails($text, $expected, $attrs = array()) {
 		$result = $this->Text->autoLinkEmails($text, $attrs);
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * test invalid email addresses.
- *
- * @return void
- */
+	/**
+	 * test invalid email addresses.
+	 *
+	 * @return void
+	 */
 	public function testAutoLinkEmailInvalid() {
 		$result = $this->Text->autoLinkEmails('this is a myaddress@gmx-de test');
 		$expected = 'this is a myaddress@gmx-de test';
 		$this->assertEquals($expected, $result);
 	}
 
-/**
- * testAutoParagraph method
- *
- * @return void
- */
+	/**
+	 * testAutoParagraph method
+	 *
+	 * @return void
+	 */
 	public function testAutoParagraph() {
 		$text = 'This is a test text';
 		$expected = <<<TEXT

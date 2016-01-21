@@ -76,11 +76,11 @@ if (!defined('CAKE_CORE_INCLUDE_PATH')) {
 		ini_set('include_path', ROOT . DS . 'lib' . PATH_SEPARATOR . ini_get('include_path'));
 	}
 	if (!include 'Cake' . DS . 'bootstrap.php') {
-		$failed = true;
+		$failed = TRUE;
 	}
 } else {
 	if (!include CAKE_CORE_INCLUDE_PATH . DS . 'Cake' . DS . 'bootstrap.php') {
-		$failed = true;
+		$failed = TRUE;
 	}
 }
 if (!empty($failed)) {

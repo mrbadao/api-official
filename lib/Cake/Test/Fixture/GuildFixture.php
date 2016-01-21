@@ -23,24 +23,24 @@
  */
 class GuildFixture extends CakeTestFixture {
 
-/**
- * fields property
- *
- * @var array
- */
+	/**
+	 * fields property
+	 *
+	 * @var array
+	 */
 	public $fields = array(
-		'id' => array('type' => 'integer', 'key' => 'primary'),
-		'name' => array('type' => 'string', 'null' => false),
+			'id' => array('type' => 'integer', 'key' => 'primary'),
+			'name' => array('type' => 'string', 'null' => FALSE),
 	);
 
-/**
- * records property
- *
- * @var array
- */
+	/**
+	 * records property
+	 *
+	 * @var array
+	 */
 	public $records = array(
-		array('name' => 'Warriors'),
-		array('name' => 'Rangers'),
-		array('name' => 'Wizards'),
+			array('name' => 'Warriors'),
+			array('name' => 'Rangers'),
+			array('name' => 'Wizards'),
 	);
 }

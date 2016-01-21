@@ -26,32 +26,33 @@ App::uses('AppController', 'Controller');
  * Override this controller by placing a copy in controllers directory of an application
  *
  * @package       Cake.Controller
- * @link http://book.cakephp.org/2.0/en/controllers/pages-controller.html
+ * @link          http://book.cakephp.org/2.0/en/controllers/pages-controller.html
  */
 class PagesController extends AppController {
 
-/**
- * Default helper
- *
- * @var array
- */
+	/**
+	 * Default helper
+	 *
+	 * @var array
+	 */
 	public $helpers = array('Html', 'Session');
 
-/**
- * This controller does not use a model
- *
- * @var array
- */
+	/**
+	 * This controller does not use a model
+	 *
+	 * @var array
+	 */
 	public $uses = array();
 
-/**
- * Displays a view
- *
- * @param mixed What page to display
- * @return void
- * @throws NotFoundException When the view file could not be found
- *	or MissingViewException in debug mode.
- */
+	/**
+	 * Displays a view
+	 *
+	 * @param mixed What page to display
+	 *
+	 * @return void
+	 * @throws NotFoundException When the view file could not be found
+	 *    or MissingViewException in debug mode.
+	 */
 	public function display() {
 		$path = func_get_args();
 
@@ -59,7 +60,7 @@ class PagesController extends AppController {
 		if (!$count) {
 			return $this->redirect('/');
 		}
-		$page = $subpage = $titleForLayout = null;
+		$page = $subpage = $titleForLayout = NULL;
 
 		if (!empty($path[0])) {
 			$page = $path[0];
@@ -71,9 +72,9 @@ class PagesController extends AppController {
 			$titleForLayout = Inflector::humanize($path[$count - 1]);
 		}
 		$this->set(array(
-			'page' => $page,
-			'subpage' => $subpage,
-			'title_for_layout' => $titleForLayout
+				'page' => $page,
+				'subpage' => $subpage,
+				'title_for_layout' => $titleForLayout
 		));
 
 		try {

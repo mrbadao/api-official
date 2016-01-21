@@ -23,30 +23,30 @@
  */
 class AroFixture extends CakeTestFixture {
 
-/**
- * fields property
- *
- * @var array
- */
+	/**
+	 * fields property
+	 *
+	 * @var array
+	 */
 	public $fields = array(
-		'id' => array('type' => 'integer', 'key' => 'primary'),
-		'parent_id' => array('type' => 'integer', 'length' => 10, 'null' => true),
-		'model' => array('type' => 'string', 'null' => true),
-		'foreign_key' => array('type' => 'integer', 'length' => 10, 'null' => true),
-		'alias' => array('type' => 'string', 'default' => ''),
-		'lft' => array('type' => 'integer', 'length' => 10, 'null' => true),
-		'rght' => array('type' => 'integer', 'length' => 10, 'null' => true)
+			'id' => array('type' => 'integer', 'key' => 'primary'),
+			'parent_id' => array('type' => 'integer', 'length' => 10, 'null' => TRUE),
+			'model' => array('type' => 'string', 'null' => TRUE),
+			'foreign_key' => array('type' => 'integer', 'length' => 10, 'null' => TRUE),
+			'alias' => array('type' => 'string', 'default' => ''),
+			'lft' => array('type' => 'integer', 'length' => 10, 'null' => TRUE),
+			'rght' => array('type' => 'integer', 'length' => 10, 'null' => TRUE)
 	);
 
-/**
- * records property
- *
- * @var array
- */
+	/**
+	 * records property
+	 *
+	 * @var array
+	 */
 	public $records = array(
-		array('parent_id' => null, 'model' => null, 'foreign_key' => null, 'alias' => 'ROOT', 'lft' => 1, 'rght' => 8),
-		array('parent_id' => '1', 'model' => 'Group', 'foreign_key' => '1', 'alias' => 'admins', 'lft' => 2, 'rght' => 7),
-		array('parent_id' => '2', 'model' => 'AuthUser', 'foreign_key' => '1', 'alias' => 'Gandalf', 'lft' => 3, 'rght' => 4),
-		array('parent_id' => '2', 'model' => 'AuthUser', 'foreign_key' => '2', 'alias' => 'Elrond', 'lft' => 5, 'rght' => 6)
+			array('parent_id' => NULL, 'model' => NULL, 'foreign_key' => NULL, 'alias' => 'ROOT', 'lft' => 1, 'rght' => 8),
+			array('parent_id' => '1', 'model' => 'Group', 'foreign_key' => '1', 'alias' => 'admins', 'lft' => 2, 'rght' => 7),
+			array('parent_id' => '2', 'model' => 'AuthUser', 'foreign_key' => '1', 'alias' => 'Gandalf', 'lft' => 3, 'rght' => 4),
+			array('parent_id' => '2', 'model' => 'AuthUser', 'foreign_key' => '2', 'alias' => 'Elrond', 'lft' => 5, 'rght' => 6)
 	);
 }

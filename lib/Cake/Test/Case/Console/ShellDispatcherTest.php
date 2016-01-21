@@ -25,74 +25,78 @@ App::uses('ShellDispatcher', 'Console');
  */
 class TestShellDispatcher extends ShellDispatcher {
 
-/**
- * params property
- *
- * @var array
- */
+	/**
+	 * params property
+	 *
+	 * @var array
+	 */
 	public $params = array();
 
-/**
- * stopped property
- *
- * @var string
- */
-	public $stopped = null;
+	/**
+	 * stopped property
+	 *
+	 * @var string
+	 */
+	public $stopped = NULL;
 
-/**
- * TestShell
- *
- * @var mixed
- */
+	/**
+	 * TestShell
+	 *
+	 * @var mixed
+	 */
 	public $TestShell;
 
-/**
- * _initEnvironment method
- *
- * @return void
- */
-	protected function _initEnvironment() {
-	}
-
-/**
- * clear method
- *
- * @return void
- */
+	/**
+	 * clear method
+	 *
+	 * @return void
+	 */
 	public function clear() {
 	}
 
-/**
- * _stop method
- *
- * @return void
- */
-	protected function _stop($status = 0) {
-		$this->stopped = 'Stopped with status: ' . $status;
-		return $status;
-	}
-
-/**
- * getShell
- *
- * @param string $shell
- * @return mixed
- */
+	/**
+	 * getShell
+	 *
+	 * @param string $shell
+	 *
+	 * @return mixed
+	 */
 	public function getShell($shell) {
 		return $this->_getShell($shell);
 	}
 
-/**
- * _getShell
- *
- * @param string $plugin
- * @return mixed
- */
+	/**
+	 * _getShell
+	 *
+	 * @param string $plugin
+	 *
+	 * @return mixed
+	 */
 	protected function _getShell($shell) {
 		if (isset($this->TestShell)) {
 			return $this->TestShell;
 		}
+
 		return parent::_getShell($shell);
+	}
+
+	/**
+	 * _initEnvironment method
+	 *
+	 * @return void
+	 */
+	protected function _initEnvironment() {
+	}
+
+	/**
+	 * _stop method
+	 *
+	 * @return void
+	 */
+	protected function _stop($status = 0) {
+		$this->stopped = 'Stopped with status: ' . $status;
+
+		return $status;
 	}
 
 }
@@ -104,99 +108,99 @@ class TestShellDispatcher extends ShellDispatcher {
  */
 class ShellDispatcherTest extends CakeTestCase {
 
-/**
- * setUp method
- *
- * @return void
- */
+	/**
+	 * setUp method
+	 *
+	 * @return void
+	 */
 	public function setUp() {
 		parent::setUp();
 		App::build(array(
-			'Plugin' => array(
-				CAKE . 'Test' . DS . 'test_app' . DS . 'Plugin' . DS
-			),
-			'Console/Command' => array(
-				CAKE . 'Test' . DS . 'test_app' . DS . 'Console' . DS . 'Command' . DS
-			)
+				'Plugin' => array(
+						CAKE . 'Test' . DS . 'test_app' . DS . 'Plugin' . DS
+				),
+				'Console/Command' => array(
+						CAKE . 'Test' . DS . 'test_app' . DS . 'Console' . DS . 'Command' . DS
+				)
 		), App::RESET);
 		CakePlugin::load('TestPlugin');
 	}
 
-/**
- * tearDown method
- *
- * @return void
- */
+	/**
+	 * tearDown method
+	 *
+	 * @return void
+	 */
 	public function tearDown() {
 		parent::tearDown();
 		CakePlugin::unload();
 	}
 
-/**
- * testParseParams method
- *
- * @return void
- */
+	/**
+	 * testParseParams method
+	 *
+	 * @return void
+	 */
 	public function testParseParams() {
 		$Dispatcher = new TestShellDispatcher();
 
 		$params = array(
-			'/cake/1.2.x.x/cake/console/cake.php',
-			'bake',
-			'-app',
-			'new',
-			'-working',
-			'/var/www/htdocs'
+				'/cake/1.2.x.x/cake/console/cake.php',
+				'bake',
+				'-app',
+				'new',
+				'-working',
+				'/var/www/htdocs'
 		);
 		$expected = array(
-			'app' => 'new',
-			'webroot' => 'webroot',
-			'working' => str_replace('/', DS, '/var/www/htdocs/new'),
-			'root' => str_replace('/', DS, '/var/www/htdocs')
+				'app' => 'new',
+				'webroot' => 'webroot',
+				'working' => str_replace('/', DS, '/var/www/htdocs/new'),
+				'root' => str_replace('/', DS, '/var/www/htdocs')
 		);
 		$Dispatcher->parseParams($params);
 		$this->assertEquals($expected, $Dispatcher->params);
 
 		$params = array('cake.php');
 		$expected = array(
-			'app' => 'app',
-			'webroot' => 'webroot',
-			'working' => str_replace('\\', DS, dirname(CAKE_CORE_INCLUDE_PATH) . DS . 'app'),
-			'root' => str_replace('\\', DS, dirname(CAKE_CORE_INCLUDE_PATH)),
+				'app' => 'app',
+				'webroot' => 'webroot',
+				'working' => str_replace('\\', DS, dirname(CAKE_CORE_INCLUDE_PATH) . DS . 'app'),
+				'root' => str_replace('\\', DS, dirname(CAKE_CORE_INCLUDE_PATH)),
 		);
 		$Dispatcher->params = $Dispatcher->args = array();
 		$Dispatcher->parseParams($params);
 		$this->assertEquals($expected, $Dispatcher->params);
 
 		$params = array(
-			'cake.php',
-			'-app',
-			'new',
+				'cake.php',
+				'-app',
+				'new',
 		);
 		$expected = array(
-			'app' => 'new',
-			'webroot' => 'webroot',
-			'working' => str_replace('\\', DS, dirname(CAKE_CORE_INCLUDE_PATH) . DS . 'new'),
-			'root' => str_replace('\\', DS, dirname(CAKE_CORE_INCLUDE_PATH))
+				'app' => 'new',
+				'webroot' => 'webroot',
+				'working' => str_replace('\\', DS, dirname(CAKE_CORE_INCLUDE_PATH) . DS . 'new'),
+				'root' => str_replace('\\', DS, dirname(CAKE_CORE_INCLUDE_PATH))
 		);
 		$Dispatcher->params = $Dispatcher->args = array();
 		$Dispatcher->parseParams($params);
 		$this->assertEquals($expected, $Dispatcher->params);
 
 		$params = array(
-			'./cake.php',
-			'bake',
-			'-app',
-			'new',
-			'-working',
-			'/cake/1.2.x.x/cake/console'
+				'./cake.php',
+				'bake',
+				'-app',
+				'new',
+				'-working',
+				'/cake/1.2.x.x/cake/console'
 		);
 
 		$expected = array(
-			'app' => 'new',
-			'webroot' => 'webroot',
-			'working' => str_replace('\\', DS, dirname(CAKE_CORE_INCLUDE_PATH) . DS . 'new'),
-			'root' => str_replace('\\', DS, dirname(CAKE_CORE_INCLUDE_PATH))
+				'app' => 'new',
+				'webroot' => 'webroot',
+				'working' => str_replace('\\', DS, dirname(CAKE_CORE_INCLUDE_PATH) . DS . 'new'),
+				'root' => str_replace('\\', DS, dirname(CAKE_CORE_INCLUDE_PATH))
 		);
 
 		$Dispatcher->params = $Dispatcher->args = array();
@@ -204,103 +208,103 @@ class ShellDispatcherTest extends CakeTestCase {
 		$this->assertEquals($expected, $Dispatcher->params);
 
 		$params = array(
-			'./console/cake.php',
-			'bake',
-			'-app',
-			'new',
-			'-working',
-			'/cake/1.2.x.x/cake'
+				'./console/cake.php',
+				'bake',
+				'-app',
+				'new',
+				'-working',
+				'/cake/1.2.x.x/cake'
 		);
 		$expected = array(
-			'app' => 'new',
-			'webroot' => 'webroot',
-			'working' => str_replace('\\', DS, dirname(CAKE_CORE_INCLUDE_PATH) . DS . 'new'),
-			'root' => str_replace('\\', DS, dirname(CAKE_CORE_INCLUDE_PATH))
+				'app' => 'new',
+				'webroot' => 'webroot',
+				'working' => str_replace('\\', DS, dirname(CAKE_CORE_INCLUDE_PATH) . DS . 'new'),
+				'root' => str_replace('\\', DS, dirname(CAKE_CORE_INCLUDE_PATH))
 		);
 		$Dispatcher->params = $Dispatcher->args = array();
 		$Dispatcher->parseParams($params);
 		$this->assertEquals($expected, $Dispatcher->params);
 
 		$params = array(
-			'./console/cake.php',
-			'bake',
-			'-app',
-			'new',
-			'-dry',
-			'-working',
-			'/cake/1.2.x.x/cake'
+				'./console/cake.php',
+				'bake',
+				'-app',
+				'new',
+				'-dry',
+				'-working',
+				'/cake/1.2.x.x/cake'
 		);
 		$expected = array(
-			'app' => 'new',
-			'working' => str_replace('\\', DS, dirname(CAKE_CORE_INCLUDE_PATH) . DS . 'new'),
-			'root' => str_replace('\\', DS, dirname(CAKE_CORE_INCLUDE_PATH)),
-			'webroot' => 'webroot'
+				'app' => 'new',
+				'working' => str_replace('\\', DS, dirname(CAKE_CORE_INCLUDE_PATH) . DS . 'new'),
+				'root' => str_replace('\\', DS, dirname(CAKE_CORE_INCLUDE_PATH)),
+				'webroot' => 'webroot'
 		);
 		$Dispatcher->params = $Dispatcher->args = array();
 		$Dispatcher->parseParams($params);
 		$this->assertEquals($expected, $Dispatcher->params);
 
 		$params = array(
-			'./console/cake.php',
-			'-working',
-			'/cake/1.2.x.x/cake',
-			'schema',
-			'run',
-			'create',
-			'-dry',
-			'-f',
-			'-name',
-			'DbAcl'
+				'./console/cake.php',
+				'-working',
+				'/cake/1.2.x.x/cake',
+				'schema',
+				'run',
+				'create',
+				'-dry',
+				'-f',
+				'-name',
+				'DbAcl'
 		);
 		$expected = array(
-			'app' => 'app',
-			'webroot' => 'webroot',
-			'working' => str_replace('\\', DS, dirname(CAKE_CORE_INCLUDE_PATH) . DS . 'app'),
-			'root' => str_replace('\\', DS, dirname(CAKE_CORE_INCLUDE_PATH)),
+				'app' => 'app',
+				'webroot' => 'webroot',
+				'working' => str_replace('\\', DS, dirname(CAKE_CORE_INCLUDE_PATH) . DS . 'app'),
+				'root' => str_replace('\\', DS, dirname(CAKE_CORE_INCLUDE_PATH)),
 		);
 		$Dispatcher->params = $Dispatcher->args = array();
 		$Dispatcher->parseParams($params);
 		$this->assertEquals($expected, $Dispatcher->params);
 
 		$expected = array(
-			'./console/cake.php', 'schema', 'run', 'create', '-dry', '-f', '-name', 'DbAcl'
+				'./console/cake.php', 'schema', 'run', 'create', '-dry', '-f', '-name', 'DbAcl'
 		);
 		$this->assertEquals($expected, $Dispatcher->args);
 
 		$params = array(
-			'/cake/1.2.x.x/cake/console/cake.php',
-			'-working',
-			'/cake/1.2.x.x/app',
-			'schema',
-			'run',
-			'create',
-			'-dry',
-			'-name',
-			'DbAcl'
+				'/cake/1.2.x.x/cake/console/cake.php',
+				'-working',
+				'/cake/1.2.x.x/app',
+				'schema',
+				'run',
+				'create',
+				'-dry',
+				'-name',
+				'DbAcl'
 		);
 		$expected = array(
-			'app' => 'app',
-			'webroot' => 'webroot',
-			'working' => str_replace('/', DS, '/cake/1.2.x.x/app'),
-			'root' => str_replace('/', DS, '/cake/1.2.x.x'),
+				'app' => 'app',
+				'webroot' => 'webroot',
+				'working' => str_replace('/', DS, '/cake/1.2.x.x/app'),
+				'root' => str_replace('/', DS, '/cake/1.2.x.x'),
 		);
 		$Dispatcher->params = $Dispatcher->args = array();
 		$Dispatcher->parseParams($params);
 		$this->assertEquals($expected, $Dispatcher->params);
 
 		$params = array(
-			'cake.php',
-			'-working',
-			'C:/wamp/www/cake/app',
-			'bake',
-			'-app',
-			'C:/wamp/www/apps/cake/app',
+				'cake.php',
+				'-working',
+				'C:/wamp/www/cake/app',
+				'bake',
+				'-app',
+				'C:/wamp/www/apps/cake/app',
 		);
 		$expected = array(
-			'app' => 'app',
-			'webroot' => 'webroot',
-			'working' => 'C:\wamp\www\apps\cake\app',
-			'root' => 'C:\wamp\www\apps\cake'
+				'app' => 'app',
+				'webroot' => 'webroot',
+				'working' => 'C:\wamp\www\apps\cake\app',
+				'root' => 'C:\wamp\www\apps\cake'
 		);
 
 		$Dispatcher->params = $Dispatcher->args = array();
@@ -308,94 +312,94 @@ class ShellDispatcherTest extends CakeTestCase {
 		$this->assertEquals($expected, $Dispatcher->params);
 
 		$params = array(
-			'cake.php',
-			'-working',
-			'C:\wamp\www\cake\app',
-			'bake',
-			'-app',
-			'C:\wamp\www\apps\cake\app',
+				'cake.php',
+				'-working',
+				'C:\wamp\www\cake\app',
+				'bake',
+				'-app',
+				'C:\wamp\www\apps\cake\app',
 		);
 		$expected = array(
-			'app' => 'app',
-			'webroot' => 'webroot',
-			'working' => 'C:\wamp\www\apps\cake\app',
-			'root' => 'C:\wamp\www\apps\cake'
+				'app' => 'app',
+				'webroot' => 'webroot',
+				'working' => 'C:\wamp\www\apps\cake\app',
+				'root' => 'C:\wamp\www\apps\cake'
 		);
 		$Dispatcher->params = $Dispatcher->args = array();
 		$Dispatcher->parseParams($params);
 		$this->assertEquals($expected, $Dispatcher->params);
 
 		$params = array(
-			'cake.php',
-			'-working',
-			'C:\wamp\www\apps',
-			'bake',
-			'-app',
-			'cake\app',
-			'-url',
-			'http://example.com/some/url/with/a/path'
+				'cake.php',
+				'-working',
+				'C:\wamp\www\apps',
+				'bake',
+				'-app',
+				'cake\app',
+				'-url',
+				'http://example.com/some/url/with/a/path'
 		);
 		$expected = array(
-			'app' => 'app',
-			'webroot' => 'webroot',
-			'working' => 'C:\wamp\www\apps\cake\app',
-			'root' => 'C:\wamp\www\apps\cake',
+				'app' => 'app',
+				'webroot' => 'webroot',
+				'working' => 'C:\wamp\www\apps\cake\app',
+				'root' => 'C:\wamp\www\apps\cake',
 		);
 		$Dispatcher->params = $Dispatcher->args = array();
 		$Dispatcher->parseParams($params);
 		$this->assertEquals($expected, $Dispatcher->params);
 
 		$params = array(
-			'/home/amelo/dev/cake-common/cake/console/cake.php',
-			'-root',
-			'/home/amelo/dev/lsbu-vacancy',
-			'-working',
-			'/home/amelo/dev/lsbu-vacancy',
-			'-app',
-			'app',
+				'/home/amelo/dev/cake-common/cake/console/cake.php',
+				'-root',
+				'/home/amelo/dev/lsbu-vacancy',
+				'-working',
+				'/home/amelo/dev/lsbu-vacancy',
+				'-app',
+				'app',
 		);
 		$expected = array(
-			'app' => 'app',
-			'webroot' => 'webroot',
-			'working' => '/home/amelo/dev/lsbu-vacancy/app',
-			'root' => '/home/amelo/dev/lsbu-vacancy',
+				'app' => 'app',
+				'webroot' => 'webroot',
+				'working' => '/home/amelo/dev/lsbu-vacancy/app',
+				'root' => '/home/amelo/dev/lsbu-vacancy',
 		);
 		$Dispatcher->params = $Dispatcher->args = array();
 		$Dispatcher->parseParams($params);
 		$this->assertEquals($expected, $Dispatcher->params);
 
 		$params = array(
-			'/cake/1.2.x.x/cake/console/cake.php',
-			'bake',
-			'-app',
-			'new',
-			'-app',
-			'old',
-			'-working',
-			'/var/www/htdocs'
+				'/cake/1.2.x.x/cake/console/cake.php',
+				'bake',
+				'-app',
+				'new',
+				'-app',
+				'old',
+				'-working',
+				'/var/www/htdocs'
 		);
 		$expected = array(
-			'app' => 'old',
-			'webroot' => 'webroot',
-			'working' => str_replace('/', DS, '/var/www/htdocs/old'),
-			'root' => str_replace('/', DS, '/var/www/htdocs')
+				'app' => 'old',
+				'webroot' => 'webroot',
+				'working' => str_replace('/', DS, '/var/www/htdocs/old'),
+				'root' => str_replace('/', DS, '/var/www/htdocs')
 		);
 		$Dispatcher->parseParams($params);
 		$this->assertEquals($expected, $Dispatcher->params);
 
 		if (DS === '\\') {
 			$params = array(
-				'cake.php',
-				'-working',
-				'D:\www',
-				'bake',
-				'my_app',
+					'cake.php',
+					'-working',
+					'D:\www',
+					'bake',
+					'my_app',
 			);
 			$expected = array(
-				'working' => 'D:\\\\www',
-				'app' => 'www',
-				'root' => 'D:\\',
-				'webroot' => 'webroot'
+					'working' => 'D:\\\\www',
+					'app' => 'www',
+					'root' => 'D:\\',
+					'webroot' => 'webroot'
 			);
 
 			$Dispatcher->params = $Dispatcher->args = array();
@@ -404,11 +408,11 @@ class ShellDispatcherTest extends CakeTestCase {
 		}
 	}
 
-/**
- * Verify loading of (plugin-) shells
- *
- * @return void
- */
+	/**
+	 * Verify loading of (plugin-) shells
+	 *
+	 * @return void
+	 */
 	public function testGetShell() {
 		$this->skipIf(class_exists('SampleShell'), 'SampleShell Class already loaded.');
 		$this->skipIf(class_exists('ExampleShell'), 'ExampleShell Class already loaded.');
@@ -437,19 +441,19 @@ class ShellDispatcherTest extends CakeTestCase {
 		$this->assertInstanceOf('TestPluginShell', $result);
 	}
 
-/**
- * Verify correct dispatch of Shell subclasses with a main method
- *
- * @return void
- */
+	/**
+	 * Verify correct dispatch of Shell subclasses with a main method
+	 *
+	 * @return void
+	 */
 	public function testDispatchShellWithMain() {
 		$Dispatcher = new TestShellDispatcher();
 		$Shell = $this->getMock('Shell');
 
 		$Shell->expects($this->once())->method('initialize');
 		$Shell->expects($this->once())->method('runCommand')
-			->with(null, array())
-			->will($this->returnValue(true));
+				->with(NULL, array())
+				->will($this->returnValue(TRUE));
 
 		$Dispatcher->TestShell = $Shell;
 
@@ -459,19 +463,19 @@ class ShellDispatcherTest extends CakeTestCase {
 		$this->assertEquals(array(), $Dispatcher->args);
 	}
 
-/**
- * Verify correct dispatch of Shell subclasses without a main method
- *
- * @return void
- */
+	/**
+	 * Verify correct dispatch of Shell subclasses without a main method
+	 *
+	 * @return void
+	 */
 	public function testDispatchShellWithoutMain() {
 		$Dispatcher = new TestShellDispatcher();
 		$Shell = $this->getMock('Shell');
 
 		$Shell->expects($this->once())->method('initialize');
 		$Shell->expects($this->once())->method('runCommand')
-			->with('initdb', array('initdb'))
-			->will($this->returnValue(true));
+				->with('initdb', array('initdb'))
+				->will($this->returnValue(TRUE));
 
 		$Dispatcher->TestShell = $Shell;
 
@@ -480,11 +484,11 @@ class ShellDispatcherTest extends CakeTestCase {
 		$this->assertTrue($result);
 	}
 
-/**
- * Verify correct dispatch of custom classes with a main method
- *
- * @return void
- */
+	/**
+	 * Verify correct dispatch of custom classes with a main method
+	 *
+	 * @return void
+	 */
 	public function testDispatchNotAShellWithMain() {
 		$Dispatcher = new TestShellDispatcher();
 		$methods = get_class_methods('Object');
@@ -493,7 +497,7 @@ class ShellDispatcherTest extends CakeTestCase {
 
 		$Shell->expects($this->never())->method('initialize');
 		$Shell->expects($this->once())->method('startup');
-		$Shell->expects($this->once())->method('main')->will($this->returnValue(true));
+		$Shell->expects($this->once())->method('main')->will($this->returnValue(TRUE));
 		$Dispatcher->TestShell = $Shell;
 
 		$Dispatcher->args = array('mock_with_main_not_a');
@@ -502,7 +506,7 @@ class ShellDispatcherTest extends CakeTestCase {
 		$this->assertEquals(array(), $Dispatcher->args);
 
 		$Shell = $this->getMock('Object', $methods);
-		$Shell->expects($this->once())->method('initdb')->will($this->returnValue(true));
+		$Shell->expects($this->once())->method('initdb')->will($this->returnValue(TRUE));
 		$Shell->expects($this->once())->method('startup');
 		$Dispatcher->TestShell = $Shell;
 
@@ -511,11 +515,11 @@ class ShellDispatcherTest extends CakeTestCase {
 		$this->assertTrue($result);
 	}
 
-/**
- * Verify correct dispatch of custom classes without a main method
- *
- * @return void
- */
+	/**
+	 * Verify correct dispatch of custom classes without a main method
+	 *
+	 * @return void
+	 */
 	public function testDispatchNotAShellWithoutMain() {
 		$Dispatcher = new TestShellDispatcher();
 		$methods = get_class_methods('Object');
@@ -524,7 +528,7 @@ class ShellDispatcherTest extends CakeTestCase {
 
 		$Shell->expects($this->never())->method('initialize');
 		$Shell->expects($this->once())->method('startup');
-		$Shell->expects($this->once())->method('main')->will($this->returnValue(true));
+		$Shell->expects($this->once())->method('main')->will($this->returnValue(TRUE));
 		$Dispatcher->TestShell = $Shell;
 
 		$Dispatcher->args = array('mock_without_main_not_a');
@@ -533,7 +537,7 @@ class ShellDispatcherTest extends CakeTestCase {
 		$this->assertEquals(array(), $Dispatcher->args);
 
 		$Shell = $this->getMock('Object', $methods);
-		$Shell->expects($this->once())->method('initdb')->will($this->returnValue(true));
+		$Shell->expects($this->once())->method('initdb')->will($this->returnValue(TRUE));
 		$Shell->expects($this->once())->method('startup');
 		$Dispatcher->TestShell = $Shell;
 
@@ -542,11 +546,11 @@ class ShellDispatcherTest extends CakeTestCase {
 		$this->assertTrue($result);
 	}
 
-/**
- * Verify shifting of arguments
- *
- * @return void
- */
+	/**
+	 * Verify shifting of arguments
+	 *
+	 * @return void
+	 */
 	public function testShiftArgs() {
 		$Dispatcher = new TestShellDispatcher();
 

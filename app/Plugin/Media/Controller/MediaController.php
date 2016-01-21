@@ -1,22 +1,22 @@
 <?php
-	/**
-	 * @author  : hieunc
-	 * @project api-official.
-	 * @Date    : 18/12/2015
-	 * @Time    : 14:53
-	 */
+/**
+ * @author  : hieunc
+ * @project api-official.
+ * @Date    : 18/12/2015
+ * @Time    : 14:53
+ */
 
-	App::uses('BaseController', 'Controller');
+App::uses('BaseController', 'Controller');
 
+/**
+ * Class MediaController
+ *
+ */
+class MediaController extends BaseController {
 	/**
-	 * Class MediaController
-	 *
+	 * @medthod index()
 	 */
-	class MediaController extends BaseController {
-		/**
-		 * @medthod index()
-		 */
-		public function index() {
-			var_dump($this->layoutPath);
-		}
+	public function index() {
+		var_dump($this->layoutPath);
 	}
+}

@@ -24,66 +24,66 @@ App::uses('Validation', 'Utility');
 /**
  * Task class for creating and updating model files.
  *
- * @package	   Cake.Console.Command.Task
+ * @package       Cake.Console.Command.Task
  */
 class ModelTask extends BakeTask {
 
-/**
- * path to Model directory
- *
- * @var string
- */
-	public $path = null;
+	/**
+	 * path to Model directory
+	 *
+	 * @var string
+	 */
+	public $path = NULL;
 
-/**
- * tasks
- *
- * @var array
- */
+	/**
+	 * tasks
+	 *
+	 * @var array
+	 */
 	public $tasks = array('DbConfig', 'Fixture', 'Test', 'Template');
 
-/**
- * Tables to skip when running all()
- *
- * @var array
- */
+	/**
+	 * Tables to skip when running all()
+	 *
+	 * @var array
+	 */
 	public $skipTables = array('i18n');
 
-/**
- * Holds tables found on connection.
- *
- * @var array
- */
+	/**
+	 * Holds tables found on connection.
+	 *
+	 * @var array
+	 */
 	protected $_tables = array();
 
-/**
- * Holds the model names
- *
- * @var array
- */
+	/**
+	 * Holds the model names
+	 *
+	 * @var array
+	 */
 	protected $_modelNames = array();
 
-/**
- * Holds validation method map.
- *
- * @var array
- */
+	/**
+	 * Holds validation method map.
+	 *
+	 * @var array
+	 */
 	protected $_validations = array();
 
-/**
- * Override initialize
- *
- * @return void
- */
+	/**
+	 * Override initialize
+	 *
+	 * @return void
+	 */
 	public function initialize() {
 		$this->path = current(App::path('Model'));
 	}
 
-/**
- * Execution method always used for tasks
- *
- * @return void
- */
+	/**
+	 * Execution method always used for tasks
+	 *
+	 * @return void
+	 */
 	public function execute() {
 		parent::execute();
 
@@ -92,7 +92,7 @@ class ModelTask extends BakeTask {
 		}
 
 		if (!empty($this->args[0])) {
-			$this->interactive = false;
+			$this->interactive = FALSE;
 			if (!isset($this->connection)) {
 				$this->connection = 'default';
 			}
@@ -103,7 +103,7 @@ class ModelTask extends BakeTask {
 			$this->listAll($this->connection);
 			$useTable = $this->getTable($model);
 			$object = $this->_getModelObject($model, $useTable);
-			if ($this->bake($object, false)) {
+			if ($this->bake($object, FALSE)) {
 				if ($this->_checkUnitTest()) {
 					$this->bakeFixture($model, $useTable);
 					$this->bakeTest($model);
@@ -112,87 +112,16 @@ class ModelTask extends BakeTask {
 		}
 	}
 
-/**
- * Bake all models at once.
- *
- * @return void
- */
-	public function all() {
-		$this->listAll($this->connection, false);
-		$unitTestExists = $this->_checkUnitTest();
-		foreach ($this->_tables as $table) {
-			if (in_array($table, $this->skipTables)) {
-				continue;
-			}
-			$modelClass = Inflector::classify($table);
-			$this->out(__d('cake_console', 'Baking %s', $modelClass));
-			$object = $this->_getModelObject($modelClass, $table);
-			if ($this->bake($object, false) && $unitTestExists) {
-				$this->bakeFixture($modelClass, $table);
-				$this->bakeTest($modelClass);
-			}
-		}
-	}
-
-/**
- * Get a model object for a class name.
- *
- * @param string $className Name of class you want model to be.
- * @param string $table Table name
- * @return Model Model instance
- */
-	protected function _getModelObject($className, $table = null) {
-		if (!$table) {
-			$table = Inflector::tableize($className);
-		}
-		$object = new Model(array('name' => $className, 'table' => $table, 'ds' => $this->connection));
-		$fields = $object->schema(true);
-		foreach ($fields as $name => $field) {
-			if (isset($field['key']) && $field['key'] === 'primary') {
-				$object->primaryKey = $name;
-				break;
-			}
-		}
-		return $object;
-	}
-
-/**
- * Generate a key value list of options and a prompt.
- *
- * @param array $options Array of options to use for the selections. indexes must start at 0
- * @param string $prompt Prompt to use for options list.
- * @param int $default The default option for the given prompt.
- * @return int Result of user choice.
- */
-	public function inOptions($options, $prompt = null, $default = null) {
-		$valid = false;
-		$max = count($options);
-		while (!$valid) {
-			$len = strlen(count($options) + 1);
-			foreach ($options as $i => $option) {
-				$this->out(sprintf("%${len}d. %s", $i + 1, $option));
-			}
-			if (empty($prompt)) {
-				$prompt = __d('cake_console', 'Make a selection from the choices above');
-			}
-			$choice = $this->in($prompt, null, $default);
-			if ((int)$choice > 0 && (int)$choice <= $max) {
-				$valid = true;
-			}
-		}
-		return $choice - 1;
-	}
-
-/**
- * Handles interactive baking
- *
- * @return bool
- */
+	/**
+	 * Handles interactive baking
+	 *
+	 * @return bool
+	 */
 	protected function _interactive() {
 		$this->hr();
 		$this->out(__d('cake_console', "Bake Model\nPath: %s", $this->getPath()));
 		$this->hr();
-		$this->interactive = true;
+		$this->interactive = TRUE;
 
 		$primaryKey = 'id';
 		$validate = $associations = array();
@@ -208,16 +137,16 @@ class ModelTask extends BakeTask {
 			$prompt = __d('cake_console', "The table %s doesn't exist or could not be automatically detected\ncontinue anyway?", $useTable);
 			$continue = $this->in($prompt, array('y', 'n'));
 			if (strtolower($continue) === 'n') {
-				return false;
+				return FALSE;
 			}
 		}
 
 		$tempModel = new Model(array('name' => $currentModelName, 'table' => $useTable, 'ds' => $this->connection));
 
-		$knownToExist = false;
+		$knownToExist = FALSE;
 		try {
-			$fields = $tempModel->schema(true);
-			$knownToExist = true;
+			$fields = $tempModel->schema(TRUE);
+			$knownToExist = TRUE;
 		} catch (Exception $e) {
 			$fields = array($tempModel->primaryKey);
 		}
@@ -233,7 +162,7 @@ class ModelTask extends BakeTask {
 
 			$prompt = __d('cake_console', "Would you like to supply validation criteria \nfor the fields in your model?");
 			$wannaDoValidation = $this->in($prompt, array('y', 'n'), 'y');
-			if (array_search($useTable, $this->_tables) !== false && strtolower($wannaDoValidation) === 'y') {
+			if (array_search($useTable, $this->_tables) !== FALSE && strtolower($wannaDoValidation) === 'y') {
 				$validate = $this->doValidation($tempModel);
 			}
 
@@ -260,7 +189,7 @@ class ModelTask extends BakeTask {
 			$this->out(__d('cake_console', 'Primary Key: %s', $primaryKey));
 		}
 		if (!empty($validate)) {
-			$this->out(__d('cake_console', 'Validation: %s', print_r($validate, true)));
+			$this->out(__d('cake_console', 'Validation: %s', print_r($validate, TRUE)));
 		}
 		if (!empty($associations)) {
 			$this->out(__d('cake_console', 'Associations:'));
@@ -283,33 +212,149 @@ class ModelTask extends BakeTask {
 				}
 			}
 		} else {
-			return false;
+			return FALSE;
 		}
 	}
 
-/**
- * Print out all the associations of a particular type
- *
- * @param string $modelName Name of the model relations belong to.
- * @param string $type Name of association you want to see. i.e. 'belongsTo'
- * @param string $associations Collection of associations.
- * @return void
- */
-	protected function _printAssociation($modelName, $type, $associations) {
-		if (!empty($associations[$type])) {
-			for ($i = 0, $len = count($associations[$type]); $i < $len; $i++) {
-				$out = "\t" . $modelName . ' ' . $type . ' ' . $associations[$type][$i]['alias'];
-				$this->out($out);
+	/**
+	 * Forces the user to specify the model he wants to bake, and returns the selected model name.
+	 *
+	 * @param string $useDbConfig Database config name
+	 *
+	 * @return string The model name
+	 */
+	public function getName($useDbConfig = NULL) {
+		$this->listAll($useDbConfig);
+
+		$enteredModel = '';
+
+		while (!$enteredModel) {
+			$enteredModel = $this->in(__d('cake_console', "Enter a number from the list above,\n" .
+					"type in the name of another model, or 'q' to exit"), NULL, 'q');
+
+			if ($enteredModel === 'q') {
+				$this->out(__d('cake_console', 'Exit'));
+
+				return $this->_stop();
+			}
+
+			if (!$enteredModel || (int)$enteredModel > count($this->_modelNames)) {
+				$this->err(__d('cake_console', "The model name you supplied was empty,\n" .
+						"or the number you selected was not an option. Please try again."));
+				$enteredModel = '';
 			}
 		}
+		if ((int)$enteredModel > 0 && (int)$enteredModel <= count($this->_modelNames)) {
+			return $this->_modelNames[(int)$enteredModel - 1];
+		}
+
+		return $enteredModel;
 	}
 
-/**
- * Finds a primary Key in a list of fields.
- *
- * @param array $fields Array of fields that might have a primary key.
- * @return string Name of field that is a primary key.
- */
+	/**
+	 * outputs the a list of possible models or controllers from database
+	 *
+	 * @param string $useDbConfig Database configuration name
+	 *
+	 * @return array
+	 */
+	public function listAll($useDbConfig = NULL) {
+		$this->_tables = $this->getAllTables($useDbConfig);
+
+		$this->_modelNames = array();
+		$count = count($this->_tables);
+		for ($i = 0; $i < $count; $i++) {
+			$this->_modelNames[] = $this->_modelName($this->_tables[$i]);
+		}
+		if ($this->interactive === TRUE) {
+			$this->out(__d('cake_console', 'Possible Models based on your current database:'));
+			$len = strlen($count + 1);
+			for ($i = 0; $i < $count; $i++) {
+				$this->out(sprintf("%${len}d. %s", $i + 1, $this->_modelNames[$i]));
+			}
+		}
+
+		return $this->_tables;
+	}
+
+	/**
+	 * Get an Array of all the tables in the supplied connection
+	 * will halt the script if no tables are found.
+	 *
+	 * @param string $useDbConfig Connection name to scan.
+	 *
+	 * @return array Array of tables in the database.
+	 */
+	public function getAllTables($useDbConfig = NULL) {
+		if (!isset($useDbConfig)) {
+			$useDbConfig = $this->connection;
+		}
+
+		$tables = array();
+		$db = ConnectionManager::getDataSource($useDbConfig);
+		$db->cacheSources = FALSE;
+		$usePrefix = empty($db->config['prefix']) ? '' : $db->config['prefix'];
+		if ($usePrefix) {
+			foreach ($db->listSources() as $table) {
+				if (!strncmp($table, $usePrefix, strlen($usePrefix))) {
+					$tables[] = substr($table, strlen($usePrefix));
+				}
+			}
+		} else {
+			$tables = $db->listSources();
+		}
+		if (empty($tables)) {
+			$this->err(__d('cake_console', 'Your database does not have any tables.'));
+
+			return $this->_stop();
+		}
+		sort($tables);
+
+		return $tables;
+	}
+
+	/**
+	 * Interact with the user to determine the table name of a particular model
+	 *
+	 * @param string $modelName   Name of the model you want a table for.
+	 * @param string $useDbConfig Name of the database config you want to get tables from.
+	 *
+	 * @return string Table name
+	 */
+	public function getTable($modelName, $useDbConfig = NULL) {
+		$useTable = Inflector::tableize($modelName);
+		if (in_array($modelName, $this->_modelNames)) {
+			$modelNames = array_flip($this->_modelNames);
+			$useTable = $this->_tables[$modelNames[$modelName]];
+		}
+
+		if ($this->interactive === TRUE) {
+			if (!isset($useDbConfig)) {
+				$useDbConfig = $this->connection;
+			}
+			$db = ConnectionManager::getDataSource($useDbConfig);
+			$fullTableName = $db->fullTableName($useTable, FALSE);
+			$tableIsGood = FALSE;
+			if (array_search($useTable, $this->_tables) === FALSE) {
+				$this->out();
+				$this->out(__d('cake_console', "Given your model named '%s',\nCake would expect a database table named '%s'", $modelName, $fullTableName));
+				$tableIsGood = $this->in(__d('cake_console', 'Do you want to use this table?'), array('y', 'n'), 'y');
+			}
+			if (strtolower($tableIsGood) === 'n') {
+				$useTable = $this->in(__d('cake_console', 'What is the name of the table (without prefix)?'));
+			}
+		}
+
+		return $useTable;
+	}
+
+	/**
+	 * Finds a primary Key in a list of fields.
+	 *
+	 * @param array $fields Array of fields that might have a primary key.
+	 *
+	 * @return string Name of field that is a primary key.
+	 */
 	public function findPrimaryKey($fields) {
 		$name = 'id';
 		foreach ($fields as $name => $field) {
@@ -317,51 +362,84 @@ class ModelTask extends BakeTask {
 				break;
 			}
 		}
-		return $this->in(__d('cake_console', 'What is the primaryKey?'), null, $name);
+
+		return $this->in(__d('cake_console', 'What is the primaryKey?'), NULL, $name);
 	}
 
-/**
- * interact with the user to find the displayField value for a model.
- *
- * @param array $fields Array of fields to look for and choose as a displayField
- * @return mixed Name of field to use for displayField or false if the user declines to choose
- */
+	/**
+	 * interact with the user to find the displayField value for a model.
+	 *
+	 * @param array $fields Array of fields to look for and choose as a displayField
+	 *
+	 * @return mixed Name of field to use for displayField or false if the user declines to choose
+	 */
 	public function findDisplayField($fields) {
 		$fieldNames = array_keys($fields);
 		$prompt = __d('cake_console', "A displayField could not be automatically detected\nwould you like to choose one?");
 		$continue = $this->in($prompt, array('y', 'n'));
 		if (strtolower($continue) === 'n') {
-			return false;
+			return FALSE;
 		}
 		$prompt = __d('cake_console', 'Choose a field from the options above:');
 		$choice = $this->inOptions($fieldNames, $prompt);
+
 		return $fieldNames[$choice];
 	}
 
-/**
- * Handles Generation and user interaction for creating validation.
- *
- * @param Model $model Model to have validations generated for.
- * @return array validate Array of user selected validations.
- */
+	/**
+	 * Generate a key value list of options and a prompt.
+	 *
+	 * @param array  $options Array of options to use for the selections. indexes must start at 0
+	 * @param string $prompt  Prompt to use for options list.
+	 * @param int    $default The default option for the given prompt.
+	 *
+	 * @return int Result of user choice.
+	 */
+	public function inOptions($options, $prompt = NULL, $default = NULL) {
+		$valid = FALSE;
+		$max = count($options);
+		while (!$valid) {
+			$len = strlen(count($options) + 1);
+			foreach ($options as $i => $option) {
+				$this->out(sprintf("%${len}d. %s", $i + 1, $option));
+			}
+			if (empty($prompt)) {
+				$prompt = __d('cake_console', 'Make a selection from the choices above');
+			}
+			$choice = $this->in($prompt, NULL, $default);
+			if ((int)$choice > 0 && (int)$choice <= $max) {
+				$valid = TRUE;
+			}
+		}
+
+		return $choice - 1;
+	}
+
+	/**
+	 * Handles Generation and user interaction for creating validation.
+	 *
+	 * @param Model $model Model to have validations generated for.
+	 *
+	 * @return array validate Array of user selected validations.
+	 */
 	public function doValidation($model) {
 		if (!$model instanceof Model) {
-			return false;
+			return FALSE;
 		}
 
 		$fields = $model->schema();
 		if (empty($fields)) {
-			return false;
+			return FALSE;
 		}
 
-		$skipFields = false;
+		$skipFields = FALSE;
 		$validate = array();
 		$this->initValidations();
 		foreach ($fields as $fieldName => $field) {
 			$validation = $this->fieldValidation($fieldName, $field, $model->primaryKey);
 			if (isset($validation['_skipFields'])) {
 				unset($validation['_skipFields']);
-				$skipFields = true;
+				$skipFields = TRUE;
 			}
 			if (!empty($validation)) {
 				$validate[$fieldName] = $validation;
@@ -370,14 +448,15 @@ class ModelTask extends BakeTask {
 				return $validate;
 			}
 		}
+
 		return $validate;
 	}
 
-/**
- * Populate the _validations array
- *
- * @return void
- */
+	/**
+	 * Populate the _validations array
+	 *
+	 * @return void
+	 */
 	public function initValidations() {
 		$options = $choices = array();
 		if (class_exists('Validation')) {
@@ -395,23 +474,25 @@ class ModelTask extends BakeTask {
 		}
 		$choices[$default] = 'none'; // Needed since index starts at 1
 		$this->_validations = $choices;
+
 		return $choices;
 	}
 
-/**
- * Does individual field validation handling.
- *
- * @param string $fieldName Name of field to be validated.
- * @param array $metaData metadata for field
- * @param string $primaryKey The primary key field.
- * @return array Array of validation for the field.
- */
+	/**
+	 * Does individual field validation handling.
+	 *
+	 * @param string $fieldName  Name of field to be validated.
+	 * @param array  $metaData   metadata for field
+	 * @param string $primaryKey The primary key field.
+	 *
+	 * @return array Array of validation for the field.
+	 */
 	public function fieldValidation($fieldName, $metaData, $primaryKey = 'id') {
 		$defaultChoice = count($this->_validations);
 		$validate = $alreadyChosen = array();
 
 		$prompt = __d('cake_console',
-			"or enter in a valid regex validation string.\nAlternatively [s] skip the rest of the fields.\n"
+				"or enter in a valid regex validation string.\nAlternatively [s] skip the rest of the fields.\n"
 		);
 		$methods = array_flip($this->_validations);
 
@@ -467,10 +548,11 @@ class ModelTask extends BakeTask {
 				}
 			}
 
-			if ($this->interactive === true) {
-				$choice = $this->in($prompt, null, $guess);
+			if ($this->interactive === TRUE) {
+				$choice = $this->in($prompt, NULL, $guess);
 				if ($choice === 's') {
-					$validate['_skipFields'] = true;
+					$validate['_skipFields'] = TRUE;
+
 					return $validate;
 				}
 				if (in_array($choice, $alreadyChosen)) {
@@ -501,31 +583,34 @@ class ModelTask extends BakeTask {
 			$anotherValidator = 'n';
 			if ($this->interactive && $choice != $defaultChoice) {
 				$anotherValidator = $this->in(__d('cake_console', "Would you like to add another validation rule\n" .
-					"or skip the rest of the fields?"), array('y', 'n', 's'), 'n');
+						"or skip the rest of the fields?"), array('y', 'n', 's'), 'n');
 				if ($anotherValidator === 's') {
-					$validate['_skipFields'] = true;
+					$validate['_skipFields'] = TRUE;
+
 					return $validate;
 				}
 			}
 		}
+
 		return $validate;
 	}
 
-/**
- * Handles associations
- *
- * @param Model $model The model object
- * @return array Associations
- */
+	/**
+	 * Handles associations
+	 *
+	 * @param Model $model The model object
+	 *
+	 * @return array Associations
+	 */
 	public function doAssociations($model) {
 		if (!$model instanceof Model) {
-			return false;
+			return FALSE;
 		}
-		if ($this->interactive === true) {
+		if ($this->interactive === TRUE) {
 			$this->out(__d('cake_console', 'One moment while the associations are detected.'));
 		}
 
-		$fields = $model->schema(true);
+		$fields = $model->schema(TRUE);
 		if (empty($fields)) {
 			return array();
 		}
@@ -535,21 +620,21 @@ class ModelTask extends BakeTask {
 		}
 
 		$associations = array(
-			'belongsTo' => array(),
-			'hasMany' => array(),
-			'hasOne' => array(),
-			'hasAndBelongsToMany' => array()
+				'belongsTo' => array(),
+				'hasMany' => array(),
+				'hasOne' => array(),
+				'hasAndBelongsToMany' => array()
 		);
 
 		$associations = $this->findBelongsTo($model, $associations);
 		$associations = $this->findHasOneAndMany($model, $associations);
 		$associations = $this->findHasAndBelongsToMany($model, $associations);
 
-		if ($this->interactive !== true) {
+		if ($this->interactive !== TRUE) {
 			unset($associations['hasOne']);
 		}
 
-		if ($this->interactive === true) {
+		if ($this->interactive === TRUE) {
 			$this->hr();
 			if (empty($associations)) {
 				$this->out(__d('cake_console', 'None found.'));
@@ -560,74 +645,54 @@ class ModelTask extends BakeTask {
 			}
 			$associations = $this->doMoreAssociations($model, $associations);
 		}
+
 		return $associations;
 	}
 
-/**
- * Handles behaviors
- *
- * @param Model $model The model object.
- * @return array Behaviors
- */
-	public function doActsAs($model) {
-		if (!$model instanceof Model) {
-			return false;
-		}
-		$behaviors = array();
-		$fields = $model->schema(true);
-		if (empty($fields)) {
-			return array();
-		}
-
-		if (isset($fields['lft']) && $fields['lft']['type'] === 'integer' &&
-			isset($fields['rght']) && $fields['rght']['type'] === 'integer' &&
-			isset($fields['parent_id'])) {
-			$behaviors[] = 'Tree';
-		}
-		return $behaviors;
-	}
-
-/**
- * Find belongsTo relations and add them to the associations list.
- *
- * @param Model $model Model instance of model being generated.
- * @param array $associations Array of in progress associations
- * @return array Associations with belongsTo added in.
- */
+	/**
+	 * Find belongsTo relations and add them to the associations list.
+	 *
+	 * @param Model $model        Model instance of model being generated.
+	 * @param array $associations Array of in progress associations
+	 *
+	 * @return array Associations with belongsTo added in.
+	 */
 	public function findBelongsTo(Model $model, $associations) {
-		$fieldNames = array_keys($model->schema(true));
+		$fieldNames = array_keys($model->schema(TRUE));
 		foreach ($fieldNames as $fieldName) {
 			$offset = substr($fieldName, -3) === '_id';
-			if ($fieldName != $model->primaryKey && $fieldName !== 'parent_id' && $offset !== false) {
+			if ($fieldName != $model->primaryKey && $fieldName !== 'parent_id' && $offset !== FALSE) {
 				$tmpModelName = $this->_modelNameFromKey($fieldName);
 				$associations['belongsTo'][] = array(
-					'alias' => $tmpModelName,
-					'className' => $tmpModelName,
-					'foreignKey' => $fieldName,
+						'alias' => $tmpModelName,
+						'className' => $tmpModelName,
+						'foreignKey' => $fieldName,
 				);
 			} elseif ($fieldName === 'parent_id') {
 				$associations['belongsTo'][] = array(
-					'alias' => 'Parent' . $model->name,
-					'className' => $model->name,
-					'foreignKey' => $fieldName,
+						'alias' => 'Parent' . $model->name,
+						'className' => $model->name,
+						'foreignKey' => $fieldName,
 				);
 			}
 		}
+
 		return $associations;
 	}
 
-/**
- * Find the hasOne and hasMany relations and add them to associations list
- *
- * @param Model $model Model instance being generated
- * @param array $associations Array of in progress associations
- * @return array Associations with hasOne and hasMany added in.
- */
+	/**
+	 * Find the hasOne and hasMany relations and add them to associations list
+	 *
+	 * @param Model $model        Model instance being generated
+	 * @param array $associations Array of in progress associations
+	 *
+	 * @return array Associations with hasOne and hasMany added in.
+	 */
 	public function findHasOneAndMany(Model $model, $associations) {
 		$foreignKey = $this->_modelKey($model->name);
 		foreach ($this->_tables as $otherTable) {
 			$tempOtherModel = $this->_getModelObject($this->_modelName($otherTable), $otherTable);
-			$tempFieldNames = array_keys($tempOtherModel->schema(true));
+			$tempFieldNames = array_keys($tempOtherModel->schema(TRUE));
 
 			$pattern = '/_' . preg_quote($model->table, '/') . '|' . preg_quote($model->table, '/') . '_/';
 			$possibleJoinTable = preg_match($pattern, $otherTable);
@@ -635,18 +700,18 @@ class ModelTask extends BakeTask {
 				continue;
 			}
 			foreach ($tempFieldNames as $fieldName) {
-				$assoc = false;
+				$assoc = FALSE;
 				if ($fieldName !== $model->primaryKey && $fieldName === $foreignKey) {
 					$assoc = array(
-						'alias' => $tempOtherModel->name,
-						'className' => $tempOtherModel->name,
-						'foreignKey' => $fieldName
+							'alias' => $tempOtherModel->name,
+							'className' => $tempOtherModel->name,
+							'foreignKey' => $fieldName
 					);
 				} elseif ($otherTable === $model->table && $fieldName === 'parent_id') {
 					$assoc = array(
-						'alias' => 'Child' . $model->name,
-						'className' => $model->name,
-						'foreignKey' => $fieldName
+							'alias' => 'Child' . $model->name,
+							'className' => $model->name,
+							'foreignKey' => $fieldName
 					);
 				}
 				if ($assoc) {
@@ -656,49 +721,77 @@ class ModelTask extends BakeTask {
 
 			}
 		}
+
 		return $associations;
 	}
 
-/**
- * Find the hasAndBelongsToMany relations and add them to associations list
- *
- * @param Model $model Model instance being generated
- * @param array $associations Array of in-progress associations
- * @return array Associations with hasAndBelongsToMany added in.
- */
+	/**
+	 * Get a model object for a class name.
+	 *
+	 * @param string $className Name of class you want model to be.
+	 * @param string $table     Table name
+	 *
+	 * @return Model Model instance
+	 */
+	protected function _getModelObject($className, $table = NULL) {
+		if (!$table) {
+			$table = Inflector::tableize($className);
+		}
+		$object = new Model(array('name' => $className, 'table' => $table, 'ds' => $this->connection));
+		$fields = $object->schema(TRUE);
+		foreach ($fields as $name => $field) {
+			if (isset($field['key']) && $field['key'] === 'primary') {
+				$object->primaryKey = $name;
+				break;
+			}
+		}
+
+		return $object;
+	}
+
+	/**
+	 * Find the hasAndBelongsToMany relations and add them to associations list
+	 *
+	 * @param Model $model        Model instance being generated
+	 * @param array $associations Array of in-progress associations
+	 *
+	 * @return array Associations with hasAndBelongsToMany added in.
+	 */
 	public function findHasAndBelongsToMany(Model $model, $associations) {
 		$foreignKey = $this->_modelKey($model->name);
 		foreach ($this->_tables as $otherTable) {
-			$tableName = null;
+			$tableName = NULL;
 			$offset = strpos($otherTable, $model->table . '_');
 			$otherOffset = strpos($otherTable, '_' . $model->table);
 
-			if ($offset !== false) {
+			if ($offset !== FALSE) {
 				$tableName = substr($otherTable, strlen($model->table . '_'));
-			} elseif ($otherOffset !== false) {
+			} elseif ($otherOffset !== FALSE) {
 				$tableName = substr($otherTable, 0, $otherOffset);
 			}
 			if ($tableName && in_array($tableName, $this->_tables)) {
 				$habtmName = $this->_modelName($tableName);
 				$associations['hasAndBelongsToMany'][] = array(
-					'alias' => $habtmName,
-					'className' => $habtmName,
-					'foreignKey' => $foreignKey,
-					'associationForeignKey' => $this->_modelKey($habtmName),
-					'joinTable' => $otherTable
+						'alias' => $habtmName,
+						'className' => $habtmName,
+						'foreignKey' => $foreignKey,
+						'associationForeignKey' => $this->_modelKey($habtmName),
+						'joinTable' => $otherTable
 				);
 			}
 		}
+
 		return $associations;
 	}
 
-/**
- * Interact with the user and confirm associations.
- *
- * @param array $model Temporary Model instance.
- * @param array $associations Array of associations to be confirmed.
- * @return array Array of confirmed associations
- */
+	/**
+	 * Interact with the user and confirm associations.
+	 *
+	 * @param array $model        Temporary Model instance.
+	 * @param array $associations Array of associations to be confirmed.
+	 *
+	 * @return array Array of confirmed associations
+	 */
 	public function confirmAssociations(Model $model, $associations) {
 		foreach ($associations as $type => $settings) {
 			if (!empty($associations[$type])) {
@@ -715,16 +808,18 @@ class ModelTask extends BakeTask {
 				$associations[$type] = array_merge($associations[$type]);
 			}
 		}
+
 		return $associations;
 	}
 
-/**
- * Interact with the user and generate additional non-conventional associations
- *
- * @param Model $model Temporary model instance
- * @param array $associations Array of associations.
- * @return array Array of associations.
- */
+	/**
+	 * Interact with the user and generate additional non-conventional associations
+	 *
+	 * @param Model $model        Temporary model instance
+	 * @param array $associations Array of associations.
+	 *
+	 * @return array Array of associations.
+	 */
 	public function doMoreAssociations(Model $model, $associations) {
 		$prompt = __d('cake_console', 'Would you like to define some additional model associations?');
 		$wannaDoMoreAssoc = $this->in($prompt, array('y', 'n'), 'n');
@@ -735,17 +830,17 @@ class ModelTask extends BakeTask {
 			$assocType = (int)$this->inOptions($assocs, __d('cake_console', 'Enter a number'));
 
 			$this->out(__d('cake_console', "For the following options be very careful to match your setup exactly.\n" .
-				"Any spelling mistakes will cause errors."));
+					"Any spelling mistakes will cause errors."));
 			$this->hr();
 
 			$alias = $this->in(__d('cake_console', 'What is the alias for this association?'));
-			$className = $this->in(__d('cake_console', 'What className will %s use?', $alias), null, $alias);
+			$className = $this->in(__d('cake_console', 'What className will %s use?', $alias), NULL, $alias);
 
 			if ($assocType === 0) {
 				if (!empty($possibleKeys[$model->table])) {
 					$showKeys = $possibleKeys[$model->table];
 				} else {
-					$showKeys = null;
+					$showKeys = NULL;
 				}
 				$suggestedForeignKey = $this->_modelKey($alias);
 			} else {
@@ -755,10 +850,10 @@ class ModelTask extends BakeTask {
 						if (!empty($possibleKeys[$otherTable])) {
 							$showKeys = $possibleKeys[$otherTable];
 						} else {
-							$showKeys = null;
+							$showKeys = NULL;
 						}
 					} else {
-						$showKeys = null;
+						$showKeys = NULL;
 					}
 				} else {
 					$otherTable = $this->in(__d('cake_console', 'What is the table for this model?'));
@@ -772,10 +867,10 @@ class ModelTask extends BakeTask {
 				$foreignKey = $showKeys[(int)$foreignKey];
 			}
 			if (!isset($foreignKey)) {
-				$foreignKey = $this->in(__d('cake_console', 'What is the foreignKey? Specify your own.'), null, $suggestedForeignKey);
+				$foreignKey = $this->in(__d('cake_console', 'What is the foreignKey? Specify your own.'), NULL, $suggestedForeignKey);
 			}
 			if ($assocType === 3) {
-				$associationForeignKey = $this->in(__d('cake_console', 'What is the associationForeignKey?'), null, $this->_modelKey($model->name));
+				$associationForeignKey = $this->in(__d('cake_console', 'What is the associationForeignKey?'), NULL, $this->_modelKey($model->name));
 				$joinTable = $this->in(__d('cake_console', 'What is the joinTable?'));
 			}
 			$associations[$assocs[$assocType]] = array_values((array)$associations[$assocs[$assocType]]);
@@ -790,35 +885,56 @@ class ModelTask extends BakeTask {
 			}
 			$wannaDoMoreAssoc = $this->in(__d('cake_console', 'Define another association?'), array('y', 'n'), 'y');
 		}
+
 		return $associations;
 	}
 
-/**
- * Finds all possible keys to use on custom associations.
- *
- * @return array Array of tables and possible keys
- */
+	/**
+	 * Finds all possible keys to use on custom associations.
+	 *
+	 * @return array Array of tables and possible keys
+	 */
 	protected function _generatePossibleKeys() {
 		$possible = array();
 		foreach ($this->_tables as $otherTable) {
 			$tempOtherModel = new Model(array('table' => $otherTable, 'ds' => $this->connection));
-			$modelFieldsTemp = $tempOtherModel->schema(true);
+			$modelFieldsTemp = $tempOtherModel->schema(TRUE);
 			foreach ($modelFieldsTemp as $fieldName => $field) {
 				if ($field['type'] === 'integer' || $field['type'] === 'string') {
 					$possible[$otherTable][] = $fieldName;
 				}
 			}
 		}
+
 		return $possible;
 	}
 
-/**
- * Assembles and writes a Model file.
- *
- * @param string|object $name Model name or object
- * @param array|bool $data if array and $name is not an object assume bake data, otherwise boolean.
- * @return string
- */
+	/**
+	 * Print out all the associations of a particular type
+	 *
+	 * @param string $modelName    Name of the model relations belong to.
+	 * @param string $type         Name of association you want to see. i.e. 'belongsTo'
+	 * @param string $associations Collection of associations.
+	 *
+	 * @return void
+	 */
+	protected function _printAssociation($modelName, $type, $associations) {
+		if (!empty($associations[$type])) {
+			for ($i = 0, $len = count($associations[$type]); $i < $len; $i++) {
+				$out = "\t" . $modelName . ' ' . $type . ' ' . $associations[$type][$i]['alias'];
+				$this->out($out);
+			}
+		}
+	}
+
+	/**
+	 * Assembles and writes a Model file.
+	 *
+	 * @param string|object $name Model name or object
+	 * @param array|bool    $data if array and $name is not an object assume bake data, otherwise boolean.
+	 *
+	 * @return string
+	 */
 	public function bake($name, $data = array()) {
 		if ($name instanceof Model) {
 			if (!$data) {
@@ -836,13 +952,13 @@ class ModelTask extends BakeTask {
 		}
 
 		$defaults = array(
-			'associations' => array(),
-			'actsAs' => array(),
-			'validate' => array(),
-			'primaryKey' => 'id',
-			'useTable' => null,
-			'useDbConfig' => 'default',
-			'displayField' => null
+				'associations' => array(),
+				'actsAs' => array(),
+				'validate' => array(),
+				'primaryKey' => 'id',
+				'useTable' => NULL,
+				'useDbConfig' => 'default',
+				'displayField' => NULL
 		);
 		$data = array_merge($defaults, $data);
 
@@ -853,8 +969,8 @@ class ModelTask extends BakeTask {
 
 		$this->Template->set($data);
 		$this->Template->set(array(
-			'plugin' => $this->plugin,
-			'pluginPath' => $pluginPath
+				'plugin' => $this->plugin,
+				'pluginPath' => $pluginPath
 		));
 		$out = $this->Template->generate('classes', 'model');
 
@@ -863,191 +979,121 @@ class ModelTask extends BakeTask {
 		$this->out("\n" . __d('cake_console', 'Baking model class for %s...', $name), 1, Shell::QUIET);
 		$this->createFile($filename, $out);
 		ClassRegistry::flush();
+
 		return $out;
 	}
 
-/**
- * Assembles and writes a unit test file
- *
- * @param string $className Model class name
- * @return string
- */
-	public function bakeTest($className) {
-		$this->Test->interactive = $this->interactive;
-		$this->Test->plugin = $this->plugin;
-		$this->Test->connection = $this->connection;
-		return $this->Test->bake('Model', $className);
+	/**
+	 * Handles behaviors
+	 *
+	 * @param Model $model The model object.
+	 *
+	 * @return array Behaviors
+	 */
+	public function doActsAs($model) {
+		if (!$model instanceof Model) {
+			return FALSE;
+		}
+		$behaviors = array();
+		$fields = $model->schema(TRUE);
+		if (empty($fields)) {
+			return array();
+		}
+
+		if (isset($fields['lft']) && $fields['lft']['type'] === 'integer' &&
+				isset($fields['rght']) && $fields['rght']['type'] === 'integer' &&
+				isset($fields['parent_id'])
+		) {
+			$behaviors[] = 'Tree';
+		}
+
+		return $behaviors;
 	}
 
-/**
- * outputs the a list of possible models or controllers from database
- *
- * @param string $useDbConfig Database configuration name
- * @return array
- */
-	public function listAll($useDbConfig = null) {
-		$this->_tables = $this->getAllTables($useDbConfig);
-
-		$this->_modelNames = array();
-		$count = count($this->_tables);
-		for ($i = 0; $i < $count; $i++) {
-			$this->_modelNames[] = $this->_modelName($this->_tables[$i]);
-		}
-		if ($this->interactive === true) {
-			$this->out(__d('cake_console', 'Possible Models based on your current database:'));
-			$len = strlen($count + 1);
-			for ($i = 0; $i < $count; $i++) {
-				$this->out(sprintf("%${len}d. %s", $i + 1, $this->_modelNames[$i]));
-			}
-		}
-		return $this->_tables;
-	}
-
-/**
- * Interact with the user to determine the table name of a particular model
- *
- * @param string $modelName Name of the model you want a table for.
- * @param string $useDbConfig Name of the database config you want to get tables from.
- * @return string Table name
- */
-	public function getTable($modelName, $useDbConfig = null) {
-		$useTable = Inflector::tableize($modelName);
-		if (in_array($modelName, $this->_modelNames)) {
-			$modelNames = array_flip($this->_modelNames);
-			$useTable = $this->_tables[$modelNames[$modelName]];
-		}
-
-		if ($this->interactive === true) {
-			if (!isset($useDbConfig)) {
-				$useDbConfig = $this->connection;
-			}
-			$db = ConnectionManager::getDataSource($useDbConfig);
-			$fullTableName = $db->fullTableName($useTable, false);
-			$tableIsGood = false;
-			if (array_search($useTable, $this->_tables) === false) {
-				$this->out();
-				$this->out(__d('cake_console', "Given your model named '%s',\nCake would expect a database table named '%s'", $modelName, $fullTableName));
-				$tableIsGood = $this->in(__d('cake_console', 'Do you want to use this table?'), array('y', 'n'), 'y');
-			}
-			if (strtolower($tableIsGood) === 'n') {
-				$useTable = $this->in(__d('cake_console', 'What is the name of the table (without prefix)?'));
-			}
-		}
-		return $useTable;
-	}
-
-/**
- * Get an Array of all the tables in the supplied connection
- * will halt the script if no tables are found.
- *
- * @param string $useDbConfig Connection name to scan.
- * @return array Array of tables in the database.
- */
-	public function getAllTables($useDbConfig = null) {
-		if (!isset($useDbConfig)) {
-			$useDbConfig = $this->connection;
-		}
-
-		$tables = array();
-		$db = ConnectionManager::getDataSource($useDbConfig);
-		$db->cacheSources = false;
-		$usePrefix = empty($db->config['prefix']) ? '' : $db->config['prefix'];
-		if ($usePrefix) {
-			foreach ($db->listSources() as $table) {
-				if (!strncmp($table, $usePrefix, strlen($usePrefix))) {
-					$tables[] = substr($table, strlen($usePrefix));
-				}
-			}
-		} else {
-			$tables = $db->listSources();
-		}
-		if (empty($tables)) {
-			$this->err(__d('cake_console', 'Your database does not have any tables.'));
-			return $this->_stop();
-		}
-		sort($tables);
-		return $tables;
-	}
-
-/**
- * Forces the user to specify the model he wants to bake, and returns the selected model name.
- *
- * @param string $useDbConfig Database config name
- * @return string The model name
- */
-	public function getName($useDbConfig = null) {
-		$this->listAll($useDbConfig);
-
-		$enteredModel = '';
-
-		while (!$enteredModel) {
-			$enteredModel = $this->in(__d('cake_console', "Enter a number from the list above,\n" .
-				"type in the name of another model, or 'q' to exit"), null, 'q');
-
-			if ($enteredModel === 'q') {
-				$this->out(__d('cake_console', 'Exit'));
-				return $this->_stop();
-			}
-
-			if (!$enteredModel || (int)$enteredModel > count($this->_modelNames)) {
-				$this->err(__d('cake_console', "The model name you supplied was empty,\n" .
-					"or the number you selected was not an option. Please try again."));
-				$enteredModel = '';
-			}
-		}
-		if ((int)$enteredModel > 0 && (int)$enteredModel <= count($this->_modelNames)) {
-			return $this->_modelNames[(int)$enteredModel - 1];
-		}
-
-		return $enteredModel;
-	}
-
-/**
- * Gets the option parser instance and configures it.
- *
- * @return ConsoleOptionParser
- */
-	public function getOptionParser() {
-		$parser = parent::getOptionParser();
-
-		$parser->description(
-			__d('cake_console', 'Bake models.')
-		)->addArgument('name', array(
-			'help' => __d('cake_console', 'Name of the model to bake. Can use Plugin.name to bake plugin models.')
-		))->addSubcommand('all', array(
-			'help' => __d('cake_console', 'Bake all model files with associations and validation.')
-		))->addOption('plugin', array(
-			'short' => 'p',
-			'help' => __d('cake_console', 'Plugin to bake the model into.')
-		))->addOption('theme', array(
-			'short' => 't',
-			'help' => __d('cake_console', 'Theme to use when baking code.')
-		))->addOption('connection', array(
-			'short' => 'c',
-			'help' => __d('cake_console', 'The connection the model table is on.')
-		))->addOption('force', array(
-			'short' => 'f',
-			'help' => __d('cake_console', 'Force overwriting existing files without prompting.')
-		))->epilog(
-			__d('cake_console', 'Omitting all arguments and options will enter into an interactive mode.')
-		);
-
-		return $parser;
-	}
-
-/**
- * Interact with FixtureTask to automatically bake fixtures when baking models.
- *
- * @param string $className Name of class to bake fixture for
- * @param string $useTable Optional table name for fixture to use.
- * @return void
- * @see FixtureTask::bake
- */
-	public function bakeFixture($className, $useTable = null) {
+	/**
+	 * Interact with FixtureTask to automatically bake fixtures when baking models.
+	 *
+	 * @param string $className Name of class to bake fixture for
+	 * @param string $useTable  Optional table name for fixture to use.
+	 *
+	 * @return void
+	 * @see FixtureTask::bake
+	 */
+	public function bakeFixture($className, $useTable = NULL) {
 		$this->Fixture->interactive = $this->interactive;
 		$this->Fixture->connection = $this->connection;
 		$this->Fixture->plugin = $this->plugin;
 		$this->Fixture->bake($className, $useTable);
+	}
+
+	/**
+	 * Assembles and writes a unit test file
+	 *
+	 * @param string $className Model class name
+	 *
+	 * @return string
+	 */
+	public function bakeTest($className) {
+		$this->Test->interactive = $this->interactive;
+		$this->Test->plugin = $this->plugin;
+		$this->Test->connection = $this->connection;
+
+		return $this->Test->bake('Model', $className);
+	}
+
+	/**
+	 * Bake all models at once.
+	 *
+	 * @return void
+	 */
+	public function all() {
+		$this->listAll($this->connection, FALSE);
+		$unitTestExists = $this->_checkUnitTest();
+		foreach ($this->_tables as $table) {
+			if (in_array($table, $this->skipTables)) {
+				continue;
+			}
+			$modelClass = Inflector::classify($table);
+			$this->out(__d('cake_console', 'Baking %s', $modelClass));
+			$object = $this->_getModelObject($modelClass, $table);
+			if ($this->bake($object, FALSE) && $unitTestExists) {
+				$this->bakeFixture($modelClass, $table);
+				$this->bakeTest($modelClass);
+			}
+		}
+	}
+
+	/**
+	 * Gets the option parser instance and configures it.
+	 *
+	 * @return ConsoleOptionParser
+	 */
+	public function getOptionParser() {
+		$parser = parent::getOptionParser();
+
+		$parser->description(
+				__d('cake_console', 'Bake models.')
+		)->addArgument('name', array(
+				'help' => __d('cake_console', 'Name of the model to bake. Can use Plugin.name to bake plugin models.')
+		))->addSubcommand('all', array(
+				'help' => __d('cake_console', 'Bake all model files with associations and validation.')
+		))->addOption('plugin', array(
+				'short' => 'p',
+				'help' => __d('cake_console', 'Plugin to bake the model into.')
+		))->addOption('theme', array(
+				'short' => 't',
+				'help' => __d('cake_console', 'Theme to use when baking code.')
+		))->addOption('connection', array(
+				'short' => 'c',
+				'help' => __d('cake_console', 'The connection the model table is on.')
+		))->addOption('force', array(
+				'short' => 'f',
+				'help' => __d('cake_console', 'Force overwriting existing files without prompting.')
+		))->epilog(
+				__d('cake_console', 'Omitting all arguments and options will enter into an interactive mode.')
+		);
+
+		return $parser;
 	}
 
 }

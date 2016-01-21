@@ -31,59 +31,27 @@ App::uses('CakeTestLoader', 'TestSuite');
  */
 class TestsuiteShell extends TestShell {
 
-/**
- * Gets the option parser instance and configures it.
- *
- * @return ConsoleOptionParser
- */
+	/**
+	 * Gets the option parser instance and configures it.
+	 *
+	 * @return ConsoleOptionParser
+	 */
 	public function getOptionParser() {
 		$parser = parent::getOptionParser();
 
 		$parser->description(array(
-			__d('cake_console', 'The CakePHP Testsuite allows you to run test cases from the command line'),
-			__d('cake_console', "<warning>This shell is for backwards-compatibility only</warning>\nuse the test shell instead")
+				__d('cake_console', 'The CakePHP Testsuite allows you to run test cases from the command line'),
+				__d('cake_console', "<warning>This shell is for backwards-compatibility only</warning>\nuse the test shell instead")
 		));
 
 		return $parser;
 	}
 
-/**
- * Parse the CLI options into an array CakeTestDispatcher can use.
- *
- * @return array Array of params for CakeTestDispatcher
- */
-	protected function _parseArgs() {
-		if (empty($this->args)) {
-			return;
-		}
-		$params = array(
-			'core' => false,
-			'app' => false,
-			'plugin' => null,
-			'output' => 'text',
-		);
-
-		$category = $this->args[0];
-
-		if ($category === 'core') {
-			$params['core'] = true;
-		} elseif ($category === 'app') {
-			$params['app'] = true;
-		} elseif ($category !== 'core') {
-			$params['plugin'] = $category;
-		}
-
-		if (isset($this->args[1])) {
-			$params['case'] = $this->args[1];
-		}
-		return $params;
-	}
-
-/**
- * Main entry point to this shell
- *
- * @return void
- */
+	/**
+	 * Main entry point to this shell
+	 *
+	 * @return void
+	 */
 	public function main() {
 		$this->out(__d('cake_console', 'CakePHP Test Shell'));
 		$this->hr();
@@ -95,6 +63,39 @@ class TestsuiteShell extends TestShell {
 		}
 
 		$this->_run($args, $this->_runnerOptions());
+	}
+
+	/**
+	 * Parse the CLI options into an array CakeTestDispatcher can use.
+	 *
+	 * @return array Array of params for CakeTestDispatcher
+	 */
+	protected function _parseArgs() {
+		if (empty($this->args)) {
+			return;
+		}
+		$params = array(
+				'core' => FALSE,
+				'app' => FALSE,
+				'plugin' => NULL,
+				'output' => 'text',
+		);
+
+		$category = $this->args[0];
+
+		if ($category === 'core') {
+			$params['core'] = TRUE;
+		} elseif ($category === 'app') {
+			$params['app'] = TRUE;
+		} elseif ($category !== 'core') {
+			$params['plugin'] = $category;
+		}
+
+		if (isset($this->args[1])) {
+			$params['case'] = $this->args[1];
+		}
+
+		return $params;
 	}
 
 }

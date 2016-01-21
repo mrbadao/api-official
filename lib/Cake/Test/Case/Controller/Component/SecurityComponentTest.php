@@ -26,12 +26,13 @@ App::uses('Controller', 'Controller');
  */
 class TestSecurityComponent extends SecurityComponent {
 
-/**
- * validatePost method
- *
- * @param Controller $controller
- * @return bool
- */
+	/**
+	 * validatePost method
+	 *
+	 * @param Controller $controller
+	 *
+	 * @return bool
+	 */
 	public function validatePost(Controller $controller) {
 		return $this->_validatePost($controller);
 	}
@@ -45,54 +46,56 @@ class TestSecurityComponent extends SecurityComponent {
  */
 class SecurityTestController extends Controller {
 
-/**
- * components property
- *
- * @var array
- */
+	/**
+	 * components property
+	 *
+	 * @var array
+	 */
 	public $components = array('Session', 'TestSecurity');
 
-/**
- * failed property
- *
- * @var bool
- */
-	public $failed = false;
+	/**
+	 * failed property
+	 *
+	 * @var bool
+	 */
+	public $failed = FALSE;
 
-/**
- * Used for keeping track of headers in test
- *
- * @var array
- */
+	/**
+	 * Used for keeping track of headers in test
+	 *
+	 * @var array
+	 */
 	public $testHeaders = array();
 
-/**
- * fail method
- *
- * @return void
- */
+	/**
+	 * fail method
+	 *
+	 * @return void
+	 */
 	public function fail() {
-		$this->failed = true;
+		$this->failed = TRUE;
 	}
 
-/**
- * redirect method
- *
- * @param string|array $url
- * @param mixed $code
- * @param mixed $exit
- * @return void
- */
-	public function redirect($url, $status = null, $exit = true) {
+	/**
+	 * redirect method
+	 *
+	 * @param string|array $url
+	 * @param mixed        $code
+	 * @param mixed        $exit
+	 *
+	 * @return void
+	 */
+	public function redirect($url, $status = NULL, $exit = TRUE) {
 		return $status;
 	}
 
-/**
- * Convenience method for header()
- *
- * @param string $status
- * @return void
- */
+	/**
+	 * Convenience method for header()
+	 *
+	 * @param string $status
+	 *
+	 * @return void
+	 */
 	public function header($status) {
 		$this->testHeaders[] = $status;
 	}
@@ -120,49 +123,49 @@ class BrokenCallbackController extends Controller {
  */
 class SecurityComponentTest extends CakeTestCase {
 
-/**
- * Controller property
- *
- * @var SecurityTestController
- */
+	/**
+	 * Controller property
+	 *
+	 * @var SecurityTestController
+	 */
 	public $Controller;
 
-/**
- * oldSalt property
- *
- * @var string
- */
+	/**
+	 * oldSalt property
+	 *
+	 * @var string
+	 */
 	public $oldSalt;
 
-/**
- * setUp method
- *
- * @return void
- */
+	/**
+	 * setUp method
+	 *
+	 * @return void
+	 */
 	public function setUp() {
 		parent::setUp();
 
-		$request = $this->getMock('CakeRequest', array('here'), array('posts/index', false));
+		$request = $this->getMock('CakeRequest', array('here'), array('posts/index', FALSE));
 		$request->addParams(array('controller' => 'posts', 'action' => 'index'));
 		$request->expects($this->any())
-			->method('here')
-			->will($this->returnValue('/posts/index'));
+				->method('here')
+				->will($this->returnValue('/posts/index'));
 
 		$this->Controller = new SecurityTestController($request);
 		$this->Controller->Components->init($this->Controller);
 		$this->Controller->Security = $this->Controller->TestSecurity;
 		$this->Controller->Security->blackHoleCallback = 'fail';
 		$this->Security = $this->Controller->Security;
-		$this->Security->csrfCheck = false;
+		$this->Security->csrfCheck = FALSE;
 
 		Configure::write('Security.salt', 'foo!');
 	}
 
-/**
- * Tear-down method. Resets environment state.
- *
- * @return void
- */
+	/**
+	 * Tear-down method. Resets environment state.
+	 *
+	 * @return void
+	 */
 	public function tearDown() {
 		parent::tearDown();
 		$this->Controller->Session->delete('_Token');
@@ -171,17 +174,17 @@ class SecurityComponentTest extends CakeTestCase {
 		unset($this->Controller);
 	}
 
-/**
- * Test that requests are still blackholed when controller has incorrect
- * visibility keyword in the blackhole callback
- *
- * @expectedException BadRequestException
- * @return void
- */
+	/**
+	 * Test that requests are still blackholed when controller has incorrect
+	 * visibility keyword in the blackhole callback
+	 *
+	 * @expectedException BadRequestException
+	 * @return void
+	 */
 	public function testBlackholeWithBrokenCallback() {
-		$request = new CakeRequest('posts/index', false);
+		$request = new CakeRequest('posts/index', FALSE);
 		$request->addParams(array(
-			'controller' => 'posts', 'action' => 'index')
+						'controller' => 'posts', 'action' => 'index')
 		);
 		$this->Controller = new BrokenCallbackController($request);
 		$this->Controller->Components->init($this->Controller);
@@ -191,33 +194,33 @@ class SecurityComponentTest extends CakeTestCase {
 		$this->Controller->Security->blackHole($this->Controller, 'csrf');
 	}
 
-/**
- * Ensure that directly requesting the blackholeCallback as the controller
- * action results in an exception.
- *
- * @return void
- */
+	/**
+	 * Ensure that directly requesting the blackholeCallback as the controller
+	 * action results in an exception.
+	 *
+	 * @return void
+	 */
 	public function testExceptionWhenActionIsBlackholeCallback() {
 		$this->Controller->request->addParams(array(
-			'controller' => 'posts',
-			'action' => 'fail'
+				'controller' => 'posts',
+				'action' => 'fail'
 		));
 		$this->assertFalse($this->Controller->failed);
 		$this->Controller->Security->startup($this->Controller);
 		$this->assertTrue($this->Controller->failed, 'Request was blackholed.');
 	}
 
-/**
- * test that initialize can set properties.
- *
- * @return void
- */
+	/**
+	 * test that initialize can set properties.
+	 *
+	 * @return void
+	 */
 	public function testConstructorSettingProperties() {
 		$settings = array(
-			'requirePost' => array('edit', 'update'),
-			'requireSecure' => array('update_account'),
-			'requireGet' => array('index'),
-			'validatePost' => false,
+				'requirePost' => array('edit', 'update'),
+				'requireSecure' => array('update_account'),
+				'requireGet' => array('index'),
+				'validatePost' => FALSE,
 		);
 		$Security = new SecurityComponent($this->Controller->Components, $settings);
 		$this->Controller->Security->initialize($this->Controller, $settings);
@@ -227,11 +230,11 @@ class SecurityComponentTest extends CakeTestCase {
 		$this->assertEquals($Security->validatePost, $settings['validatePost']);
 	}
 
-/**
- * testStartup method
- *
- * @return void
- */
+	/**
+	 * testStartup method
+	 *
+	 * @return void
+	 */
 	public function testStartup() {
 		$this->Controller->Security->startup($this->Controller);
 		$result = $this->Controller->params['_Token']['key'];
@@ -239,11 +242,11 @@ class SecurityComponentTest extends CakeTestCase {
 		$this->assertTrue($this->Controller->Session->check('_Token'));
 	}
 
-/**
- * testRequirePostFail method
- *
- * @return void
- */
+	/**
+	 * testRequirePostFail method
+	 *
+	 * @return void
+	 */
 	public function testRequirePostFail() {
 		$_SERVER['REQUEST_METHOD'] = 'GET';
 		$this->Controller->request['action'] = 'posted';
@@ -252,11 +255,11 @@ class SecurityComponentTest extends CakeTestCase {
 		$this->assertTrue($this->Controller->failed);
 	}
 
-/**
- * testRequirePostSucceed method
- *
- * @return void
- */
+	/**
+	 * testRequirePostSucceed method
+	 *
+	 * @return void
+	 */
 	public function testRequirePostSucceed() {
 		$_SERVER['REQUEST_METHOD'] = 'POST';
 		$this->Controller->request['action'] = 'posted';
@@ -265,11 +268,11 @@ class SecurityComponentTest extends CakeTestCase {
 		$this->assertFalse($this->Controller->failed);
 	}
 
-/**
- * testRequireSecureFail method
- *
- * @return void
- */
+	/**
+	 * testRequireSecureFail method
+	 *
+	 * @return void
+	 */
 	public function testRequireSecureFail() {
 		$_SERVER['HTTPS'] = 'off';
 		$_SERVER['REQUEST_METHOD'] = 'POST';
@@ -279,11 +282,11 @@ class SecurityComponentTest extends CakeTestCase {
 		$this->assertTrue($this->Controller->failed);
 	}
 
-/**
- * testRequireSecureSucceed method
- *
- * @return void
- */
+	/**
+	 * testRequireSecureSucceed method
+	 *
+	 * @return void
+	 */
 	public function testRequireSecureSucceed() {
 		$_SERVER['REQUEST_METHOD'] = 'Secure';
 		$this->Controller->request['action'] = 'posted';
@@ -293,11 +296,11 @@ class SecurityComponentTest extends CakeTestCase {
 		$this->assertFalse($this->Controller->failed);
 	}
 
-/**
- * testRequireAuthFail method
- *
- * @return void
- */
+	/**
+	 * testRequireAuthFail method
+	 *
+	 * @return void
+	 */
 	public function testRequireAuthFail() {
 		$_SERVER['REQUEST_METHOD'] = 'AUTH';
 		$this->Controller->request['action'] = 'posted';
@@ -314,7 +317,7 @@ class SecurityComponentTest extends CakeTestCase {
 		$this->assertTrue($this->Controller->failed);
 
 		$this->Controller->Session->write('_Token', array(
-			'allowedControllers' => array('SecurityTest'), 'allowedActions' => array('posted2')
+				'allowedControllers' => array('SecurityTest'), 'allowedActions' => array('posted2')
 		));
 		$this->Controller->request->data = array('username' => 'willy', 'password' => 'somePass');
 		$this->Controller->request['action'] = 'posted';
@@ -323,11 +326,11 @@ class SecurityComponentTest extends CakeTestCase {
 		$this->assertTrue($this->Controller->failed);
 	}
 
-/**
- * testRequireAuthSucceed method
- *
- * @return void
- */
+	/**
+	 * testRequireAuthSucceed method
+	 *
+	 * @return void
+	 */
 	public function testRequireAuthSucceed() {
 		$_SERVER['REQUEST_METHOD'] = 'AUTH';
 		$this->Controller->request['action'] = 'posted';
@@ -336,13 +339,13 @@ class SecurityComponentTest extends CakeTestCase {
 		$this->assertFalse($this->Controller->failed);
 
 		$this->Controller->Security->Session->write('_Token', array(
-			'allowedControllers' => array('SecurityTest'), 'allowedActions' => array('posted')
+				'allowedControllers' => array('SecurityTest'), 'allowedActions' => array('posted')
 		));
 		$this->Controller->request['controller'] = 'SecurityTest';
 		$this->Controller->request['action'] = 'posted';
 
 		$this->Controller->request->data = array(
-			'username' => 'willy', 'password' => 'somePass', '_Token' => ''
+				'username' => 'willy', 'password' => 'somePass', '_Token' => ''
 		);
 		$this->Controller->action = 'posted';
 		$this->Controller->Security->requireAuth('posted');
@@ -350,11 +353,11 @@ class SecurityComponentTest extends CakeTestCase {
 		$this->assertFalse($this->Controller->failed);
 	}
 
-/**
- * testRequirePostSucceedWrongMethod method
- *
- * @return void
- */
+	/**
+	 * testRequirePostSucceedWrongMethod method
+	 *
+	 * @return void
+	 */
 	public function testRequirePostSucceedWrongMethod() {
 		$_SERVER['REQUEST_METHOD'] = 'GET';
 		$this->Controller->request['action'] = 'getted';
@@ -363,11 +366,11 @@ class SecurityComponentTest extends CakeTestCase {
 		$this->assertFalse($this->Controller->failed);
 	}
 
-/**
- * testRequireGetFail method
- *
- * @return void
- */
+	/**
+	 * testRequireGetFail method
+	 *
+	 * @return void
+	 */
 	public function testRequireGetFail() {
 		$_SERVER['REQUEST_METHOD'] = 'POST';
 		$this->Controller->request['action'] = 'getted';
@@ -376,11 +379,11 @@ class SecurityComponentTest extends CakeTestCase {
 		$this->assertTrue($this->Controller->failed);
 	}
 
-/**
- * testRequireGetSucceed method
- *
- * @return void
- */
+	/**
+	 * testRequireGetSucceed method
+	 *
+	 * @return void
+	 */
 	public function testRequireGetSucceed() {
 		$_SERVER['REQUEST_METHOD'] = 'GET';
 		$this->Controller->request['action'] = 'getted';
@@ -389,11 +392,11 @@ class SecurityComponentTest extends CakeTestCase {
 		$this->assertFalse($this->Controller->failed);
 	}
 
-/**
- * testRequireGetSucceedWrongMethod method
- *
- * @return void
- */
+	/**
+	 * testRequireGetSucceedWrongMethod method
+	 *
+	 * @return void
+	 */
 	public function testRequireGetSucceedWrongMethod() {
 		$_SERVER['REQUEST_METHOD'] = 'POST';
 		$this->Controller->request['action'] = 'posted';
@@ -402,11 +405,11 @@ class SecurityComponentTest extends CakeTestCase {
 		$this->assertFalse($this->Controller->failed);
 	}
 
-/**
- * testRequirePutFail method
- *
- * @return void
- */
+	/**
+	 * testRequirePutFail method
+	 *
+	 * @return void
+	 */
 	public function testRequirePutFail() {
 		$_SERVER['REQUEST_METHOD'] = 'POST';
 		$this->Controller->request['action'] = 'putted';
@@ -415,11 +418,11 @@ class SecurityComponentTest extends CakeTestCase {
 		$this->assertTrue($this->Controller->failed);
 	}
 
-/**
- * testRequirePutSucceed method
- *
- * @return void
- */
+	/**
+	 * testRequirePutSucceed method
+	 *
+	 * @return void
+	 */
 	public function testRequirePutSucceed() {
 		$_SERVER['REQUEST_METHOD'] = 'PUT';
 		$this->Controller->request['action'] = 'putted';
@@ -428,11 +431,11 @@ class SecurityComponentTest extends CakeTestCase {
 		$this->assertFalse($this->Controller->failed);
 	}
 
-/**
- * testRequirePutSucceedWrongMethod method
- *
- * @return void
- */
+	/**
+	 * testRequirePutSucceedWrongMethod method
+	 *
+	 * @return void
+	 */
 	public function testRequirePutSucceedWrongMethod() {
 		$_SERVER['REQUEST_METHOD'] = 'POST';
 		$this->Controller->request['action'] = 'posted';
@@ -441,11 +444,11 @@ class SecurityComponentTest extends CakeTestCase {
 		$this->assertFalse($this->Controller->failed);
 	}
 
-/**
- * testRequireDeleteFail method
- *
- * @return void
- */
+	/**
+	 * testRequireDeleteFail method
+	 *
+	 * @return void
+	 */
 	public function testRequireDeleteFail() {
 		$_SERVER['REQUEST_METHOD'] = 'POST';
 		$this->Controller->request['action'] = 'deleted';
@@ -454,11 +457,11 @@ class SecurityComponentTest extends CakeTestCase {
 		$this->assertTrue($this->Controller->failed);
 	}
 
-/**
- * testRequireDeleteSucceed method
- *
- * @return void
- */
+	/**
+	 * testRequireDeleteSucceed method
+	 *
+	 * @return void
+	 */
 	public function testRequireDeleteSucceed() {
 		$_SERVER['REQUEST_METHOD'] = 'DELETE';
 		$this->Controller->request['action'] = 'deleted';
@@ -467,11 +470,11 @@ class SecurityComponentTest extends CakeTestCase {
 		$this->assertFalse($this->Controller->failed);
 	}
 
-/**
- * testRequireDeleteSucceedWrongMethod method
- *
- * @return void
- */
+	/**
+	 * testRequireDeleteSucceedWrongMethod method
+	 *
+	 * @return void
+	 */
 	public function testRequireDeleteSucceedWrongMethod() {
 		$_SERVER['REQUEST_METHOD'] = 'POST';
 		$this->Controller->request['action'] = 'posted';
@@ -480,11 +483,11 @@ class SecurityComponentTest extends CakeTestCase {
 		$this->assertFalse($this->Controller->failed);
 	}
 
-/**
- * Simple hash validation test
- *
- * @return void
- */
+	/**
+	 * Simple hash validation test
+	 *
+	 * @return void
+	 */
 	public function testValidatePost() {
 		$this->Controller->Security->startup($this->Controller);
 
@@ -493,17 +496,17 @@ class SecurityComponentTest extends CakeTestCase {
 		$unlocked = '';
 
 		$this->Controller->request->data = array(
-			'Model' => array('username' => 'nate', 'password' => 'foo', 'valid' => '0'),
-			'_Token' => compact('key', 'fields', 'unlocked')
+				'Model' => array('username' => 'nate', 'password' => 'foo', 'valid' => '0'),
+				'_Token' => compact('key', 'fields', 'unlocked')
 		);
 		$this->assertTrue($this->Controller->Security->validatePost($this->Controller));
 	}
 
-/**
- * Test that validatePost fails if you are missing the session information.
- *
- * @return void
- */
+	/**
+	 * Test that validatePost fails if you are missing the session information.
+	 *
+	 * @return void
+	 */
 	public function testValidatePostNoSession() {
 		$this->Controller->Security->startup($this->Controller);
 		$this->Controller->Session->delete('_Token');
@@ -512,36 +515,36 @@ class SecurityComponentTest extends CakeTestCase {
 		$fields = 'a5475372b40f6e3ccbf9f8af191f20e1642fd877%3AModel.valid';
 
 		$this->Controller->data = array(
-			'Model' => array('username' => 'nate', 'password' => 'foo', 'valid' => '0'),
-			'_Token' => compact('key', 'fields')
+				'Model' => array('username' => 'nate', 'password' => 'foo', 'valid' => '0'),
+				'_Token' => compact('key', 'fields')
 		);
 		$this->assertFalse($this->Controller->Security->validatePost($this->Controller));
 	}
 
-/**
- * test that validatePost fails if any of its required fields are missing.
- *
- * @return void
- */
+	/**
+	 * test that validatePost fails if any of its required fields are missing.
+	 *
+	 * @return void
+	 */
 	public function testValidatePostFormHacking() {
 		$this->Controller->Security->startup($this->Controller);
 		$key = $this->Controller->params['_Token']['key'];
 		$unlocked = '';
 
 		$this->Controller->request->data = array(
-			'Model' => array('username' => 'nate', 'password' => 'foo', 'valid' => '0'),
-			'_Token' => compact('key', 'unlocked')
+				'Model' => array('username' => 'nate', 'password' => 'foo', 'valid' => '0'),
+				'_Token' => compact('key', 'unlocked')
 		);
 		$result = $this->Controller->Security->validatePost($this->Controller);
 		$this->assertFalse($result, 'validatePost passed when fields were missing. %s');
 	}
 
-/**
- * Test that objects can't be passed into the serialized string. This was a vector for RFI and LFI
- * attacks. Thanks to Felix Wilhelm
- *
- * @return void
- */
+	/**
+	 * Test that objects can't be passed into the serialized string. This was a vector for RFI and LFI
+	 * attacks. Thanks to Felix Wilhelm
+	 *
+	 * @return void
+	 */
 	public function testValidatePostObjectDeserialize() {
 		$this->Controller->Security->startup($this->Controller);
 		$key = $this->Controller->request->params['_Token']['key'];
@@ -553,18 +556,18 @@ class SecurityComponentTest extends CakeTestCase {
 		$fields .= urlencode(':' . str_rot13($attack));
 
 		$this->Controller->request->data = array(
-			'Model' => array('username' => 'mark', 'password' => 'foo', 'valid' => '0'),
-			'_Token' => compact('key', 'fields', 'unlocked')
+				'Model' => array('username' => 'mark', 'password' => 'foo', 'valid' => '0'),
+				'_Token' => compact('key', 'fields', 'unlocked')
 		);
 		$result = $this->Controller->Security->validatePost($this->Controller);
 		$this->assertFalse($result, 'validatePost passed when key was missing. %s');
 	}
 
-/**
- * Tests validation of checkbox arrays
- *
- * @return void
- */
+	/**
+	 * Tests validation of checkbox arrays
+	 *
+	 * @return void
+	 */
 	public function testValidatePostArray() {
 		$this->Controller->Security->startup($this->Controller);
 
@@ -573,17 +576,17 @@ class SecurityComponentTest extends CakeTestCase {
 		$unlocked = '';
 
 		$this->Controller->request->data = array(
-			'Model' => array('multi_field' => array('1', '3')),
-			'_Token' => compact('key', 'fields', 'unlocked')
+				'Model' => array('multi_field' => array('1', '3')),
+				'_Token' => compact('key', 'fields', 'unlocked')
 		);
 		$this->assertTrue($this->Controller->Security->validatePost($this->Controller));
 	}
 
-/**
- * testValidatePostNoModel method
- *
- * @return void
- */
+	/**
+	 * testValidatePostNoModel method
+	 *
+	 * @return void
+	 */
 	public function testValidatePostNoModel() {
 		$this->Controller->Security->startup($this->Controller);
 
@@ -592,19 +595,19 @@ class SecurityComponentTest extends CakeTestCase {
 		$unlocked = '';
 
 		$this->Controller->request->data = array(
-			'anything' => 'some_data',
-			'_Token' => compact('key', 'fields', 'unlocked')
+				'anything' => 'some_data',
+				'_Token' => compact('key', 'fields', 'unlocked')
 		);
 
 		$result = $this->Controller->Security->validatePost($this->Controller);
 		$this->assertTrue($result);
 	}
 
-/**
- * testValidatePostSimple method
- *
- * @return void
- */
+	/**
+	 * testValidatePostSimple method
+	 *
+	 * @return void
+	 */
 	public function testValidatePostSimple() {
 		$this->Controller->Security->startup($this->Controller);
 
@@ -613,19 +616,19 @@ class SecurityComponentTest extends CakeTestCase {
 		$unlocked = '';
 
 		$this->Controller->request->data = array(
-			'Model' => array('username' => '', 'password' => ''),
-			'_Token' => compact('key', 'fields', 'unlocked')
+				'Model' => array('username' => '', 'password' => ''),
+				'_Token' => compact('key', 'fields', 'unlocked')
 		);
 
 		$result = $this->Controller->Security->validatePost($this->Controller);
 		$this->assertTrue($result);
 	}
 
-/**
- * Tests hash validation for multiple records, including locked fields
- *
- * @return void
- */
+	/**
+	 * Tests hash validation for multiple records, including locked fields
+	 *
+	 * @return void
+	 */
 	public function testValidatePostComplex() {
 		$this->Controller->Security->startup($this->Controller);
 
@@ -634,27 +637,27 @@ class SecurityComponentTest extends CakeTestCase {
 		$unlocked = '';
 
 		$this->Controller->request->data = array(
-			'Addresses' => array(
-				'0' => array(
-					'id' => '123456', 'title' => '', 'first_name' => '', 'last_name' => '',
-					'address' => '', 'city' => '', 'phone' => '', 'primary' => ''
+				'Addresses' => array(
+						'0' => array(
+								'id' => '123456', 'title' => '', 'first_name' => '', 'last_name' => '',
+								'address' => '', 'city' => '', 'phone' => '', 'primary' => ''
+						),
+						'1' => array(
+								'id' => '654321', 'title' => '', 'first_name' => '', 'last_name' => '',
+								'address' => '', 'city' => '', 'phone' => '', 'primary' => ''
+						)
 				),
-				'1' => array(
-					'id' => '654321', 'title' => '', 'first_name' => '', 'last_name' => '',
-					'address' => '', 'city' => '', 'phone' => '', 'primary' => ''
-				)
-			),
-			'_Token' => compact('key', 'fields', 'unlocked')
+				'_Token' => compact('key', 'fields', 'unlocked')
 		);
 		$result = $this->Controller->Security->validatePost($this->Controller);
 		$this->assertTrue($result);
 	}
 
-/**
- * test ValidatePost with multiple select elements.
- *
- * @return void
- */
+	/**
+	 * test ValidatePost with multiple select elements.
+	 *
+	 * @return void
+	 */
 	public function testValidatePostMultipleSelect() {
 		$this->Controller->Security->startup($this->Controller);
 
@@ -663,44 +666,44 @@ class SecurityComponentTest extends CakeTestCase {
 		$unlocked = '';
 
 		$this->Controller->request->data = array(
-			'Tag' => array('Tag' => array(1, 2)),
-			'_Token' => compact('key', 'fields', 'unlocked'),
+				'Tag' => array('Tag' => array(1, 2)),
+				'_Token' => compact('key', 'fields', 'unlocked'),
 		);
 		$result = $this->Controller->Security->validatePost($this->Controller);
 		$this->assertTrue($result);
 
 		$this->Controller->request->data = array(
-			'Tag' => array('Tag' => array(1, 2, 3)),
-			'_Token' => compact('key', 'fields', 'unlocked'),
+				'Tag' => array('Tag' => array(1, 2, 3)),
+				'_Token' => compact('key', 'fields', 'unlocked'),
 		);
 		$result = $this->Controller->Security->validatePost($this->Controller);
 		$this->assertTrue($result);
 
 		$this->Controller->request->data = array(
-			'Tag' => array('Tag' => array(1, 2, 3, 4)),
-			'_Token' => compact('key', 'fields', 'unlocked'),
+				'Tag' => array('Tag' => array(1, 2, 3, 4)),
+				'_Token' => compact('key', 'fields', 'unlocked'),
 		);
 		$result = $this->Controller->Security->validatePost($this->Controller);
 		$this->assertTrue($result);
 
 		$fields = '722de3615e63fdff899e86e85e6498b11c50bb66%3A';
 		$this->Controller->request->data = array(
-			'User.password' => 'bar', 'User.name' => 'foo', 'User.is_valid' => '1',
-			'Tag' => array('Tag' => array(1)),
-			'_Token' => compact('key', 'fields', 'unlocked'),
+				'User.password' => 'bar', 'User.name' => 'foo', 'User.is_valid' => '1',
+				'Tag' => array('Tag' => array(1)),
+				'_Token' => compact('key', 'fields', 'unlocked'),
 		);
 		$result = $this->Controller->Security->validatePost($this->Controller);
 		$this->assertTrue($result);
 	}
 
-/**
- * testValidatePostCheckbox method
- *
- * First block tests un-checked checkbox
- * Second block tests checked checkbox
- *
- * @return void
- */
+	/**
+	 * testValidatePostCheckbox method
+	 *
+	 * First block tests un-checked checkbox
+	 * Second block tests checked checkbox
+	 *
+	 * @return void
+	 */
 	public function testValidatePostCheckbox() {
 		$this->Controller->Security->startup($this->Controller);
 		$key = $this->Controller->request->params['_Token']['key'];
@@ -708,8 +711,8 @@ class SecurityComponentTest extends CakeTestCase {
 		$unlocked = '';
 
 		$this->Controller->request->data = array(
-			'Model' => array('username' => '', 'password' => '', 'valid' => '0'),
-			'_Token' => compact('key', 'fields', 'unlocked')
+				'Model' => array('username' => '', 'password' => '', 'valid' => '0'),
+				'_Token' => compact('key', 'fields', 'unlocked')
 		);
 
 		$result = $this->Controller->Security->validatePost($this->Controller);
@@ -718,8 +721,8 @@ class SecurityComponentTest extends CakeTestCase {
 		$fields = 'efbcf463a2c31e97c85d95eedc41dff9e9c6a026%3A';
 
 		$this->Controller->request->data = array(
-			'Model' => array('username' => '', 'password' => '', 'valid' => '0'),
-			'_Token' => compact('key', 'fields', 'unlocked')
+				'Model' => array('username' => '', 'password' => '', 'valid' => '0'),
+				'_Token' => compact('key', 'fields', 'unlocked')
 		);
 
 		$result = $this->Controller->Security->validatePost($this->Controller);
@@ -730,19 +733,19 @@ class SecurityComponentTest extends CakeTestCase {
 		$key = $this->Controller->request->params['_Token']['key'];
 
 		$this->Controller->request->data = array(
-			'Model' => array('username' => '', 'password' => '', 'valid' => '0'),
-			'_Token' => compact('key', 'fields', 'unlocked')
+				'Model' => array('username' => '', 'password' => '', 'valid' => '0'),
+				'_Token' => compact('key', 'fields', 'unlocked')
 		);
 
 		$result = $this->Controller->Security->validatePost($this->Controller);
 		$this->assertTrue($result);
 	}
 
-/**
- * testValidatePostHidden method
- *
- * @return void
- */
+	/**
+	 * testValidatePostHidden method
+	 *
+	 * @return void
+	 */
 	public function testValidatePostHidden() {
 		$this->Controller->Security->startup($this->Controller);
 		$key = $this->Controller->request->params['_Token']['key'];
@@ -750,21 +753,21 @@ class SecurityComponentTest extends CakeTestCase {
 		$unlocked = '';
 
 		$this->Controller->request->data = array(
-			'Model' => array(
-				'username' => '', 'password' => '', 'hidden' => '0',
-				'other_hidden' => 'some hidden value'
-			),
-			'_Token' => compact('key', 'fields', 'unlocked')
+				'Model' => array(
+						'username' => '', 'password' => '', 'hidden' => '0',
+						'other_hidden' => 'some hidden value'
+				),
+				'_Token' => compact('key', 'fields', 'unlocked')
 		);
 		$result = $this->Controller->Security->validatePost($this->Controller);
 		$this->assertTrue($result);
 	}
 
-/**
- * testValidatePostWithDisabledFields method
- *
- * @return void
- */
+	/**
+	 * testValidatePostWithDisabledFields method
+	 *
+	 * @return void
+	 */
 	public function testValidatePostWithDisabledFields() {
 		$this->Controller->Security->disabledFields = array('Model.username', 'Model.password');
 		$this->Controller->Security->startup($this->Controller);
@@ -773,51 +776,51 @@ class SecurityComponentTest extends CakeTestCase {
 		$unlocked = '';
 
 		$this->Controller->request->data = array(
-			'Model' => array(
-				'username' => '', 'password' => '', 'hidden' => '0'
-			),
-			'_Token' => compact('fields', 'key', 'unlocked')
+				'Model' => array(
+						'username' => '', 'password' => '', 'hidden' => '0'
+				),
+				'_Token' => compact('fields', 'key', 'unlocked')
 		);
 
 		$result = $this->Controller->Security->validatePost($this->Controller);
 		$this->assertTrue($result);
 	}
 
-/**
- * test validating post data with posted unlocked fields.
- *
- * @return void
- */
+	/**
+	 * test validating post data with posted unlocked fields.
+	 *
+	 * @return void
+	 */
 	public function testValidatePostDisabledFieldsInData() {
 		$this->Controller->Security->startup($this->Controller);
 		$key = $this->Controller->request->params['_Token']['key'];
 		$unlocked = 'Model.username';
 		$fields = array('Model.hidden', 'Model.password');
 		$fields = urlencode(Security::hash(
-			'/posts/index' .
-			serialize($fields) .
-			$unlocked .
-			Configure::read('Security.salt'))
+				'/posts/index' .
+				serialize($fields) .
+				$unlocked .
+				Configure::read('Security.salt'))
 		);
 
 		$this->Controller->request->data = array(
-			'Model' => array(
-				'username' => 'mark',
-				'password' => 'sekret',
-				'hidden' => '0'
-			),
-			'_Token' => compact('fields', 'key', 'unlocked')
+				'Model' => array(
+						'username' => 'mark',
+						'password' => 'sekret',
+						'hidden' => '0'
+				),
+				'_Token' => compact('fields', 'key', 'unlocked')
 		);
 
 		$result = $this->Controller->Security->validatePost($this->Controller);
 		$this->assertTrue($result);
 	}
 
-/**
- * test that missing 'unlocked' input causes failure
- *
- * @return void
- */
+	/**
+	 * test that missing 'unlocked' input causes failure
+	 *
+	 * @return void
+	 */
 	public function testValidatePostFailNoDisabled() {
 		$this->Controller->Security->startup($this->Controller);
 		$key = $this->Controller->request->params['_Token']['key'];
@@ -825,23 +828,23 @@ class SecurityComponentTest extends CakeTestCase {
 		$fields = urlencode(Security::hash(serialize($fields) . Configure::read('Security.salt')));
 
 		$this->Controller->request->data = array(
-			'Model' => array(
-				'username' => 'mark',
-				'password' => 'sekret',
-				'hidden' => '0'
-			),
-			'_Token' => compact('fields', 'key')
+				'Model' => array(
+						'username' => 'mark',
+						'password' => 'sekret',
+						'hidden' => '0'
+				),
+				'_Token' => compact('fields', 'key')
 		);
 
 		$result = $this->Controller->Security->validatePost($this->Controller);
 		$this->assertFalse($result);
 	}
 
-/**
- * Test that validatePost fails when unlocked fields are changed.
- *
- * @return void
- */
+	/**
+	 * Test that validatePost fails when unlocked fields are changed.
+	 *
+	 * @return void
+	 */
 	public function testValidatePostFailDisabledFieldTampering() {
 		$this->Controller->Security->startup($this->Controller);
 		$key = $this->Controller->request->params['_Token']['key'];
@@ -853,23 +856,23 @@ class SecurityComponentTest extends CakeTestCase {
 		$unlocked = 'Model.username|Model.password';
 
 		$this->Controller->request->data = array(
-			'Model' => array(
-				'username' => 'mark',
-				'password' => 'sekret',
-				'hidden' => '0'
-			),
-			'_Token' => compact('fields', 'key', 'unlocked')
+				'Model' => array(
+						'username' => 'mark',
+						'password' => 'sekret',
+						'hidden' => '0'
+				),
+				'_Token' => compact('fields', 'key', 'unlocked')
 		);
 
 		$result = $this->Controller->Security->validatePost($this->Controller);
 		$this->assertFalse($result);
 	}
 
-/**
- * testValidateHiddenMultipleModel method
- *
- * @return void
- */
+	/**
+	 * testValidateHiddenMultipleModel method
+	 *
+	 * @return void
+	 */
 	public function testValidateHiddenMultipleModel() {
 		$this->Controller->Security->startup($this->Controller);
 		$key = $this->Controller->request->params['_Token']['key'];
@@ -877,20 +880,20 @@ class SecurityComponentTest extends CakeTestCase {
 		$unlocked = '';
 
 		$this->Controller->request->data = array(
-			'Model' => array('username' => '', 'password' => '', 'valid' => '0'),
-			'Model2' => array('valid' => '0'),
-			'Model3' => array('valid' => '0'),
-			'_Token' => compact('key', 'fields', 'unlocked')
+				'Model' => array('username' => '', 'password' => '', 'valid' => '0'),
+				'Model2' => array('valid' => '0'),
+				'Model3' => array('valid' => '0'),
+				'_Token' => compact('key', 'fields', 'unlocked')
 		);
 		$result = $this->Controller->Security->validatePost($this->Controller);
 		$this->assertTrue($result);
 	}
 
-/**
- * testValidateHasManyModel method
- *
- * @return void
- */
+	/**
+	 * testValidateHasManyModel method
+	 *
+	 * @return void
+	 */
 	public function testValidateHasManyModel() {
 		$this->Controller->Security->startup($this->Controller);
 		$key = $this->Controller->request->params['_Token']['key'];
@@ -899,28 +902,28 @@ class SecurityComponentTest extends CakeTestCase {
 		$unlocked = '';
 
 		$this->Controller->request->data = array(
-			'Model' => array(
-				array(
-					'username' => 'username', 'password' => 'password',
-					'hidden' => 'value', 'valid' => '0'
+				'Model' => array(
+						array(
+								'username' => 'username', 'password' => 'password',
+								'hidden' => 'value', 'valid' => '0'
+						),
+						array(
+								'username' => 'username', 'password' => 'password',
+								'hidden' => 'value', 'valid' => '0'
+						)
 				),
-				array(
-					'username' => 'username', 'password' => 'password',
-					'hidden' => 'value', 'valid' => '0'
-				)
-			),
-			'_Token' => compact('key', 'fields', 'unlocked')
+				'_Token' => compact('key', 'fields', 'unlocked')
 		);
 
 		$result = $this->Controller->Security->validatePost($this->Controller);
 		$this->assertTrue($result);
 	}
 
-/**
- * testValidateHasManyRecordsPass method
- *
- * @return void
- */
+	/**
+	 * testValidateHasManyRecordsPass method
+	 *
+	 * @return void
+	 */
 	public function testValidateHasManyRecordsPass() {
 		$this->Controller->Security->startup($this->Controller);
 		$key = $this->Controller->request->params['_Token']['key'];
@@ -929,71 +932,71 @@ class SecurityComponentTest extends CakeTestCase {
 		$unlocked = '';
 
 		$this->Controller->request->data = array(
-			'Address' => array(
-				0 => array(
-					'id' => '123',
-					'title' => 'home',
-					'first_name' => 'Bilbo',
-					'last_name' => 'Baggins',
-					'address' => '23 Bag end way',
-					'city' => 'the shire',
-					'phone' => 'N/A',
-					'primary' => '1',
+				'Address' => array(
+						0 => array(
+								'id' => '123',
+								'title' => 'home',
+								'first_name' => 'Bilbo',
+								'last_name' => 'Baggins',
+								'address' => '23 Bag end way',
+								'city' => 'the shire',
+								'phone' => 'N/A',
+								'primary' => '1',
+						),
+						1 => array(
+								'id' => '124',
+								'title' => 'home',
+								'first_name' => 'Frodo',
+								'last_name' => 'Baggins',
+								'address' => '50 Bag end way',
+								'city' => 'the shire',
+								'phone' => 'N/A',
+								'primary' => '1'
+						)
 				),
-				1 => array(
-					'id' => '124',
-					'title' => 'home',
-					'first_name' => 'Frodo',
-					'last_name' => 'Baggins',
-					'address' => '50 Bag end way',
-					'city' => 'the shire',
-					'phone' => 'N/A',
-					'primary' => '1'
-				)
-			),
-			'_Token' => compact('key', 'fields', 'unlocked')
+				'_Token' => compact('key', 'fields', 'unlocked')
 		);
 
 		$result = $this->Controller->Security->validatePost($this->Controller);
 		$this->assertTrue($result);
 	}
 
-/**
- * Test that values like Foo.0.1
- *
- * @return void
- */
+	/**
+	 * Test that values like Foo.0.1
+	 *
+	 * @return void
+	 */
 	public function testValidateNestedNumericSets() {
 		$this->Controller->Security->startup($this->Controller);
 		$key = $this->Controller->request->params['_Token']['key'];
 		$unlocked = '';
 		$hashFields = array('TaxonomyData');
 		$fields = urlencode(
-			Security::hash(
-			'/posts/index' .
-			serialize($hashFields) .
-			$unlocked .
-			Configure::read('Security.salt'), 'sha1')
+				Security::hash(
+						'/posts/index' .
+						serialize($hashFields) .
+						$unlocked .
+						Configure::read('Security.salt'), 'sha1')
 		);
 
 		$this->Controller->request->data = array(
-			'TaxonomyData' => array(
-				1 => array(array(2)),
-				2 => array(array(3))
-			),
-			'_Token' => compact('key', 'fields', 'unlocked')
+				'TaxonomyData' => array(
+						1 => array(array(2)),
+						2 => array(array(3))
+				),
+				'_Token' => compact('key', 'fields', 'unlocked')
 		);
 		$result = $this->Controller->Security->validatePost($this->Controller);
 		$this->assertTrue($result);
 	}
 
-/**
- * testValidateHasManyRecords method
- *
- * validatePost should fail, hidden fields have been changed.
- *
- * @return void
- */
+	/**
+	 * testValidateHasManyRecords method
+	 *
+	 * validatePost should fail, hidden fields have been changed.
+	 *
+	 * @return void
+	 */
 	public function testValidateHasManyRecordsFail() {
 		$this->Controller->Security->startup($this->Controller);
 		$key = $this->Controller->request->params['_Token']['key'];
@@ -1002,40 +1005,40 @@ class SecurityComponentTest extends CakeTestCase {
 		$unlocked = '';
 
 		$this->Controller->request->data = array(
-			'Address' => array(
-				0 => array(
-					'id' => '123',
-					'title' => 'home',
-					'first_name' => 'Bilbo',
-					'last_name' => 'Baggins',
-					'address' => '23 Bag end way',
-					'city' => 'the shire',
-					'phone' => 'N/A',
-					'primary' => '5',
+				'Address' => array(
+						0 => array(
+								'id' => '123',
+								'title' => 'home',
+								'first_name' => 'Bilbo',
+								'last_name' => 'Baggins',
+								'address' => '23 Bag end way',
+								'city' => 'the shire',
+								'phone' => 'N/A',
+								'primary' => '5',
+						),
+						1 => array(
+								'id' => '124',
+								'title' => 'home',
+								'first_name' => 'Frodo',
+								'last_name' => 'Baggins',
+								'address' => '50 Bag end way',
+								'city' => 'the shire',
+								'phone' => 'N/A',
+								'primary' => '1'
+						)
 				),
-				1 => array(
-					'id' => '124',
-					'title' => 'home',
-					'first_name' => 'Frodo',
-					'last_name' => 'Baggins',
-					'address' => '50 Bag end way',
-					'city' => 'the shire',
-					'phone' => 'N/A',
-					'primary' => '1'
-				)
-			),
-			'_Token' => compact('key', 'fields', 'unlocked')
+				'_Token' => compact('key', 'fields', 'unlocked')
 		);
 
 		$result = $this->Controller->Security->validatePost($this->Controller);
 		$this->assertFalse($result);
 	}
 
-/**
- * testFormDisabledFields method
- *
- * @return void
- */
+	/**
+	 * testFormDisabledFields method
+	 *
+	 * @return void
+	 */
 	public function testFormDisabledFields() {
 		$this->Controller->Security->startup($this->Controller);
 		$key = $this->Controller->request->params['_Token']['key'];
@@ -1043,8 +1046,8 @@ class SecurityComponentTest extends CakeTestCase {
 		$unlocked = '';
 
 		$this->Controller->request->data = array(
-			'MyModel' => array('name' => 'some data'),
-			'_Token' => compact('key', 'fields', 'unlocked')
+				'MyModel' => array('name' => 'some data'),
+				'_Token' => compact('key', 'fields', 'unlocked')
 		);
 		$result = $this->Controller->Security->validatePost($this->Controller);
 		$this->assertFalse($result);
@@ -1054,19 +1057,19 @@ class SecurityComponentTest extends CakeTestCase {
 		$key = $this->Controller->request->params['_Token']['key'];
 
 		$this->Controller->request->data = array(
-			'MyModel' => array('name' => 'some data'),
-			'_Token' => compact('key', 'fields', 'unlocked')
+				'MyModel' => array('name' => 'some data'),
+				'_Token' => compact('key', 'fields', 'unlocked')
 		);
 
 		$result = $this->Controller->Security->validatePost($this->Controller);
 		$this->assertTrue($result);
 	}
 
-/**
- * testRadio method
- *
- * @return void
- */
+	/**
+	 * testRadio method
+	 *
+	 * @return void
+	 */
 	public function testValidatePostRadio() {
 		$this->Controller->Security->startup($this->Controller);
 		$key = $this->Controller->request->params['_Token']['key'];
@@ -1074,38 +1077,38 @@ class SecurityComponentTest extends CakeTestCase {
 		$unlocked = '';
 
 		$this->Controller->request->data = array(
-			'_Token' => compact('key', 'fields', 'unlocked')
+				'_Token' => compact('key', 'fields', 'unlocked')
 		);
 		$result = $this->Controller->Security->validatePost($this->Controller);
 		$this->assertFalse($result);
 
 		$this->Controller->request->data = array(
-			'_Token' => compact('key', 'fields', 'unlocked'),
-			'Test' => array('test' => '')
+				'_Token' => compact('key', 'fields', 'unlocked'),
+				'Test' => array('test' => '')
 		);
 		$result = $this->Controller->Security->validatePost($this->Controller);
 		$this->assertTrue($result);
 
 		$this->Controller->request->data = array(
-			'_Token' => compact('key', 'fields', 'unlocked'),
-			'Test' => array('test' => '1')
+				'_Token' => compact('key', 'fields', 'unlocked'),
+				'Test' => array('test' => '1')
 		);
 		$result = $this->Controller->Security->validatePost($this->Controller);
 		$this->assertTrue($result);
 
 		$this->Controller->request->data = array(
-			'_Token' => compact('key', 'fields', 'unlocked'),
-			'Test' => array('test' => '2')
+				'_Token' => compact('key', 'fields', 'unlocked'),
+				'Test' => array('test' => '2')
 		);
 		$result = $this->Controller->Security->validatePost($this->Controller);
 		$this->assertTrue($result);
 	}
 
-/**
- * test validatePost uses here() as a hash input.
- *
- * @return void
- */
+	/**
+	 * test validatePost uses here() as a hash input.
+	 *
+	 * @return void
+	 */
 	public function testValidatePostUrlAsHashInput() {
 		$this->Controller->Security->startup($this->Controller);
 
@@ -1114,31 +1117,31 @@ class SecurityComponentTest extends CakeTestCase {
 		$unlocked = '';
 
 		$this->Controller->request->data = array(
-			'Model' => array('username' => '', 'password' => ''),
-			'_Token' => compact('key', 'fields', 'unlocked')
+				'Model' => array('username' => '', 'password' => ''),
+				'_Token' => compact('key', 'fields', 'unlocked')
 		);
 		$this->assertTrue($this->Controller->Security->validatePost($this->Controller));
 
-		$request = $this->getMock('CakeRequest', array('here'), array('articles/edit/1', false));
+		$request = $this->getMock('CakeRequest', array('here'), array('articles/edit/1', FALSE));
 		$request->expects($this->at(0))
-			->method('here')
-			->will($this->returnValue('/posts/index?page=1'));
+				->method('here')
+				->will($this->returnValue('/posts/index?page=1'));
 		$request->expects($this->at(1))
-			->method('here')
-			->will($this->returnValue('/posts/edit/1'));
+				->method('here')
+				->will($this->returnValue('/posts/edit/1'));
 
 		$this->Controller->Security->request = $request;
 		$this->assertFalse($this->Controller->Security->validatePost($this->Controller));
 		$this->assertFalse($this->Controller->Security->validatePost($this->Controller));
 	}
 
-/**
- * test that a requestAction's controller will have the _Token appended to
- * the params.
- *
- * @return void
- * @see https://cakephp.lighthouseapp.com/projects/42648/tickets/68
- */
+	/**
+	 * test that a requestAction's controller will have the _Token appended to
+	 * the params.
+	 *
+	 * @return void
+	 * @see https://cakephp.lighthouseapp.com/projects/42648/tickets/68
+	 */
 	public function testSettingTokenForRequestAction() {
 		$this->Controller->Security->startup($this->Controller);
 		$key = $this->Controller->request->params['_Token']['key'];
@@ -1150,13 +1153,13 @@ class SecurityComponentTest extends CakeTestCase {
 		$this->assertEquals($this->Controller->request->params['_Token']['key'], $key);
 	}
 
-/**
- * test that blackhole doesn't delete the _Token session key so repeat data submissions
- * stay blackholed.
- *
- * @link https://cakephp.lighthouseapp.com/projects/42648/tickets/214
- * @return void
- */
+	/**
+	 * test that blackhole doesn't delete the _Token session key so repeat data submissions
+	 * stay blackholed.
+	 *
+	 * @link https://cakephp.lighthouseapp.com/projects/42648/tickets/214
+	 * @return void
+	 */
 	public function testBlackHoleNotDeletingSessionInformation() {
 		$this->Controller->Security->startup($this->Controller);
 
@@ -1164,16 +1167,16 @@ class SecurityComponentTest extends CakeTestCase {
 		$this->assertTrue($this->Controller->Security->Session->check('_Token'), '_Token was deleted by blackHole %s');
 	}
 
-/**
- * test that csrf checks are skipped for request action.
- *
- * @return void
- */
+	/**
+	 * test that csrf checks are skipped for request action.
+	 *
+	 * @return void
+	 */
 	public function testCsrfSkipRequestAction() {
 		$_SERVER['REQUEST_METHOD'] = 'POST';
 
-		$this->Security->validatePost = false;
-		$this->Security->csrfCheck = true;
+		$this->Security->validatePost = FALSE;
+		$this->Security->csrfCheck = TRUE;
 		$this->Security->csrfExpires = '+10 minutes';
 		$this->Controller->request->params['requested'] = 1;
 		$this->Security->startup($this->Controller);
@@ -1181,14 +1184,14 @@ class SecurityComponentTest extends CakeTestCase {
 		$this->assertFalse($this->Controller->failed, 'fail() was called.');
 	}
 
-/**
- * test setting
- *
- * @return void
- */
+	/**
+	 * test setting
+	 *
+	 * @return void
+	 */
 	public function testCsrfSettings() {
-		$this->Security->validatePost = false;
-		$this->Security->csrfCheck = true;
+		$this->Security->validatePost = FALSE;
+		$this->Security->csrfCheck = TRUE;
 		$this->Security->csrfExpires = '+10 minutes';
 		$this->Security->startup($this->Controller);
 
@@ -1198,14 +1201,14 @@ class SecurityComponentTest extends CakeTestCase {
 		$this->assertEquals(array('key', 'unlockedFields'), array_keys($this->Controller->request->params['_Token']), 'Keys don not match');
 	}
 
-/**
- * Test setting multiple nonces, when startup() is called more than once, (ie more than one request.)
- *
- * @return void
- */
+	/**
+	 * Test setting multiple nonces, when startup() is called more than once, (ie more than one request.)
+	 *
+	 * @return void
+	 */
 	public function testCsrfSettingMultipleNonces() {
-		$this->Security->validatePost = false;
-		$this->Security->csrfCheck = true;
+		$this->Security->validatePost = FALSE;
+		$this->Security->csrfCheck = TRUE;
 		$this->Security->csrfExpires = '+10 minutes';
 		$csrfExpires = strtotime('+10 minutes');
 		$this->Security->startup($this->Controller);
@@ -1218,44 +1221,44 @@ class SecurityComponentTest extends CakeTestCase {
 		}
 	}
 
-/**
- * test that nonces are consumed by form submits.
- *
- * @return void
- */
+	/**
+	 * test that nonces are consumed by form submits.
+	 *
+	 * @return void
+	 */
 	public function testCsrfNonceConsumption() {
-		$this->Security->validatePost = false;
-		$this->Security->csrfCheck = true;
+		$this->Security->validatePost = FALSE;
+		$this->Security->csrfCheck = TRUE;
 		$this->Security->csrfExpires = '+10 minutes';
 
 		$this->Security->Session->write('_Token.csrfTokens', array('nonce1' => strtotime('+10 minutes')));
 
 		$this->Controller->request = $this->getMock('CakeRequest', array('is'));
 		$this->Controller->request->expects($this->once())->method('is')
-			->with(array('post', 'put'))
-			->will($this->returnValue(true));
+				->with(array('post', 'put'))
+				->will($this->returnValue(TRUE));
 
 		$this->Controller->request->params['action'] = 'index';
 		$this->Controller->request->data = array(
-			'_Token' => array(
-				'key' => 'nonce1'
-			),
-			'Post' => array(
-				'title' => 'Woot'
-			)
+				'_Token' => array(
+						'key' => 'nonce1'
+				),
+				'Post' => array(
+						'title' => 'Woot'
+				)
 		);
 		$this->Security->startup($this->Controller);
 		$token = $this->Security->Session->read('_Token');
 		$this->assertFalse(isset($token['csrfTokens']['nonce1']), 'Token was not consumed');
 	}
 
-/**
- * tests that reusable CSRF-token expiry is renewed
- */
+	/**
+	 * tests that reusable CSRF-token expiry is renewed
+	 */
 	public function testCsrfReusableTokenRenewal() {
-		$this->Security->validatePost = false;
-		$this->Security->csrfCheck = true;
-		$this->Security->csrfUseOnce = false;
+		$this->Security->validatePost = FALSE;
+		$this->Security->csrfCheck = TRUE;
+		$this->Security->csrfUseOnce = FALSE;
 		$csrfExpires = '+10 minutes';
 		$this->Security->csrfExpires = $csrfExpires;
 
@@ -1266,20 +1269,20 @@ class SecurityComponentTest extends CakeTestCase {
 		$this->assertWithinMargin($tokens['token'], strtotime($csrfExpires), 2, 'Token expiry was not renewed');
 	}
 
-/**
- * test that expired values in the csrfTokens are cleaned up.
- *
- * @return void
- */
+	/**
+	 * test that expired values in the csrfTokens are cleaned up.
+	 *
+	 * @return void
+	 */
 	public function testCsrfNonceVacuum() {
-		$this->Security->validatePost = false;
-		$this->Security->csrfCheck = true;
+		$this->Security->validatePost = FALSE;
+		$this->Security->csrfCheck = TRUE;
 		$this->Security->csrfExpires = '+10 minutes';
 
 		$this->Security->Session->write('_Token.csrfTokens', array(
-			'valid' => strtotime('+30 minutes'),
-			'poof' => strtotime('-11 minutes'),
-			'dust' => strtotime('-20 minutes')
+				'valid' => strtotime('+30 minutes'),
+				'poof' => strtotime('-11 minutes'),
+				'dust' => strtotime('-20 minutes')
 		));
 		$this->Security->startup($this->Controller);
 		$tokens = $this->Security->Session->read('_Token.csrfTokens');
@@ -1287,75 +1290,75 @@ class SecurityComponentTest extends CakeTestCase {
 		$this->assertNotEmpty('valid', $tokens, 'Valid token was removed.');
 	}
 
-/**
- * test that when the key is missing the request is blackHoled
- *
- * @return void
- */
+	/**
+	 * test that when the key is missing the request is blackHoled
+	 *
+	 * @return void
+	 */
 	public function testCsrfBlackHoleOnKeyMismatch() {
-		$this->Security->validatePost = false;
-		$this->Security->csrfCheck = true;
+		$this->Security->validatePost = FALSE;
+		$this->Security->csrfCheck = TRUE;
 		$this->Security->csrfExpires = '+10 minutes';
 
 		$this->Security->Session->write('_Token.csrfTokens', array('nonce1' => strtotime('+10 minutes')));
 
 		$this->Controller->request = $this->getMock('CakeRequest', array('is'));
 		$this->Controller->request->expects($this->once())->method('is')
-			->with(array('post', 'put'))
-			->will($this->returnValue(true));
+				->with(array('post', 'put'))
+				->will($this->returnValue(TRUE));
 
 		$this->Controller->request->params['action'] = 'index';
 		$this->Controller->request->data = array(
-			'_Token' => array(
-				'key' => 'not the right value'
-			),
-			'Post' => array(
-				'title' => 'Woot'
-			)
+				'_Token' => array(
+						'key' => 'not the right value'
+				),
+				'Post' => array(
+						'title' => 'Woot'
+				)
 		);
 		$this->Security->startup($this->Controller);
 		$this->assertTrue($this->Controller->failed, 'fail() was not called.');
 	}
 
-/**
- * test that when the key is missing the request is blackHoled
- *
- * @return void
- */
+	/**
+	 * test that when the key is missing the request is blackHoled
+	 *
+	 * @return void
+	 */
 	public function testCsrfBlackHoleOnExpiredKey() {
-		$this->Security->validatePost = false;
-		$this->Security->csrfCheck = true;
+		$this->Security->validatePost = FALSE;
+		$this->Security->csrfCheck = TRUE;
 		$this->Security->csrfExpires = '+10 minutes';
 
 		$this->Security->Session->write('_Token.csrfTokens', array('nonce1' => strtotime('-5 minutes')));
 
 		$this->Controller->request = $this->getMock('CakeRequest', array('is'));
 		$this->Controller->request->expects($this->once())->method('is')
-			->with(array('post', 'put'))
-			->will($this->returnValue(true));
+				->with(array('post', 'put'))
+				->will($this->returnValue(TRUE));
 
 		$this->Controller->request->params['action'] = 'index';
 		$this->Controller->request->data = array(
-			'_Token' => array(
-				'key' => 'nonce1'
-			),
-			'Post' => array(
-				'title' => 'Woot'
-			)
+				'_Token' => array(
+						'key' => 'nonce1'
+				),
+				'Post' => array(
+						'title' => 'Woot'
+				)
 		);
 		$this->Security->startup($this->Controller);
 		$this->assertTrue($this->Controller->failed, 'fail() was not called.');
 	}
 
-/**
- * test that csrfUseOnce = false works.
- *
- * @return void
- */
+	/**
+	 * test that csrfUseOnce = false works.
+	 *
+	 * @return void
+	 */
 	public function testCsrfNotUseOnce() {
-		$this->Security->validatePost = false;
-		$this->Security->csrfCheck = true;
-		$this->Security->csrfUseOnce = false;
+		$this->Security->validatePost = FALSE;
+		$this->Security->csrfCheck = TRUE;
+		$this->Security->csrfUseOnce = FALSE;
 		$this->Security->csrfExpires = '+10 minutes';
 
 		// Generate one token
@@ -1372,43 +1375,43 @@ class SecurityComponentTest extends CakeTestCase {
 		$this->assertEquals(array($key), array_keys($token), '_Token.key and csrfToken do not match request will blackhole.');
 	}
 
-/**
- * ensure that longer session tokens are not consumed
- *
- * @return void
- */
+	/**
+	 * ensure that longer session tokens are not consumed
+	 *
+	 * @return void
+	 */
 	public function testCsrfNotUseOnceValidationLeavingToken() {
-		$this->Security->validatePost = false;
-		$this->Security->csrfCheck = true;
-		$this->Security->csrfUseOnce = false;
+		$this->Security->validatePost = FALSE;
+		$this->Security->csrfCheck = TRUE;
+		$this->Security->csrfUseOnce = FALSE;
 		$this->Security->csrfExpires = '+10 minutes';
 
 		$this->Security->Session->write('_Token.csrfTokens', array('nonce1' => strtotime('+10 minutes')));
 
 		$this->Controller->request = $this->getMock('CakeRequest', array('is'));
 		$this->Controller->request->expects($this->once())->method('is')
-			->with(array('post', 'put'))
-			->will($this->returnValue(true));
+				->with(array('post', 'put'))
+				->will($this->returnValue(TRUE));
 
 		$this->Controller->request->params['action'] = 'index';
 		$this->Controller->request->data = array(
-			'_Token' => array(
-				'key' => 'nonce1'
-			),
-			'Post' => array(
-				'title' => 'Woot'
-			)
+				'_Token' => array(
+						'key' => 'nonce1'
+				),
+				'Post' => array(
+						'title' => 'Woot'
+				)
 		);
 		$this->Security->startup($this->Controller);
 		$token = $this->Security->Session->read('_Token');
 		$this->assertTrue(isset($token['csrfTokens']['nonce1']), 'Token was consumed');
 	}
 
-/**
- * Test generateToken()
- *
- * @return void
- */
+	/**
+	 * Test generateToken()
+	 *
+	 * @return void
+	 */
 	public function testGenerateToken() {
 		$request = $this->Controller->request;
 		$this->Security->generateToken($request);
@@ -1418,20 +1421,20 @@ class SecurityComponentTest extends CakeTestCase {
 		$this->assertTrue(isset($request->params['_Token']['key']));
 	}
 
-/**
- * Test the limiting of CSRF tokens.
- *
- * @return void
- */
+	/**
+	 * Test the limiting of CSRF tokens.
+	 *
+	 * @return void
+	 */
 	public function testCsrfLimit() {
 		$this->Security->csrfLimit = 3;
 		$time = strtotime('+10 minutes');
 		$tokens = array(
-			'1' => $time,
-			'2' => $time,
-			'3' => $time,
-			'4' => $time,
-			'5' => $time,
+				'1' => $time,
+				'2' => $time,
+				'3' => $time,
+				'4' => $time,
+				'5' => $time,
 		);
 		$this->Security->Session->write('_Token', array('csrfTokens' => $tokens));
 		$this->Security->generateToken($this->Controller->request);
@@ -1444,16 +1447,16 @@ class SecurityComponentTest extends CakeTestCase {
 		$this->assertTrue(isset($result['5']));
 	}
 
-/**
- * Test unlocked actions
- *
- * @return void
- */
+	/**
+	 * Test unlocked actions
+	 *
+	 * @return void
+	 */
 	public function testUnlockedActions() {
 		$_SERVER['REQUEST_METHOD'] = 'POST';
 		$this->Controller->request->data = array('data');
 		$this->Controller->Security->unlockedActions = 'index';
-		$this->Controller->Security->blackHoleCallback = null;
+		$this->Controller->Security->blackHoleCallback = NULL;
 		$result = $this->Controller->Security->startup($this->Controller);
 		$this->assertNull($result);
 	}

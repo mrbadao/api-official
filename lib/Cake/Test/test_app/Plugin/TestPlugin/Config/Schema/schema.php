@@ -28,13 +28,13 @@ class TestPluginAppSchema extends CakeSchema {
 	public $name = 'TestPluginApp';
 
 	public $test_plugin_acos = array(
-		'id' => array('type' => 'integer', 'null' => false, 'default' => null, 'length' => 10, 'key' => 'primary'),
-		'parent_id' => array('type' => 'integer', 'null' => true, 'default' => null, 'length' => 10),
-		'model' => array('type' => 'string', 'null' => true),
-		'foreign_key' => array('type' => 'integer', 'null' => true, 'default' => null, 'length' => 10),
-		'alias' => array('type' => 'string', 'null' => true),
-		'lft' => array('type' => 'integer', 'null' => true, 'default' => null, 'length' => 10),
-		'rght' => array('type' => 'integer', 'null' => true, 'default' => null, 'length' => 10),
-		'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1))
+			'id' => array('type' => 'integer', 'null' => FALSE, 'default' => NULL, 'length' => 10, 'key' => 'primary'),
+			'parent_id' => array('type' => 'integer', 'null' => TRUE, 'default' => NULL, 'length' => 10),
+			'model' => array('type' => 'string', 'null' => TRUE),
+			'foreign_key' => array('type' => 'integer', 'null' => TRUE, 'default' => NULL, 'length' => 10),
+			'alias' => array('type' => 'string', 'null' => TRUE),
+			'lft' => array('type' => 'integer', 'null' => TRUE, 'default' => NULL, 'length' => 10),
+			'rght' => array('type' => 'integer', 'null' => TRUE, 'default' => NULL, 'length' => 10),
+			'indexes' => array('PRIMARY' => array('column' => 'id', 'unique' => 1))
 	);
 }
