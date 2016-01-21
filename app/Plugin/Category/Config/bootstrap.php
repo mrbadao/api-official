@@ -114,4 +114,4 @@ CakeLog::config('error', array(
 		'file' => 'error',
 ));
 
-CakePlugin::load('Media', array('bootstrap' => FALSE, 'routes' => TRUE));
+CakePlugin::load('Category', array('bootstrap' => FALSE, 'routes' => TRUE));
