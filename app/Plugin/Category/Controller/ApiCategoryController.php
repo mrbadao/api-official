@@ -24,12 +24,24 @@
 		}
 
 		public function createCategory() {
-			$dumpData = array('Category' => array());
-			["CategoryName"]=> array(2) {
-				[0]=> array (
-					["id"]=> string(1) "1" ["category_id"]=> string(1) "1" ["lang_id"]=> string(1) "1" ["name"]=> string(8) "Articles" ) [1]=> array(4) (
-					["id"]=> string(1) "2" ["category_id"]=> string(1) "1" ["lang_id"]=> string(1) "2" ["name"]=> string(11) "Bài Viết" ) )
-			$this->Category->new
+			$dumpData = array(
+					'Category' => array('create' => date('Y-m-d H:m:s')),
+					"CategoryName" => array(
+							array(
+
+									"lang_id" => "1",
+									"name" => "Articles"
+							),
+							array(
+									"lang_id" => "2",
+									"name" => "Bài Viết"
+							)
+					)
+			);
+
+			$this->Category->newEntity($dumpData, [
+					'associated' => ['CategoryName']
+			]);
 			var_dump($this->request->data);
 			die;
 		}
