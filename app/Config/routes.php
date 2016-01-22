@@ -34,6 +34,7 @@ Router::parseExtensions('html', 'json');
 //Router::connect('/users/login', array('controller' => 'users', 'action' => 'login'));
 Router::connect('/api/users/login', array('controller' => 'apiUsers', 'action' => 'login'));
 Router::connect('/api/users/checkToken', array('controller' => 'apiUsers', 'action' => 'checkToken'));
+Router::connect('/api/getlanguage', array('controller' => 'ApiBase', 'action' => 'getLanguage'));
 CakePlugin::routes();
 
 /**
