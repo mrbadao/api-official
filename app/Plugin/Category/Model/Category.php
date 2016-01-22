@@ -9,9 +9,11 @@
 		public $hasMany = array(
 				'CategoryName' => array(
 						'className' => 'Category.CategoryName',
+						//'foreignKey' => 'category_id'
 				),
 				'CategorySeoLink' => array(
 						'className' => 'Category.CategorySeoLink',
+						//'foreignKey' => 'category_id'
 				)
 		);
 	}
