@@ -12,5 +12,10 @@ class ErrorConstants {
 					'4030' => "Login failed.",
 					'4031' => "Api access key invalid."
 			),
+			"CATEGORY"=>array(
+				"CREATE" => array(
+					'404' => "Empty data receive."
+				)
+			),
 	);
 }
