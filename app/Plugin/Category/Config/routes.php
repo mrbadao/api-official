@@ -39,12 +39,15 @@
 					'[method]' => 'POST',
 			)
 	);
-	//web view
-	//	Router::connect(
-	//			'/media/',
-	//			array(
-	//					'plugin' => 'media',
-	//					'controller' => 'media',
-	//					'action' => 'index'
-	//			)
-	//	);
+	Router::connect(
+			'/api/category/getcategory/:id',
+			array(
+					'plugin' => 'category',
+					'controller' => 'apiCategory',
+					'action' => 'getCategory'
+			),
+			array(
+					'pass' => array('id'),
+					':id' => '[\d]+'
+			)
+	);

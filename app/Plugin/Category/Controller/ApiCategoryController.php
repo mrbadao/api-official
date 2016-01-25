@@ -24,6 +24,21 @@
 			)));
 		}
 
+		public function getCategory($id = NULL) {
+			$categoryData = $this->Category->find('first', array(
+					'recursive' => 2,
+					'conditions' => array(
+							'Category.id' => $id,
+					),
+			));
+
+			if (!$categoryData || empty($categoryData)) {
+				return self::getJsonResponseData(404, array(), ErrorConstants::$API_MESSAGES['CATEGORY']['GET_CATEGORY']['404']);
+			}
+
+			return self::getJsonResponseData(200, $categoryData);
+		}
+
 		public function createCategory() {
 			if (empty($this->request->data)) {
 				return self::getJsonResponseData(404, array(), ErrorConstants::$API_MESSAGES['CATEGORY']['CREATE']['404']);
