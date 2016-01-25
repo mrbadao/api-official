@@ -97,7 +97,7 @@
 		public function beforeFilter() {
 			parent::beforeFilter();
 			$this->ApiAuth->allow('getLanguage');
-			$this->request->data = json_decode(utf8_encode(trim(file_get_contents('php://input'))), TRUE);
+			$this->request->data = json_decode(trim(file_get_contents('php://input')), TRUE);
 
 			$this->response->type(self::default_response_content_type);
 			$this->response->header('Access-Control-Allow-Origin', '*');
